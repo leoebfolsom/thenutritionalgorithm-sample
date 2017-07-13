@@ -2,7 +2,9 @@ THE NUTRITION ALGORITHM
 leo.e.brown@gmail.com
 
 Core algorithm: https://github.com/leoebrown/thenutritionalgorithm-sample/blob/master/app/services/write_list_stepwise.rb
+
 Most interesting controllers:
+
 * Lists: https://github.com/leoebrown/thenutritionalgorithm-sample/blob/master/app/controllers/lists_controller.rb
 * Quantities: https://github.com/leoebrown/thenutritionalgorithm-sample/blob/master/app/controllers/quantities_controller.rb
 * Users: https://github.com/leoebrown/thenutritionalgorithm-sample/blob/master/app/controllers/users_controller.rb
