@@ -1,0 +1,8 @@
+<% if @dishes.any? %>
+  $("#user-dishes").html("");
+  <% @dishes.each do |p| %>
+    $("#user-dishes").append("<%= j render 'posts/post', :post => p %>");
+  <% end %>
+<% else %>
+  $("#no-dishes").removeClass("hidden");
+<% end%>

@@ -1,0 +1,18 @@
+<% if feed_user != "from_profile" %>
+	<% @user = feed_user %>
+<% end %>
+<% if current_user %>
+	<% unless current_user == @user %>
+		  <div class="follow_form-<%=@user.id%>">
+		  <% if current_user.following?(@user) %>
+		  	<% if feed_user != "from_profile" %>
+		    	<%= render 'users/unfollow' %>
+		    <% else %>
+		    	<%= render 'users/unfollow' %>
+		    <% end %>
+		  <% else %>
+		    <%= render 'users/follow' %>
+		  <% end %>
+		  </div>
+	<% end %>
+<% end %>

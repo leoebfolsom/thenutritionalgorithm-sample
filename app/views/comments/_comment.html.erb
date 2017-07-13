@@ -1,0 +1,85 @@
+<li class="comment-li" id="comment-<%=comment.id%>" style="text-align:left;">
+  <a href="comment-<%=comment.id%>"></a>
+    
+
+  <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+
+    <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0px;">
+      <% if comment.user_id != nil %>
+        <% user = User.find(comment.user_id) %>
+        <% if user.image != nil %>
+          <% user_image = user.image %>
+        <% else %>
+          <% user_image = "apple-touch-icon-180x180.png" %>
+        <% end %>
+        <%= link_to user.name, user %>
+        <div class="timestamp smaller-text gray"><%= time_ago_in_words(comment.created_at).capitalize %> ago.</div>
+        <%= image_tag(user_image, style: "height:50px;") %>
+        <div class="hidden tiny-text">
+          <%= image_tag "Lentils_red_and_brown.png", {:class => "",style: "max-width: 15px;", "data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Lentil"} %>
+          <span data-toggle="modal" data-target="#beansModal">
+            <%= link_to "#{user.points}", "#", {:class => "", "data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Collect beans to unlock achievements. Everyone starts as a lentil."} %>
+          </span>
+
+        </div>
+      <% end %>
+    </div>
+    <div class="col-md-10 col-sm-10 col-xs-10">
+      <%= simple_format(comment.content) %>
+    </div>
+    
+  </div>
+
+
+  <div class="col-md-10 col-sm-10 col-xs-10 col-md-offset-2 col-sm-offset-2 col-xs-offset-2">
+    <% if current_user %>
+      <% if Activity.where(action:"like",comment_id:comment.id.to_i,user_id:current_user.id).count == 0 %>
+        <span id="comment-<%=comment.id%>-not-yet-liked">
+          <%= link_to "Like <i class='fa fa-thumbs-o-up'></i>".html_safe, like_path(:comment_id => comment.id, :post_id => post.id, :user_to_be_notified_id => comment.user_id), :remote => true %> 
+        </span>
+      <% else %>
+        <i class='fa fa-thumbs-up'></i>
+      <% end %>
+    <% else %>
+      <i class='fa fa-thumbs-up'></i>
+    <% end %>
+    <span id="comment-like-count-<%=comment.id%>"><%=Activity.where(is_notification:nil,action:"like",comment_id:comment.id).count%></span>
+
+  </div>
+  <div class="col-md-12 col-sm-12 col-xs-12">
+  <div class='span12'><hr></div>
+  </div>
+<%
+=begin %>
+
+
+   <%=comment.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%m/%d/%Y")%> at <%=comment.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("at %I:%M%p")%>.
+
+   
+    <% if comment.user_id == current_user.id %>
+      <div class="smaller-text" style="text-align: left;">
+        <%= link_to "edit comment text", "#", :class => "edit-comment", href: "javascript:void(0)" %> |
+        <%= link_to comment, method: :delete, :class => "delete-comment", :remote => true, data: { confirm: "You sure?" } do %>  
+          delete
+        <% end %>          
+      </div>
+    <% end %>
+
+  
+  <% if comment.user_id == current_user.id %>
+    <div class="comment-content-edit-div hidden">
+      <%= form_for(comment, :html => {:class => "form-inline", :style => "max-width: 100%; padding: 0 15px;" }) do |f| %>
+        <%= f.text_area :content, :value=>comment.content, :class=>"input form-control comment-content-edit", :style=>"width: 100%; text-align:left;" %>
+        
+        <%= f.submit "UPDATE", :style => "padding: 6.4px;width: 100%;", :class => "comment-content-edit-submit" %>
+      <% end %>
+    </div>
+  <% end %>
+
+<%
+=end %>
+
+  
+  
+
+</li>

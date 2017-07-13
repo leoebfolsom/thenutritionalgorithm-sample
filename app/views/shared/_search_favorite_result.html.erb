@@ -1,0 +1,81 @@
+<div class="col-md-6 col-sm-12 col-xs-12 search-result-grand-container">
+  <div class="item-grand-div item search-result-favorite">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <% if f.image != "" %>
+        <%= image_tag(f.image, width: "100%", style:"max-width:200px;") %>
+      <% end %>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 item-name">
+      <div><%= f.name.split.map(&:capitalize).join(' ') %></div>
+      <div>$<%= '%.2f' % f.price %></div>
+    </div>
+
+
+
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 15px;">
+      <button type="button" class="btn wide-button smaller-text view-product-details-modal-button" data-toggle="modal" data-target="#previewDetailsModalLikeSearchResult-<%=f.id%>">
+        View details
+      </button>
+
+    </div>
+    
+
+      <!-- Modal -->
+      <div class="modal fade" id="previewDetailsModalLikeSearchResult-<%=f.id%>" tabindex="-1" role="dialog" aria-labelledby="#previewDetailsModalLikeSearchResultLabel-<%=f.id%>" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="previewDetailsModalLikeSearchResultLabel-<%=f.id%>">Nutrition details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+
+              <div class="" style="display:inline; text-align:left;">
+                <ul>
+                  <li><%= f.name.split.map(&:capitalize).join(' ') %></li>
+                  <% if f.aisle != "Produce" %> <li><%= f.aisle %></li><% end %>
+                  <li>Price: $<%= '%.2f' % f.price %></li>
+                  <li>Calories: <%= "#{f.calories} cal." %></li>
+                  <li>Carbohydrates: <%= "#{f.carbohydrates} g"%></li>
+                  <li>Fat: <%= "#{f.fat} g"%></li>
+                  <li>Protein: <%= "#{f.protein} g"%> </li>
+                  <li>Sugar: <%= "#{f.sugar} g"%> </li>
+                  <li>Fiber: <%= "#{f.fiber} g"%> </li>
+                  <li>Vit. A: <%= "#{f.vitamin_a} %DV"%> </li>
+                  <li>Vit. C: <%= "#{f.vitamin_c} %DV"%> </li>
+                  <li>Calcium: <%= "#{f.calcium} %DV"%> </li>
+                  <li>Iron: <%= "#{f.iron} %DV"%> </li>
+                  <li>Sodium: <%= "#{f.sodium} mg"%> </li>
+                </ul>
+
+              </div>
+  
+
+            </div>
+            <div class="modal-footer hidden">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <%= link_to user_favorite_path(:param => f.id), :remote => true, :class => "add-to-favorites" do %>
+        <button class="btn wide-button">LIKE</button>
+      <% end %>
+    </div>
+
+  </div>
+</div>
+

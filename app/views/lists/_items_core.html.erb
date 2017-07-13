@@ -1,0 +1,168 @@
+<div class="item-grand-div-container col-md-12 col-sm-12 col-xs-12">
+  <div class="item-grand-div item">
+    <span class="hidden" id="<%=q.id%>-items-core">
+
+    </span>
+
+    <% if current_user != nil || (current_user == nil && @list.user.id == 75) %>
+      <% if current_user == @list.user || (current_user == nil && @list.user.id == 75) %>  
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="remove-link remove-right">
+            <%= link_to "\xe2\x9c\x95".html_safe, hard_delete_path(:param => q.id), :class => 'remove', :remote => true %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+
+    <div class="col-md-1 col-sm-1 col-xs-1" style="padding: 15px 0px 0px 0px;text-align:center;">
+      <input type="checkbox" name="grocery[]" style="width:auto;">
+    </div>
+    <div class="col-md-2 col-sm-2 col-xs-2 text-center" style="padding: 15px 0px 0px 0px;">
+      <% if current_user %>
+        <% favorites = current_user.favorites.split(",").map(&:to_i) %>
+        <span id="already-liked-<%=q.id%>"
+          <% if !favorites.include?(q.food.id) %>
+            style="display:none;"
+          <% end %>
+            >
+          <i class='fa fa-heart' aria-hidden='true'></i>
+        </span>
+      
+        <span id="not-yet-liked-<%=q.id%>"
+          <% if favorites.include?(q.food.id) %>
+            style="display:none;"
+          <% end %>
+          >
+          <%= link_to user_favorite_path(:param => q.food.id, :from_list => true, :quantity_id => q.id), :remote => true, :class => "add-to-favorites-from-list" do %>
+            <i class='fa fa-heart-o' aria-hidden='true'></i>
+          <% end %>
+        </span>
+      <% else %>
+        <a href="#" class="smaller-text" data-toggle="modal" data-target="#guest-liked" class="add-to-favorites-from-list">
+          <i class='fa fa-heart-o' aria-hidden='true'></i>
+        </a>
+      <% end %>
+      <% if q.food.image != "" && q.food.image != nil %>
+        <div><%= image_tag(q.food.image, style: "max-height: 50px; max-width: 100%;") %></div>
+      <% end %>  
+      <a href="#" class="tiny-text" data-toggle="modal" data-target="#previewDetailsModal-<%=q.id%>">
+        Details
+      </a>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xs-6" style="padding: 5px; padding-top: 15px;text-align:left;">
+      <div>
+        <%= q.food.name.split.map(&:capitalize).join(' ') %><br>
+        $<%= '%.2f' % q.food.price %>
+        <% if q.food.aisle != "Produce" %>
+          <span style="color:gray">
+          <%= q.food.aisle %>
+          </span>
+        <% end %>
+      </div>
+      <% if current_user == @list.user || (current_user == nil && @list.user.id == 75) %>  
+        <div class="tiny-text">
+          How much will you eat? <span class="quantity-percentage-show"><%=q.percentage%></span>%
+        </div>
+        <%= form_for(q, :remote => true, :html => {:class => "form-inline", :id => "edit-quantity-percentage-#{q.id}"}) do |f| %>
+          
+          <%= f.range_field(:percentage, in: 1..100, :value=>q.percentage,:class=>"input form-control quantity-field-input quantity-field-input-list bfh-number quantity-percentage", :id=>"quantity-percentage-field-#{q.id}", :style=> "padding:0px; margin: 5px auto;") %>
+          <%= f.submit "Save changes", class: "hidden" %>
+          <span class="tiny-text" style="display:inline;">
+          
+          </span>
+        <% end %>
+      <% end %>
+
+    </div>  
+    <div class="col-md-3 col-sm-3 col-xs-3 item-quantity text-center" style="padding: 15px 0px;">
+
+      <% if current_user != nil || (current_user == nil && @list.user.id == 75) %>
+        <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+          <%= form_for(q, :remote => true, :html => {:class => "form-inline", :style => "padding:0px;margin:0 auto;"}) do |f| %>
+            <div class="quantity-plus"><%= link_to "<i class='fa fa-angle-up fa-2x' aria-hidden='true'></i>".html_safe, "javascript:void(0)" %></div>
+            <%= f.number_field(:amount, in: 1..20, :step => "1", :value=> "%g" % ("%.2f" % q.amount),:class=>"input form-control quantity-field-input quantity-field-input-list scroll-to-input bfh-number quantity-amount hidden", :id=>"quantity-number-field-#{q.id}", :style=> "text-align:center;margin:0px auto;padding:5px;width:50px;") %>
+            <div class="number-field-display"><%="%g" % ("%.2f" % q.amount)%></div>
+            <div class="quantity-minus"><%= link_to "<i class='fa fa-angle-down fa-2x' aria-hidden='true'></i>".html_safe, "javascript:void(0)" %></div>
+            <%= f.submit "Save changes", class: "hidden amount-submit" %>
+            <center><div class="quantity-field-input-save-status little" style="min-height: 25px; display:none;"></div></center>
+          <% end %>
+
+        <% else %>
+          <div style="font-size:2em;">
+            <%= "%.3g" % q.amount %>
+          </div> 
+        <% end %>
+      <% else %>
+        <div style="font-size:2em;">
+          <%= "%.3g" % q.amount %>
+        </div> 
+      <% end %>
+
+
+      <% if current_user == @list.user || (current_user == nil && @list.user.id == 75) %>  
+        <div class="tiny-text" style="margin-top: 15px;">
+          <% if q.pantry == 1 %>
+            <span id="undo-pantry-link-#{q.id}" class="undo-pantry" style=""><%= link_to "Count price", pantry_remove_path(:quantity_id => q.id), :remote => true, :style=>""  %></span>
+            <span id="pantry-link-#{q.id}" class="pantry hidden" style=""><%= link_to "Remove price", pantry_path(:quantity_id => q.id), :remote => true, :style=>""  %></span>
+          <% else %>
+            <span id="undo-pantry-link-#{q.id}" class="undo-pantry hidden" style=""><%= link_to "Count price", pantry_remove_path(:quantity_id => q.id), :remote => true, :style=>""  %></span>
+            <span id="pantry-link-#{q.id}" class="pantry" style=""><%= link_to "Remove price".html_safe, pantry_path(:quantity_id => q.id), :remote => true, :style=>"" %></span>
+          <% end %>
+        </div>
+      <% end %>
+
+
+
+
+    </div> 
+
+
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+
+
+
+
+      <!-- PREVIEW DETAILS MODAL -->
+      <div class="modal fade" id="previewDetailsModal-<%=q.id%>" tabindex="-1" role="dialog" aria-labelledby="#previewDetailsModalLabel-<%=q.id%>" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="previewDetailsModalLabel-<%=q.id%>">Nutrition details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+
+
+              <%= render 'lists/item_preview_details', :q => q  %>
+  
+
+            </div>
+            <div class="modal-footer hidden">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<% 
+=begin %>
+
+     
+
+<% 
+=end %>
+
+    </div>
+
+
+
+
+  </div>
+</div>

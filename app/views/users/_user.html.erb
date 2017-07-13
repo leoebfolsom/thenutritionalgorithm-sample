@@ -1,0 +1,10 @@
+    <li>
+			<% if user.image != nil %>
+        <% user_image = user.image %>
+      <% else %>
+        <% user_image = "apple-touch-icon-180x180.png" %>
+      <% end %>
+      <%= image_tag(user_image, style: "max-width: 50px;", id: "header-profile-pic") %>
+      <%= link_to user.name, user %>
+
+    </li>

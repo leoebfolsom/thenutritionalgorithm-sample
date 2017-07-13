@@ -1,0 +1,6 @@
+var comment_id = "#comment-like-count-"+"<%=@comment_id%>";
+
+$(comment_id).html("<%=@new_comment_like_count%>");
+var comment_not_yet_liked = "#comment-<%=@comment_id%>-not-yet-liked";
+$(comment_not_yet_liked).html("<i class='fa fa-thumbs-up'></i>");
+//$(comment_id).html(@new_comment_like_count);

@@ -1,0 +1,498 @@
+<div class="col-md-12 col-sm-12 col-xs-12 text-center" style="margin-bottom:15px;">
+	<section class="stats">
+
+  <%= render 'shared/stats' %>
+	</section>
+	<%= render 'follow_form', feed_user: "from_profile" %>
+</div>
+
+
+<% provide(:title, @user.name) %>
+
+<div class="transparency hidden"></div>
+<!-- http://bootsnipp.com/snippets/featured/user-profile-sidebar to elaborate -->
+<% if current_user != nil %>
+	<% if current_user.birthday == nil && @user == current_user %>
+		<span id="current-user-birthday-nil"></span>
+	<% end %>
+<% end %>
+
+<% if @change_settings != nil %>
+	<div class="change-profile-settings"></div>
+<% end %>
+
+<% if @user_profile_favorites != nil %>
+	<div class="user-profile-favorites"></div>
+<% end %>
+
+<% if @user_profile_update_settings != nil %>
+	<div class="user-profile-update-settings"></div>
+<% end %>
+
+<% if @from_list_buys != nil %>
+	<div id="from-list-buys"></div>
+<% end %>
+
+<div id="user-profile-container">
+	<div class="profile">
+		<div class="col-md-3 col-sm-12 col-xs-12 text-center" id="profile-sidebar-container">
+			<div class="profile-sidebar">
+        <% if @user.image != nil %>
+          <% user_image = @user.image %>
+        <% else %>
+          <% user_image = "apple-touch-icon-180x180.png" %>
+        <% end %>
+        <div style="display:block;" class="row">
+        	<div class="col-md-12 col-sm-3 col-xs-6" style="min-height:70px;">
+						<%= image_tag(user_image, style: "max-width: 50px;", id: "header-profile-pic") %>
+						<% if @user == current_user %>
+		          <div id="camera">
+		            <%= link_to "#", :id => "camera-link", :class => "smaller-text" do %>
+		              <i class="fa fa-camera" aria-hidden="true"></i><% if @user.image == nil || @user.image == "" %>Upload a photo.<% end %>
+		            <% end %>
+		          </div>
+							<div id="user-id-div">
+		            <%= form_for(@user, html: { class: 'directUpload hidden', data: { 'form-data' => (@s3_direct_post.fields), 'url' => @s3_direct_post.url, 'host' => URI.parse(@s3_direct_post.url).host } }) do |f| %>
+		              <div class="field">
+		                <%= f.file_field :image %>
+		              </div>             
+		              <div class="actions">
+		                <%= f.submit "SAVE PHOTO", :class => "btn wide-button" %>
+		              </div>
+		            <% end %>
+		          </div>
+		        <% end %>
+		      </div>
+		      <div class="col-md-12 col-sm-3 col-xs-6 text-center" style="min-height:70px;">
+						<div class="profile-usertitle-name">
+							<%= @user.name %>
+						</div>
+						<div class="user-bio-container">
+							<div class="profile-usertitle-job" id="user-bio">
+								<%= auto_link(@user.bio) %>
+							</div>
+							<% if @user == current_user %>
+							  <span style="font-size: .75em">
+							  	<%= link_to "edit bio", "#", id: "edit-bio-link", href: "javascript:void(0)" %>
+							  	<br>
+							  </span>
+							  <span style="font-size: .75em" id="cancel-link-bio" class="hidden">
+							  	<%= link_to "cancel", "#", href: "javascript:void(0)" %>
+							  	<br>
+							  </span>
+							  <section id = "edit-bio" class="hidden">
+							    <%= form_for(@user, as: :user, method: :patch, :remote => true) do |f| %>
+							      <%= render 'shared/error_messages', object: @user %>
+							      <%= f.text_area :bio, class: 'form-control input', id: "bio", :style => "text-align:left;", placeholder: "This is your bio, where you can share a bit about yourself for other users to see." %>
+							      <%= f.button "Save", id: 'save-bio', class: 'btn' %>
+							    <% end %>
+							  </section>
+							<% end %>
+						</div>
+					</div>
+					<div class="col-md-12 col-sm-3 col-xs-6 text-center" style="margin-top:15px;">
+						<div class="user-ig-container">
+							<div class="profile-usertitle-job" id="user-ig">
+								<% if @user.instagram != "" %>
+									<%= auto_instagram(@user.instagram) %>
+								<% else %>
+									<i class='fa fa-2x fa-instagram' aria-hidden='true'></i>
+								<% end %>
+							</div>
+							<% if @user == current_user %>
+							  <span style="font-size: .75em">
+							  	<%= link_to "edit instagram", "#", id: "edit-ig-link", href: "javascript:void(0)" %>
+							  	<br>
+							  </span>
+							  <span style="font-size: .75em" id="cancel-link-ig" class="hidden">
+							  	<%= link_to "cancel", "#", href: "javascript:void(0)" %>
+							  	<br>
+							  </span>
+							  <section id = "edit-ig" class="hidden">
+							    <%= form_for(@user, as: :user, method: :patch, :remote => true) do |f| %>
+							      <%= render 'shared/error_messages', object: @user %>
+							      <%= f.text_field :instagram, class: 'form-control input', id: "ig", :style => "text-align:left;width:200px;", placeholder: "@your_instagram" %>
+							      <%= f.button "Save", id: 'save-ig', class: 'btn' %>
+							    <% end %>
+							  </section>
+							<% end %>
+						</div>
+					</div>
+					<div class="col-md-12 col-sm-3 col-xs-6 text-center" style="margin-top:15px;">
+						<div class="user-twitter-container">
+							<div class="profile-usertitle-job" id="user-twitter">
+								<% if @user.twitter != "" %>
+									<%= auto_twitter(@user.twitter) %>
+								<% else %>
+									<i class='fa fa-2x fa-twitter' aria-hidden='true'></i>
+								<% end %>
+							</div>
+							<% if @user == current_user %>
+							  <span style="font-size: .75em">
+							  	<%= link_to "edit twitter", "#", id: "edit-twitter-link", href: "javascript:void(0)" %>
+							  	<br>
+							  </span>
+							  <span style="font-size: .75em" id="cancel-link-twitter" class="hidden">
+							  	<%= link_to "cancel", "#", href: "javascript:void(0)" %>
+							  	<br>
+							  </span>
+							  <section id = "edit-twitter" class="hidden">
+							    <%= form_for(@user, as: :user, method: :patch, :remote => true) do |f| %>
+							      <%= render 'shared/error_messages', object: @user %>
+							      <%= f.text_field :twitter, class: 'form-control input', id: "twitter", :style => "text-align:left;width:200px;", placeholder: "@your_twitter" %>
+							      <%= f.button "Save", id: 'save-twitter', class: 'btn' %>
+							    <% end %>
+							  </section>
+							<% end %>
+						</div>
+					</div>
+
+
+	      </div>
+				<!-- END SIDEBAR BUTTONS -->
+
+
+
+
+
+				<!-- SIDEBAR MENU -->
+				<div class="profile-usermenu text-center">
+					<ul class="nav sidebar-ul-icon-plus-text">
+
+						<li class="sidebar-li sidebar-li-icon-plus-text user-profile-view-lists-link active">
+							<%= link_to "<i class='fa fa-file-text-o fa-2x'></i> Lists".html_safe, "#" %>
+						</li>
+
+
+<%
+=begin %>	
+						<% if current_user == @user %>
+							<li class="sidebar-li sidebar-li-icon-plus-text user-profile-view-charts-link">
+								<%= link_to "<i class='fa fa-pie-chart fa-2x'></i> Data".html_safe, chart_generate_path, :remote => true %>
+							</li>
+						<% end %>
+
+						<li class="sidebar-li sidebar-li-icon-plus-text user-profile-view-spoons-link">
+							<%= link_to "<i class='fa fa-spoon fa-2x'></i> Spoons".html_safe, user_spoons_path(:user_id => @user.id), :remote => true %>
+						</li>
+<%
+=end %>
+
+						<li class="sidebar-li sidebar-li-icon-plus-text user-profile-view-dishes-link">
+							<%= link_to "&#x1f372; Dishes".html_safe, user_dishes_path(:user_id => @user.id), :remote => true %>
+						</li>
+						<% if current_user == @user %>
+							<li class="sidebar-li sidebar-li-icon-plus-text user-profile-view-favorites-link">
+								<%= link_to "<i class='fa fa-thumbs-up fa-2x'></i> Likes".html_safe, user_likes_path(:user_id => @user.id), :remote => true %>
+							</li>
+							<li class="sidebar-li sidebar-li-icon-plus-text user-profile-view-dislikes-link">
+								<%= link_to "<i class='fa fa-thumbs-o-down fa-2x'></i> Dislikes".html_safe, user_dislikes_path(:user_id => @user.id), :remote => true %>
+							</li>
+							<li class="sidebar-li sidebar-li-icon-plus-text user-profile-view-settings-link">
+								<%= link_to "<i class='fa fa-sliders fa-2x'></i> Nutrition Settings".html_safe, "#" %>
+							</li>
+						<% end %>
+					</ul>
+					<ul class="nav sidebar-ul-icon-only">
+						<li class="sidebar-li sidebar-li-icon-only user-profile-view-lists-link active">
+							<%= link_to "<i class='fa fa-file-text-o fa-2x'></i>".html_safe, "#" %>
+						</li>
+
+<%
+=begin %>
+						<% if current_user == @user %>
+							<li class="sidebar-li sidebar-li-icon-only user-profile-view-charts-link">
+								<%= link_to "<i class='fa fa-pie-chart fa-2x'></i>".html_safe, chart_generate_path, :remote => true %>
+							</li>
+						<% end %>
+
+
+						<li class="sidebar-li sidebar-li-icon-only user-profile-view-spoons-link">
+							<%= link_to "<i class='fa fa-spoon fa-2x'></i>".html_safe, user_spoons_path(:user_id => @user.id), :remote => true %>
+						</li>
+<%
+=end %>
+
+						<li class="sidebar-li sidebar-li-icon-only user-profile-view-dishes-link">
+							<%= link_to "&#x1f372;".html_safe, user_dishes_path(:user_id => @user.id), :remote => true, style: "height: 49px;" %>
+						</li>
+						<% if current_user == @user %>
+							<li class="sidebar-li sidebar-li-icon-only user-profile-view-favorites-link">
+								<%= link_to "<i class='fa fa-thumbs-up fa-2x'></i>".html_safe, user_likes_path(:user_id => @user.id), :remote => true %>
+							</li>
+							<li class="sidebar-li sidebar-li-icon-only user-profile-view-dislikes-link">
+								<%= link_to "<i class='fa fa-thumbs-o-down fa-2x'></i>".html_safe, user_dislikes_path(:user_id => @user.id), :remote => true %>
+							</li>
+							<li class="sidebar-li sidebar-li-icon-only user-profile-view-settings-link">
+								<%= link_to "<i class='fa fa-sliders fa-2x'></i>".html_safe, "#" %>
+							</li>
+						<% end %>
+					</ul>
+				</div>
+				<!-- END MENU -->
+			</div>
+		</div>
+		<div class="col-md-9 col-sm-12 col-xs-12" id="profile-main-container">
+     	<div class="profile-content">
+
+				
+				<div id="user-profile-view-lists">
+					<% if @user == current_user %>
+
+						<h4 class="hidden text-center col-md-12 center-block">
+							Your grocery lists.
+						</h4>
+
+
+						<center>
+							<% if 1==2#@user.list_buys.any? %>
+								<div>
+									<%= link_to "View grocery lists that you've bought", "#", id: "view-bought-grocery-lists", href: "javascript:void(0)" %>
+								</div>
+							<% end %>
+
+              <%= link_to build_list_path(:from => "home_grid") do %>
+                
+             	<button class="btn wide-button green-button">CREATE A GROCERY LIST</button>
+                  
+
+              <% end %> 
+
+			      </center>
+					<% end %>
+
+					<% if @user.lists.any? %>
+						<ol class="lists text-center">
+							<% @user.lists.each do |l| %>
+								<%= render 'shared/list', list: l, display_name: false %>
+							<% end %>
+						</ol>
+					<% end%>
+				</div>
+
+
+				
+				<% if 1==2#@user == current_user %>
+					<div id="user-profile-view-list-buys" class="hidden">
+
+						<div>
+							<h4 class="text-center col-md-12 center-block">
+								Grocery lists that you've bought.
+							</h4>
+
+							<center>
+								<div>
+									<%= link_to "View grocery lists that you've created", "#", id: "view-created-grocery-lists", href: "javascript:void(0)" %>		
+								</div>
+							</center>
+						</div>
+
+						<ol class="lists text-center">
+							<% @user.list_buys.each do |l| %>
+								<%= render 'shared/list_buy', list_buy: l %>
+							<% end %>
+						</ol>
+						
+					</div>
+				<% end %>
+
+<%
+=begin %>
+				<% if @user == current_user %>
+					<div id="user-profile-view-charts" class="hidden">
+						<center>
+							<div style="font-size:1.25em;">
+								<i class='fa fa-pie-chart fa-2x'></i> Data
+							</div>
+						</center>
+						<div id="data-charts">
+							<% if ListBuy.where(user_id:@user.id).length > 0 %>
+								<div id="charts"></div>
+								</div>
+							<% else %>
+								<center>
+									<br><br>Once you begin tracking your grocery purchases, this section will be filled with interesting data!<br><br>Just click the SHOP button on any grocery list.<br><br>					      
+									<%= link_to build_list_path(:from => "profile") do %>
+						        <button class="btn wide-button green-button">CREATE A GROCRY LIST</button>
+						      <% end %>
+					      </center>
+							<% end %>
+						</div>
+					</div>
+				<% end %>
+
+
+
+				<div id="user-profile-view-spoons" class="hidden">
+					<center>
+						<div style="font-size:1.25em;">
+							<i class='fa fa-spoon fa-2x'></i> Spoons
+						</div>
+					</center>
+					<div id="no-spoons" class="hidden">
+						<center>
+							<% if current_user == @user %>
+					      <%= link_to root_path(:from => "profile") do %>
+					        <button class="btn wide-button">EXPLORE</button>
+					      <% end %>
+					      <br><br>
+					      You don't have any spoons yet!<br><br>
+					      When you spoon a list, it will be saved to your profile, and the original list creator will receive props.<br><br>
+					      Browse around to find lists to spoon.
+						  <% else %>
+						    <%= @user.name %> doesn't have any spoons yet! Maybe next time.
+						  <% end %>
+					  </center>
+					</div>
+					<ol class="lists text-center" id="user-spoons">
+					</ol>
+				</div>
+<%
+=end %>
+
+
+
+				<div id="user-profile-view-dishes" class="hidden">
+					<center>
+						<div style="font-size:1.25em;">
+							<%="&#x1f372; Dishes".html_safe %>
+						</div>
+					</center>
+					<div id="no-dishes" class="hidden" style="margin-top:30px;">
+						<center>
+							<% if current_user == @user %>
+					      You don't have any dishes yet! You can write dishes about any of your lists.
+					      	<br>
+									<%= link_to build_list_path(:from => "profile") do %>
+						        <button class="btn wide-button green-button">CREATE A GROCERY LIST</button>
+						      <% end %>
+
+						  <% else %>
+						    <%= @user.name %> doesn't have any dishes yet! Maybe next time.
+						  <% end %>
+					  </center>
+					</div>
+					<ol class="lists text-center" id="user-dishes">
+					</ol>
+				</div>
+				<% if @user == current_user %>
+					<div id="user-profile-view-settings" class="hidden">
+				    <%= render 'devise/registrations/edit', user: @user %>
+					</div>
+					<div id="user-profile-view-favorites" class="hidden">
+						<div id="searcher-box-profile" class="hidden search-box-container">
+					    <div class="search-box">
+					    	<div>
+							    <div class="close-link-container row">
+								  	<div id="close-search-link-profile" class="close-box-link col-md-12">
+								  		<%= link_to "\xe2\x9c\x95".html_safe, "#", href: "javascript:void(0)" %>
+								  	</div>
+							  	</div>
+	      					<div class="row">
+										<%= form_tag({action: "search_favorite", controller: "users"}, :method => "get", :remote => true) do %>
+											<div class="col-md-12">
+												<div class="btn-group">
+							        		<%= text_field_tag :search_favorite, params[:search_favorite], placeholder: "Peas", class: "text-field-clearable" %>
+							        		<span class="text-field-clear glyphicon glyphicon-remove-circle">
+							        		</span>
+							        	</div>
+							        	<%= submit_tag "Search", :name => nil, :class => "search-submit" %>
+							        </div>
+							      <% end %>
+							    </div>
+							  </div>
+					    </div>
+					    <div id="search-favorite-results-container" class="search-results-container">
+					    </div>
+					  </div>
+						<div>
+							<% if @user == current_user %>
+								<div class="row">
+									<center>
+										<h4 class="text-center col-md-12 center-block">
+											Search for foods to add to your likes.
+										</h4>
+										<%= link_to "#", href: "javascript:void(0)", id: "search-click-profile" do %>
+						          <button class="btn wide-button">SEARCH</button>
+						        <% end %>
+					        </center>
+				      	</div>
+				      <% end %>
+				      <div class="row">
+								<div id="user-favorites">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="hidden" id="user-profile-view-dislikes">
+						<div id="searcher-box-profile-dislike" class="hidden search-box-container">
+					    <div class="search-box">
+				    	  <div>
+									<div class="close-link-container row">
+							    	<div id="close-search-link-profile-dislike" class="close-box-link col-md-12">
+							    		<%= link_to "\xe2\x9c\x95".html_safe, "#", href: "javascript:void(0)" %>
+							    	</div>					
+							    </div>
+	    						<div class="row">
+										<%= form_tag({action: "search_dislike", controller: "users"}, :method => "get", :remote => true) do %>
+											<div class="col-md-12">
+												<div class="btn-group">
+								        	<%= text_field_tag :search_dislike, params[:search_dislike], placeholder: "Mulberries", class: "text-field-clearable" %>
+								        	<span class="text-field-clear glyphicon glyphicon-remove-circle">
+								        	</span>
+								        </div>
+								        <%= submit_tag "Search", :name => nil, :class => "search-submit" %>
+							        </div>
+							      <% end %>
+							    </div>
+							  </div>  
+					    </div>
+					    <div id="search-dislike-results-container" class="search-results-container">
+					    </div>
+					  </div>
+						<div>
+							<% if @user == current_user %>
+								<div class="row">				  
+									<h4 class="text-center col-md-12 center-block">
+										Search for foods to add to your dislikes.
+									</h4>
+									<center>
+									  <%= link_to "#", href: "javascript:void(0)", id: "search-click-profile-dislike" do %>
+						          <button class="btn wide-button">SEARCH</button>
+						        <% end %>
+						      </center>
+					      </div>
+					    <% end %>
+				      <div class="row">
+								<div id="user-dislikes">		
+								</div>
+							</div>
+						</div>
+
+
+
+					</div>
+<%
+=begin %>
+					<div id="charts-hidden" style="opacity:0;">
+						<% if ListBuy.where(user_id:@user.id).length > 0 %>
+							<%= line_chart @line_chart_calories, xtitle: "Time", ytitle: "Average calories per day", id: "chartkick-calories" %>
+							<%= line_chart @line_chart_price, xtitle: "Time", ytitle: "Average spend ($) per day", id: "chartkick-price" %>
+							<%= pie_chart [["Carbohydrates",@user.list_buys.where("created_at > ?",Time.now - 1.month).sum("total_carbohydrates")],["Fat",@user.list_buys.where("created_at > ?",Time.now - 1.month).sum("total_fat")],["Protein",@user.list_buys.where("created_at > ?",Time.now - 1.month).sum("total_protein")]].to_h, {colors: ["turquoise","aqua","blue"], title: "Percentage of Calories from Macronutrients", id: "chartkick-macros" } %>
+							<% user_settings = @user.settings %>
+							<%= line_chart [["total_calories",user_settings["max_calories"].to_i,"Calories"],["total_sodium",user_settings["max_sodium"].to_i,"Sodium"]].map { |n|
+							    {name: n[2], data: @user.list_buys.unscope(:order).group_by_week(:created_at).sum(n[0]).to_a.each { |c| c[1] = c[1].to_f/((7*n[1].to_f)/100)}.to_h } }, {colors: ["green","blue"], xtitle: "Time", ytitle: "Pctg of Required Intake", title: "Percentage of Required Intake for Nutrients with Key Maximums", id: "chartkick-maxs", library: {legend: {position: "top"} } } %>
+							 
+							 <%= line_chart [["total_calories",user_settings["min_calories"].to_i,"Calories"],["total_vitamin_a",user_settings["min_vitamin_a"].to_i,"Vitamin A"],["total_vitamin_c",user_settings["min_vitamin_c"].to_i,"Vitamin C"],["total_iron",user_settings["min_iron"].to_i,"Iron"],["total_calcium",user_settings["min_calcium"].to_i,"Calcium"]].map { |n|
+							    {name: n[2], data: @user.list_buys.unscope(:order).group_by_week(:created_at).sum(n[0]).to_a.each { |c| c[1] = c[1].to_f/((7*n[1].to_f)/100)}.to_h } }, {colors: ["pink","brown","black","gray","red"], xtitle: "Time", ytitle: "Pctg of Required Intake", title: "Percentage of Required Intake for Nutrients with Key Minimums", id: "chartkick-mins", library: {legend: {position: "top", maxLines:5} } } %>
+							<% end %>
+					</div>
+<%
+=end %>
+				<% end %>
+      </div>
+
+		</div>
+	</div>
+</div>

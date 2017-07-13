@@ -1,0 +1,8 @@
+<li>
+  <div>
+    <%= link_to quantity.amount, quantity %>
+    | <%= link_to "edit", edit_quantity_path(quantity) %> | 
+    <%= link_to "delete", quantity, method: :delete,
+                                  data: { confirm: "You sure?" } %>
+  </div>
+</li>

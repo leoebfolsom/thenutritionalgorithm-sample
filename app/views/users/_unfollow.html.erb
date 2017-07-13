@@ -1,0 +1,9 @@
+
+<% if controller.controller_name != "static_pages" %>
+
+  <%= form_for(current_user.active_relationships.find_by(followed_id: @user.id),
+             html: { method: :delete }) do |f| %>
+  <%= f.submit "Unfollow", class: "btn wide-button white-skinny-button", style: "padding:0px;margin:0px;max-width:75px;" %>
+	<% end %>
+
+<% end %>

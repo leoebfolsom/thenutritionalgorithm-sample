@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <center>
+      <%= link_to image_tag("https://s3.amazonaws.com/tna-main/tna_handwritten.svg", style: "max-width:500px; width: 100%"), "https://www.thenutritionalgorithm.com", :target => "_blank" %>
+      <div style="width:100%;height:50px;"></div>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none; font-size:1.5em;">Good news, <%=@user.name.split.map(&:capitalize).join(' ')%>!</p>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;"><%= link_to "#{@forking_user.name.split.map(&:capitalize).join(' ')}", "https://www.thenutritionalgorithm.com/users/#{@forking_user.id}", :target => "_blank", style: "text-decoration: none;color:#218E00" %> has forked your list</p>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;font-size:1.25em;"><%= link_to "#{@list.name}", "https://www.thenutritionalgorithm.com/lists/#{@list.id}", :target => "_blank", style: "text-decoration: none;color:#218E00" %></p>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">to create a new list</p>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;font-size:1.25em;"><%= link_to "#{@new_list.name}", "http://www.thenutritionalgorithm.com/lists/#{@new_list.id}", :target => "_blank", style: "text-decoration: none;color:#218E00" %>.
+      </p>
+<% 
+=begin %>  
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+        This has earned you 7 beans, bringing your total to <%=@user.points%> beans.
+      </p>
+<% 
+=end %>  
+      <%= link_to "http://www.thenutritionalgorithm.com" do %>
+        <button style='background-color:rgb(51, 204, 102);
+                        background-image:none;
+                        border-bottom-color:transparent;
+                        border-bottom-left-radius:28px;
+                        border-bottom-right-radius:28px;
+                        border-bottom-style:solid;
+                        border-bottom-width:1px;
+                        border-image-outset:initial;
+                        border-image-repeat:initial;
+                        border-image-slice:initial;
+                        border-image-source:initial;
+                        border-image-width:initial;
+                        border-left-color:transparent;
+                        border-left-style:solid;
+                        border-left-width:1px;
+                        border-right-color:transparent;
+                        border-right-style:solid;
+                        border-right-width:1px;
+                        border-top-color:transparent;
+                        border-top-left-radius:28px;
+                        border-top-right-radius:28px;
+                        border-top-style:solid;
+                        border-top-width:1px;
+                        color:white;
+                        font-size:1.25em;
+                        font-stretch:inherit;
+                        font-style:inherit;
+                        font-weight:normal;
+                        line-height:1.42857;
+                        margin:0px;
+                        padding:6px;
+                        cursor:pointer;
+                        display:inline-block;
+                        vertical-align:middle;
+                        width:300px;
+                        height:50px;'
+
+        >
+        Visit the nutrition algorithm.
+        </button>
+      <% end %>
+    </center>
+  </body>
+</html>

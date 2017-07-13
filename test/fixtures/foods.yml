@@ -1,0 +1,612 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+grape:
+  name: grape
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 1
+  aisle: produce
+  
+apple:
+  name: apple
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 2
+  aisle: produce
+  
+banana:
+  name: banana
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 3
+  aisle: produce
+    
+clementine:
+  name: clementine
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 4
+  aisle: produce
+  
+dragonfruit:
+  name: dragonfruit
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  calcium: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 5
+  aisle: produce
+  
+egg:
+  name: egg
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 6
+  aisle: produce
+  
+fat:
+  name: fat
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 7
+  aisle: produce
+  
+grapefruit:
+  name: grapefruit
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 8
+  aisle: produce
+  
+haddock:
+  name: haddock
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 9
+  aisle: produce
+  
+ice cream:
+  name: ice cream
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 10
+  aisle: produce
+  
+jello:
+  name: jello
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 11
+  aisle: produce
+  
+kiwi:
+  name: kiwi
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 12
+  aisle: produce
+  
+lemon:
+  name: lemon
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 13
+  aisle: produce
+  
+mango:
+  name: mango
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 14
+  aisle: produce
+  
+noodles:
+  name: noodles
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 15
+  aisle: produce
+  
+orange:
+  name: orange
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 16
+  aisle: produce
+  
+pineapple:
+  name: pineapple
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 17
+  aisle: produce
+  
+qumkwat:
+  name: qumkwat
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: BLSmart
+  food_store_id: 18
+  aisle: produce
+  
+ravioli:
+  name: ravioli
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 19
+  aisle: produce
+    
+sunnyD:
+  name: sunnyD
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 20
+  aisle: produce
+  
+tomato:
+  name: tort
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 21
+  aisle: produce
+  
+uglifruit:
+  name: uglifruit
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 22
+  aisle: produce
+  
+vanilla:
+  name: vanilla
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 23
+  aisle: produce
+  
+wax:
+  name: wax
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 24
+  aisle: produce
+  
+xylophone:
+  name: xylophone
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 25
+  aisle: produce
+  
+yam:
+  name: yam
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 26
+  aisle: produce
+  
+zorse:
+  name: zorse
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 27
+  aisle: produce
+  
+animal:
+  name: animal
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 28
+  aisle: produce
+  
+bee:
+  name: bee
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 29
+  aisle: produce
+  
+cat:
+  name: cat
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 30
+  aisle: produce
+  
+dog:
+  name: dog
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 31
+  aisle: produce
+  
+elephant:
+  name: elephant
+  calories: 1
+  carbohydrates: 1
+  fat: 1
+  protein: 1
+  sugar: 1
+  potassium: 1
+  fiber: 1
+  vitamin_a: 1
+  vitamin_c: 1
+  calcium: 1
+  iron: 1
+  sodium: 1
+  price: 1
+  food_store: Kwik-E-Mart
+  food_store_id: 32
+  aisle: produce

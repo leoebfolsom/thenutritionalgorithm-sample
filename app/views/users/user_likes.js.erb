@@ -1,0 +1,6 @@
+<% if @favorites.any? %>
+  $("#user-favorites").html("");
+  <% @favorites.each do |l| %>
+    $("#user-favorites").append("<%= j render 'shared/like', f: l, :user => @user %>");
+  <% end %>
+<% end%>

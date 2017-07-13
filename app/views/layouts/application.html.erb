@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>
+      <%= full_title(yield(:title)) %>
+    </title>
+    <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+    <%= javascript_include_tag "http://www.google.com/jsapi", "chartkick" %>
+    <%= stylesheet_link_tag    "application", media: "all" %>
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+    <script type="text/javascript"> document.documentElement.className += " js"</script>
+    <%= favicon_link_tag 'favicon.ico' %>
+    <%= render 'shared/favicon' %>      
+    <meta property="og:description" content="Spend less. Eat Better. Build your smartest grocery list ever." />
+    <meta property="og:image" content="<%= asset_path 'list_preview.png' %>" />
+    <!-- For Chrome for Android: -->
+    <link rel="icon" sizes="192x192" href="<%= asset_path 'touch-icon-192x192.png' %>">
+    <!-- For iPhone 6 Plus with @3× display: -->
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="<%= asset_path 'apple-touch-icon-180x180-precomposed.png' %>">
+    <!-- For iPad with @2× display running iOS ≥ 7: -->
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="<%= asset_path 'apple-touch-icon-152x152-precomposed.png' %>">
+    <!-- For iPad with @2× display running iOS ≤ 6: -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<%= asset_path 'apple-touch-icon-144x144-precomposed.png' %>">
+    <!-- For iPhone with @2× display running iOS ≥ 7: -->
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="<%= asset_path 'apple-touch-icon-120x120-precomposed.png' %>">
+    <!-- For iPhone with @2× display running iOS ≤ 6: -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<%= asset_path 'apple-touch-icon-114x114-precomposed.png' %>">
+    <!-- For the iPad mini and the first- and second-generation iPad (@1× display) on iOS ≥ 7: -->
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="<%= asset_path 'apple-touch-icon-76x76-precomposed.png' %>">
+    <!-- For the iPad mini and the first- and second-generation iPad (@1× display) on iOS ≤ 6: -->
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<%= asset_path 'apple-touch-icon-72x72-precomposed.png' %>">
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <link rel="apple-touch-icon-precomposed" href="<%= asset_path 'apple-touch-icon-precomposed.png' %>"><!-- 57×57px -->
+  </head>
+  <body>
+    <div class="container-fluid" style="padding:0px">
+      <div id="noscript">
+        <h2>Please enable JavaScript!</h2>
+        <center>
+          <p>
+          The nutrition algorithm only works if your browser has JavaScript enabled.
+          </p>
+          <p>
+          <%= link_to "These instructions", "http://activatejavascript.org/en/instructions", :target => :_blank, class: "text-link" %> explain how to enable JavaScript on most web browsers and mobile devices.
+          </p>
+          <p>
+          Please email me at <%= link_to "leo.e.brown@gmail.com", "mailto:leo.e.brown@gmail.com", target: :_blank, class: "text-link" %> if you run into trouble.
+          </p> 
+        </center>
+      </div>
+      <% if !browser.device.ipad? %>
+        <div id="wrapper">
+          <div class="transparency hidden"></div>
+          <%= render 'layouts/shim' %>  
+
+          <div class="modal fade" id="beansModal" tabindex="-1" role="dialog" aria-labelledby="beansModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  <h4 class="modal-title" id="beansModalLabel">How does one collect beans?</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 text-center">Everyone starts as a lentil. Collect beans to become a garbanzo or even a pinto.</div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+                    
+                    <div class="col-md-3 col-sm-3 col-xs-3">+10 beans</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Write a dish<br><span class="smaller-text"><i>Dishes are like blog posts. You dish about food.</i></span></div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3">+7 beans</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Add an image to a dish or to a list</div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3">+7 beans</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Someone else forks your grocery list<br><span class="smaller-text"><i>Forking a list creates a new, editable version.</i></span></div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3">+5 beans</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Create a new grocery list</div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3">+5 beans</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Log a purchase from a grocery list
+                    <br><span class="smaller-text"><i>You can keep track of your nutrition and spend over time.</i></span></div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3">+5 beans</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Someone else logs a purchase from your grocery list</div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+                    
+                    <div class="col-md-3 col-sm-3 col-xs-3">+3 beans</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Fork someone's grocery list</div>
+                    <div class='col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2' style="height:10px;"></div>
+
+                    <div class="col-md-3 col-sm-3 col-xs-3">+1 bean</div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">Update your image on your user profile</div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+<%
+=begin %>
+        <% if @successfully_added != [] && @successfully_added != nil %>
+          <div class="item hidden" 
+               id="peapod-iframe" 
+               style="
+                      margin: 0;
+                      padding: 0;
+                      width: 100%;
+                      height: 100%;
+                      padding: 0;
+                      border-color: white; 
+                      background-color: white; 
+                      position:fixed;
+                      z-index:2;
+                      display:inline-block;
+                      right: 0;
+                      left: 0;
+                      overflow: scroll;
+                    ">
+            
+            <span id="peapod-iframe-close" style="margin:5px;"><%= link_to "Return to the nutrition algorithm.", "#", href: "javascript:void(0)" %>
+            </span>
+
+            <iframe src="https://peapod.com/shop" style="border: 0; margin: 2%; padding: 0; width: 100%; height: 100%">
+                <p>Please visit <%= link_to "Peapod", "https://peapod.com/shop", target: "_blank" %> to complete your purchase.</p>
+            </iframe>
+          </div>
+        <% end %>
+
+
+          <% display_ad = true %>
+          <% if current_user != nil %>
+            <% if current_user.birthday != nil && current_user.onboard == "Z" %>
+              <% display_ad = true %>
+            <% else %>
+              <% display_ad = false %>
+            <% end %>
+          <% else %>
+             <% if controller.controller_name == "registrations" && controller.action_name == "new" %>
+              <% display_ad = false %>
+            <% end %>
+          <% end %>
+          <% if display_ad == true %>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- the nut alg -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-8230610783433693"
+                 data-ad-slot="8227841337"
+                 data-ad-format="auto"></ins>
+            <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+
+
+          <% end %>
+<%
+=end %>
+          <script>
+            window.fbAsyncInit = function() {
+              FB.init({
+                appId      : '1576250499333574',
+                xfbml      : true,
+                version    : 'v2.5'
+              });
+            };
+            (function(d, s, id){
+               var js, fjs = d.getElementsByTagName(s)[0];
+               if (d.getElementById(id)) {return;}
+               js = d.createElement(s); js.id = id;
+               js.src = "//connect.facebook.net/en_US/sdk.js";
+               fjs.parentNode.insertBefore(js, fjs);
+             }(document, 'script', 'facebook-jssdk'));
+          </script>
+
+          <div id="details-parent-box" class="hidden fixed-box">
+            <div class="close-link-container">
+              <div class="close-box-link" id="close-details-box">
+                <%= link_to "\xe2\x9c\x95".html_safe, "#", href: "javascript:void(0)" %>
+              </div>
+            </div>
+            <div id="preview-details-box" class="hidden">                
+            </div>
+          </div>
+
+          <%= render 'layouts/header' %>
+
+          <% flash.each do |message_type, message| %>
+            <div id="flash" class="hidden alert alert-<%= message_type %>">
+              <%= message.html_safe %>
+            </div>
+          <% end %>
+
+          <center>
+            <div class="notice" style="margin: 15px auto; width: 50%">
+              <div>
+                <span id="notice-span" style="font-size: 1.5em;"><%= notice %></span>
+                <% if notice != nil %>
+                  <br><span style="font-size: 0.75em;"><%= link_to "Hide notification.", "#", href: "javascript:void(0)", id: "dismiss-notice" %></span>
+                <% end %>
+              </div>      
+            </div>
+          </center>
+          
+          <% if alert != nil %>
+            <p class="alert"><%= alert %></p>
+          <% end %>
+
+          <!-- Button trigger modal -->
+
+          <div id="body-below-header">
+            <%= yield %>
+          </div>
+
+          <div class="hidden">
+            <%= debug(params) if Rails.env.development? %>  
+          </div>
+
+          <%= render 'layouts/footer' %>
+        </div>
+      <% else %>
+        <div class="row">
+          <div class="col-md-12 text-center" style="padding-top:30px; font-size: 1.5em;">
+            Please visit the nutrition algorithm on your laptop or phone. It is not quite ready for iPad yet.
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <%= yield :charts_js %>
+  </body>
+</html>

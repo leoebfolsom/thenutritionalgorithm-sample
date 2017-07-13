@@ -1,0 +1,8 @@
+<% if @dislikesearch.length != 0 %>
+  $("#search-dislike-results-container").html("");
+  <% @dislikesearch.each do |f| %>
+    $("#search-dislike-results-container").append("<%= j render 'shared/search_dislike_result', :f => f %>");
+  <% end %>
+<% else %>
+  $("#search-dislike-results-container").html("<%=@no_results%>");
+<% end %>

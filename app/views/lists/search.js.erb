@@ -1,0 +1,26 @@
+$(".item-grand-div").css("background-color","white");
+$(".search-results-container").html("");
+$("#clear-search-results").removeClass("hidden");
+<% if @foodsearch.length > 0 %>
+
+  $(".search-results-container").append("<div class='row'><div class='col-md-12 col-sm-12 col-xs-12' style='font-size:1.25em;'></div></div>");
+  <% @foodsearch.first(25).each do |f| %>
+    $(".search-results-container").append("<%= j render 'shared/search_result', :f => Food.find(f), l: @list_id, from: 'search' %>");
+  <% end %>
+<% end %>
+/*
+if @foodsearch_other.length > 0
+
+ // $(".search-results-container").append("<div class='row text-center'><div class='col-md-12 col-sm-12 col-xs-12' style='font-size:1.25em;'>These foods matched your search term, but they violate one or more of your filters. Feel free to add them anyway!</div></div>");
+   @foodsearch_other.first(25).each do |f| 
+    $(".search-results-container").append(" j render 'shared/search_result', :f => Food.find(f), l: @list_id, from: 'search' ");
+ end 
+ end 
+*/
+
+
+<% if @foodsearch.length == 0 ##&& @foodsearch_already_added.length == 0 %>
+  $(".search-results-container").html("<div style='margin-bottom:30px;font-size:1.25em;color:#D63B3B;'><%=@no_results%></div>");
+  $("#search").focus();
+  //$("#search").val("");
+<% end %>

@@ -1,0 +1,11 @@
+<% if @good_lists.length > 0 %>
+  $("#browse-lists-display").addClass("hidden");
+  $("#good-lists-display").html("");
+  <% @good_lists.each do |l| %>
+    $("#good-lists-display").prepend("<%= j render 'shared/list', list: l, display_name: true %>");
+  <% end %>
+  $("#good-lists-display").prepend("<center><div class='smaller-text col-md-12'>Note: this filter does not yet take into account your dietary restrictions or preferences--only your nutrition needs and budget for now.</div></center>");
+  $("#good-lists-display").removeClass("hidden");
+<% else %>
+  alert("We weren't able to find any lists that quite match your needs. Please try creating a new list!");
+<% end %>

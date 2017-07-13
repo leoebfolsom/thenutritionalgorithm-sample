@@ -1,0 +1,53 @@
+<div class="row" id="stepwise-response-box">
+  <div id="optimizer-name" class="col-md-12 col-sm-12 col-xs-12 text-center">
+  </div>
+  <div id="stepwise-response" class="hidden col-md-12 col-sm-12 col-xs-12" style="">
+  </div>
+
+  <div class="row hidden" id="user-actions-in-suggestions">
+
+    <div class="col-md-4 col-sm-4 col-xs-4 dim-when-clicked" id="skip-or-delete-and-dislike" style="padding:0px;">
+
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-4" style="padding:0px;">
+      <div id="amount-and-percentage" class="hidden row">
+
+        <div class=" col-md-6 col-xs-12 col-sm-6">
+          <div class="quantity-plus-suggestions"><%= link_to "<i class='fa fa-angle-up fa-2x' aria-hidden='true'></i>".html_safe, "javascript:void(0)" %></div>
+          <%= number_field_tag(:quantity, 1, in: 1..50, :step => 1, :id => "amount-from-suggestions", :class => "input form-control text_field hidden scroll-to-input suggestions-input-amount", :style => "display:none;") %>
+          <div class="number-field-display suggestions-number-field-display">1</div>
+          <div class="quantity-minus-suggestions"><%= link_to "<i class='fa fa-angle-down fa-2x' aria-hidden='true'></i>".html_safe, "javascript:void(0)" %></div>
+        </div>
+        <div class="col-md-6 col-xs-12 col-sm-6 tiny-text">
+        How much you'll eat in <%=l.days%> days: <span id="quantity-percentage-show-from-suggestions">100</span><span>%</span><br>
+          
+          <%= range_field_tag(:percentage_from_suggestions, 100, :class=>"input form-control bfh-number", :style=> "padding:0px; margin: 5px auto;") %><br>
+
+        </div>
+        
+      </div>
+
+
+      <%= link_to root_path, :id => "add-or-delete-stepwise", :remote => true, :class => "hidden" do %>
+        <button class="btn wide-button text-center center-margin green-button img-responsive dim-when-clicked" id="add-or-delete-stepwise-button" style="max-width:100px;"></button>
+      <% end %>
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-4 dim-when-clicked" id="add-and-like" style="padding:0px;">
+    </div>
+  </div>
+
+  <div id="shuffle-stepwise-skip" class="hidden col-md-12 col-sm-12 col-xs-12 dim-when-clicked" style="margin-top:15px;"> 
+  </div>
+
+  <div class="col-md-12 col-sm-12 col-xs-12 cancel-auto hidden">
+    <div id="cancel-auto-link">
+      <center>
+        <%= link_to "#", :remote => true do %>
+          <button class="btn wide-button text-center center-margin green-button img-responsive" id="cancel-auto-button">PAUSE</button>
+        <% end %>
+      </center>
+    </div>
+  </div>
+  <div id="cancel-auto-indicator" class="hidden">AUTO
+  </div>
+</div>

@@ -1,0 +1,10 @@
+var a = '<%= @random_list_name %>';
+$("#list-title-edit").val(a);
+$("#list-title-edit").focus();
+var val = $("#list-title-edit").val(); //store the value of the element
+$("#list-title-edit").val(''); //clear the value of the element
+$("#list-title-edit").val(val); //set that value back.  
+//$("#list-title-main").html(val);
+//if ($("#list-title").hasClass("hidden") == false) {
+//  $("#list-title-edit-container").find("form").submit();
+//}

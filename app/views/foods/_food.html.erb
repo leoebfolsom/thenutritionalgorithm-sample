@@ -1,0 +1,6 @@
+<div class="col-md-12">
+  <span style="font-size:1.5em;"><%= link_to food.name, food %></span><br>
+  <%= link_to "edit", edit_food_path(food) %> 
+    | <%= link_to "delete", food, method: :delete, data: { confirm: "You sure?" } %> 
+  <br><br>
+</div>

@@ -1,0 +1,143 @@
+<% provide(:title, 'save purchase') %>
+<% @list = List.find(@list_id) %>
+<%= form_for(@list_buy) do |f| %>
+  <div class="row">
+    <% if params[:error] %>
+      <div class="error-save-purchase col-md-6 col-md-offset-3 text-center">
+        There was an error in saving your purchase. Please make sure the fields contain numbers, not words, and that you have at least one item checked off.
+      </div>
+    <% end %>
+    <div class="col-md-12 text-center">
+      <div>
+        <%= link_to "Back to the full list view", list_path(@list,:show_full => "true"), {:class => "", "data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Your progress on this page won't be saved."} %>
+        |
+        <%= link_to send_checklist_mailer_path(:list_id => @list_id, :user_id => current_user.id), :remote => true do %>
+          <span class="send-checklist-mailer-button" id="email-me-the-list">
+            Email me a link to this checklist view
+          </span>
+        <% end %>
+      </div>
+
+      <div>
+        <%= f.submit "SAVE TO PROFILE", class: "btn wide-button", style: "margin-bottom:15px;" %>  
+      </div>
+      <%= render 'shared/error_messages', object: @list_buy %>
+    </div>
+
+    <div class="col-md-6 col-md-offset-2">
+      
+        <% @list.quantities.each do |q| %>
+          <div class="col-md-12">  
+            <label class="mobile-btn" for="list-buy-checkbox-<%=q.id%>" style="width:100%;"><span style="float:right; width:85%;"><%="%.3g" % q.amount+" #{q.food.name.split.map(&:capitalize).join(' ')}"%><br><span class="smaller-text"><%=q.food.aisle%></span><br><%= link_to "Details", "#", href: "javascript:void(0)", id: "list-buy-checkbox-details-show-link-#{q.id}", class: "smaller-text list-buy-checkbox-details-show-link" %></span>
+              <input type="checkbox" class="list-buy-checkbox" id="list-buy-checkbox-<%=q.id%>" autocomplete="off" style="width:10%;vertical-align:middle;">
+            </label>
+          </div>
+          <div class="col-md-12">
+            
+          </div>
+          <div id="list-buy-checkbox-details-<%=q.id%>" style="display:none;" class="col-md-12">
+            <%= link_to "Hide details", "#", href: "javascript:void(0)", id: "list-buy-checkbox-details-hide-link-#{q.id}", class: "smaller-text list-buy-checkbox-details-hide-link" %>
+            <br>
+            <div class="col-md-6">Price</div>
+            <div class="col-md-6">
+              $<input class="list-buy-checkbox-individual-field" type="text" id="price-<%=q.id%>" value="<%='%.2f' % (q.food.price.to_f*q.amount)%>" style="width: 50px; text-align:center;">
+            </div>
+
+            <div class="col-md-6">Calories</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="calories-<%=q.id%>" value="<%=q.food.calories*q.amount.to_i%>" style="width: 50px; text-align:center;">
+              <span> kcal</span>
+            </div>
+            <br>
+            <div class="col-md-6">Carbohydrates</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="carbohydrates-<%=q.id%>" value="<%=q.food.carbohydrates*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style=""> g</span>
+            </div>
+
+            <div class="col-md-6">Fat</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="protein-<%=q.id%>" value="<%=q.food.fat*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style=""> g</span>
+            </div>
+            
+            <div class="col-md-6">Protein</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="fat-<%=q.id%>" value="<%=q.food.protein*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style=""> g</span>
+            </div>
+            <div class="col-md-6">Sugar</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="sugar-<%=q.id%>" value="<%=q.food.sugar*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style=""> g</span>
+            </div>
+
+            <div class="col-md-6">Fiber</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="fiber-<%=q.id%>" value="<%=q.food.fiber*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style=""> g</span>
+            </div>
+
+            <div class="col-md-6">Vitamin A</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="vitamin_a-<%=q.id%>" value="<%=q.food.vitamin_a*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style="">% DV</span>
+            </div>
+            <div class="col-md-6">Vitamin C</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="vitamin_c-<%=q.id%>" value="<%=q.food.vitamin_c*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style="">% DV</span>
+            </div>
+            <div class="col-md-6">Iron</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="iron-<%=q.id%>" value="<%=q.food.iron.to_i*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style="">% DV</span>
+            </div>
+
+            <div class="col-md-6">Calcium</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="calcium-<%=q.id%>" value="<%=q.food.calcium*q.amount.to_i%>" style=" width: 50px; text-align:center;"><span style="">% DV</span>
+            </div>
+            <div class="col-md-6">Sodium</div>
+            <div class="col-md-6">
+              <input class="list-buy-checkbox-individual-field" type="text" id="sodium-<%=q.id%>" value="<%=q.food.sodium*q.amount.to_i%>" style="width: 50px; text-align:center;"><span style=""> mg</span>
+            </div>
+          </div>
+        <% end %>
+      
+    </div>
+    <div class="col-md-2">
+      <center>
+        <%= f.label :total_price, "Price ($)" %>
+        <%= f.text_field :total_price, class: 'form-control total-price' %>
+
+
+        <%= f.label :total_calories, "Calories" %>
+        <%= f.text_field :total_calories, class: 'form-control total-calories' %>
+
+        <%= f.label :total_carbohydrates, "Carbohydrates (g)" %>
+        <%= f.text_field :total_carbohydrates, class: 'form-control total-carbohydrates' %>
+        <%= f.label :total_fat, "Fat (g)"%>
+        <%= f.text_field :total_fat, class: 'form-control total-fat' %>
+        <%= f.label :total_protein, "Protein (g)" %>
+        <%= f.text_field :total_protein, class: 'form-control total-protein' %>
+        <%= f.label :total_sugar, "Sugar (g)" %>
+        <%= f.text_field :total_sugar, class: 'form-control total-sugar' %>
+        
+        <%= f.label :total_fiber, "Fiber (g)" %>
+        <%= f.text_field :total_fiber, class: 'form-control total-fiber' %>
+       
+        <%= f.label :total_vitamin_a, "Vitamin A (% DV)" %>
+        <%= f.text_field :total_vitamin_a, class: 'form-control total-vitamin_a' %>
+       
+        <%= f.label :total_vitamin_c, "Vitamin C (% DV)" %>
+        <%= f.text_field :total_vitamin_c, class: 'form-control total-vitamin_c' %>
+        <%= f.label :total_calcium, "Calcium (% DV)" %>
+        <%= f.text_field :total_calcium, class: 'form-control total-calcium' %>
+        <%= f.label :total_iron, "Iron (% DV)" %>
+        <%= f.text_field :total_iron, class: 'form-control total-iron' %>
+        
+        <%= f.label :total_sodium, "Sodium (mg)"%>
+        <%= f.text_field :total_sodium, class: 'form-control total-sodium' %>
+        
+        <%= f.text_field :list_id, class: 'form-control hidden', value: params[:list_id] %>
+        <%= f.text_field :user_id, class: 'form-control hidden', value: params[:user_id] %>
+        <div class="hidden">
+          <%= f.text_field_tag :list_buy_code, @list_buy_code %>
+        </div>
+      </center>
+    <% end %>
+  </div>
+</div>

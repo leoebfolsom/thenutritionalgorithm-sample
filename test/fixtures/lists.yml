@@ -1,0 +1,715 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+weekend:
+  days: 2
+  name: weekend
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+week:
+  days: 5
+  name: week
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+   
+grape:
+  name: grape
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+apple:
+  name: apple
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+banana:
+  name: banana
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+clementine:
+  name: clementine
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+dragonstone:
+  name: dragonfruit
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+dorne:
+  name: egg
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+frey:
+  name: fat
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+tully:
+  name: grapefruit
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+greyjoy:
+  name: house
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+asha:
+  name: iberia
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+drogo:
+  name: drogo
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart      
+  max_price: 1.00
+  
+khaleesi:
+  name: khaleesi
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+lemon:
+  name: lemon
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: BLSmart
+  max_price: 1.00
+  
+mango:
+  name: mango
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+north:
+  name: nymeria
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+oberyn:
+  name: orange
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+pineapple:
+  name: pineapple
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+qumkwat:
+  name: qarth
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+ravioli:
+  name: ravioli
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+sunflower:
+  name: sunflower
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+tomato:
+  name: tort
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+uglifruit:
+  name: uglifruit
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+vanilla:
+  name: valar morghulis
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+wax:
+  name: wax
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+xylophone:
+  name: xylophone
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+yam:
+  name: yam
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+zorse:
+  name: zorse
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+animal:
+  name: animal
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+bee:
+  name: bee
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+cat:
+  name: cat
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+dog:
+  name: the park
+  days: 1
+  age: 26
+  gender: m
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00
+  
+elephant:
+  name: birthday party
+  days: 1
+  age: 26
+  gender: f
+  total_calories: 0
+  total_carbohydrates: 0
+  total_fat: 0
+  total_protein: 0
+  total_sugar: 0
+  total_potassium: 0
+  total_fiber: 0
+  total_vitamin_a: 0
+  total_vitamin_c: 0
+  total_calcium: 0
+  total_iron: 0
+  total_sodium: 0
+  total_price: 0
+  store: Kwik-E-Mart
+  max_price: 1.00

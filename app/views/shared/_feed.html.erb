@@ -1,0 +1,80 @@
+<div class="">
+<% @feed_items.each do |p| %>
+	<% if User.exists?(p.user_id) %>
+		<% if p.class.to_s == "Post" %>
+		  <div class="col-md-4 col-sm-6 col-xs-12 text-center" style="margin-bottom:30px;">
+		    <div class='span12'><hr>
+		    </div>
+	    	<% post_link = "http://www.thenutritionalgorithm.com/lists/"+p.list.id.to_s+"/#dish-"+p.id.to_s %>
+	    	<%= link_to post_link do %>
+		      <div>
+		        <%= image_tag p.images.sample.image_url, :class => "", :style => "max-width:300px; max-width: 100%; max-height:300px; margin:0px auto;display:block;" %>
+		      </div>
+		      <div class="smaller-text">
+		        <%= "#{p.title}" %>
+		      </div>
+	    	<% end %>
+	      <div class="smaller-text">
+	      	<% if p.original_author == nil %>by
+	      	<% else %>forked by
+	      	<% end %>
+	      	<%= link_to p.user.name, p.user %>
+	      </div>
+		    <% unless current_user == p.user %>
+				  <div id="follow_form">
+				  	<%= render 'users/follow_form', feed_user: p.user %>
+				  </div>
+				<% end %>
+		    <div class="smaller-text" style="max-width:300px; margin: 0 auto;">
+		      <%= simple_format(truncate(p.body, :length => 250).gsub("\r\n", "<br />"), {}, wrapper_tag: "span") %>
+		      <%= link_to post_link do %>
+		        <div>
+		        	Read more
+		        </div>
+		      <% end %>
+		    </div>
+		  </div>
+		<% else %>
+			<% if p.quantities.length > 0 %>
+			  <div class="col-md-4 col-sm-6 col-xs-12 text-center" style="margin-bottom:30px;">
+			    <div class='span12'><hr>
+			    </div>
+			    <%= link_to p do %>
+			      <div>
+			      	<% if p.image != nil %>
+			      		<% image_url = p.image %>
+			      	<% elsif Image.where(post_id:p.posts.pluck(:id)).length > 0 %>
+			      		<% image_url = Image.where(post_id:p.posts.pluck(:id)).sample.image_url %>
+			      	<% else %>
+			      		<% image_url = p.foods.sample.image %>
+			      	<% end %>
+			      	<% if image_url != nil %>
+			        	<%= image_tag image_url, :class => "", :style => "max-width:300px; max-width: 100%; max-height:300px; margin:0px auto;display:block;" %>
+			        <% end %>
+			      </div>
+			      <div class="smaller-text">
+			        <%= "#{p.name}" %>
+			      </div>
+			    <% end %>
+		      <div class="smaller-text">
+						by <%= link_to p.user.name, p.user %>
+		      </div>
+			    <div id="follow_form">
+				    <% unless current_user == p.user %>
+						  <%= render 'users/follow_form', feed_user: p.user %>
+						<% end %>
+					</div>
+			    <div class="smaller-text" style="max-width:300px; margin: 0 auto;">
+			      <%= simple_format(truncate(p.note, :length => 140).gsub("\r\n", "<br />"), {}, wrapper_tag: "span") %>
+			      <%= link_to p do %>
+			        <div>
+			        	View list
+			        </div>
+			      <% end %>
+			    </div>
+			  </div>
+			<% end %>
+		<% end %>
+	<% end %>
+<% end %>
+</div>

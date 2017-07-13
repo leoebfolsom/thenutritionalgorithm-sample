@@ -1,0 +1,115 @@
+<div class="modal fade" id="previewListModal-<%=list.id%>" tabindex="-1" role="dialog" aria-labelledby="#previewListModalLabel-<%=list.id%>" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewListModalLabel-<%=list.id%>">What's on this list?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-body-<%=list.id%>" style='overflow-y:scroll'>
+       
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<% if controller.action_name == "home" %>
+  <% col_md = "col-md-6 list-grand-div-container text-center" %>
+<% else %>
+  <% col_md = "col-md-4 list-grand-div-container text-center" %>
+<% end %>
+<div class="<%=col_md%>">
+  <div class="list-grand-div item">
+    <% list_id = list.id %>
+    <% forks_length = Activity.where(action:"fork",forked_list_id:list_id).length %>
+    
+    <% if forks_length > 0 %>
+      <div class="col-md-12">
+        <% (1..forks_length).each do |i| %>
+          <i class="fa fa-cutlery" aria-hidden="true"></i>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="row">
+      <div class="col-md-12" style="z-index:1;">
+        <%= link_to list.name, list %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 user" style="z-index:1;">
+        <% if display_name == true %>
+          by <%= link_to list.user.name, list.user, {:class => ""} %>
+        <% end %>
+
+      </div>
+    </div>
+    <% list_note = list.note %>
+    <% if list_note != "" && list_note != nil %>
+      <% if list_note.length > 140 %>
+        <% list_note = truncate(list.note, :length => 140) %>
+      <% end %>
+      <div class="row">
+        <div class="col-md-12 smaller-text">
+          <%= list_note %>
+        </div>
+      </div>
+    <% end %>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="smaller-text">
+          $<%= list.total_price.to_f.round(2) %> over <%=list.days%> days.
+        </div>
+      </div>
+      <div class="col-md-12" style="z-index:1;">
+
+        <%= link_to list_preview_path(:list_id => list.id), :remote => true do %>
+          <button type="button" class="btn wide-button smaller-text" data-toggle="modal" data-target="#previewListModal-<%=list.id%>">
+            What's on this list?
+          </button>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" style="z-index:1;">
+        <%= link_to list do %>
+          <% if Quantity.where(list_id:list_id).length != 0 %>
+            <% if list.image != nil %>
+              <div class="col-md-12">
+                <%= image_tag list.image, style: "max-width:100%; max-height: 100px; margin-top: 10px;" %>
+              </div>
+            <% elsif list.foods.where.not(image:"").length != 0 %>
+              <% list = List.joins(:foods).find(list_id) %>
+              <% sample_image = list.foods.where.not(image:"").sample.image %>
+              <div class="col-md-12">
+                <img src=<%=sample_image%> style="max-width:100%; max-height: 100px; margin-top: 10px;">
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-md-12 pull-down" style="z-index:1;">
+        <% if list.user == current_user %>
+          <center>
+            <%= link_to list, method: :delete, :class => "delete-list", :remote => true, data: { confirm: "You sure?" } do %>
+              <button>
+                DELETE
+              </button>
+            <% end %>
+          </center>
+        <% end %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <span class="timestamp smaller-text">Updated <%= time_ago_in_words(list.updated_at) %> ago.
+          </span>
+      </div>
+    </div>
+
+  </div>
+</div>

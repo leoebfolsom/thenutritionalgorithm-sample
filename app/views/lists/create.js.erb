@@ -1,0 +1,10 @@
+var a = '<%= @list.id %>';
+$("#start-list-add-foods").removeClass("hidden");
+$("#new-list-container").addClass("hidden");
+var b = $("#complete-list-btn").attr("href")
+var c = b+"?list_id="+a;
+$("#complete-list-btn").attr("href",c);
+var d = "&list_id="+a;
+
+$(".list_id").html(a)
+window.scrollTo(0,0);

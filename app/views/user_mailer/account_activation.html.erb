@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <%= link_to image_tag("https://s3.amazonaws.com/tna-main/tna_handwritten.svg", style: "max-width:500px; width: 100%"), "https://www.thenutritionalgorithm.com", :target => "_blank" %>
+    <p><%= @user.name %>,</p>
+
+    <p>
+    Thank you for signing up for the nutrition algorithm!
+    </p>
+    <center>
+    <%= link_to edit_account_activation_url(@user.activation_token,
+                                                        email: @user.email) do %>
+    <button>
+    ACTIVATE YOUR ACCOUNT
+    </button>
+    <% end %>
+    </center>
+    <p>
+    Once you've activated your account, you can begin building grocery lists and 
+    </p>
+  </body>
+</html>

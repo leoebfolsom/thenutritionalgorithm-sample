@@ -1,0 +1,17 @@
+<% if @list_result.length > 0 %>
+
+  $("#home-search-results").prepend("<div class='col-md-12'><div class='span12'><hr></div></div>");
+  $(".home-no-results").hide();
+  <% @list_result.reverse.each do |l| %>
+
+      $("#home-search-results").prepend("<%= j render 'shared/square_home', list: l, display_name: true %>");
+
+  <% end %>
+  $(".home-thinking").hide();
+  $('html, body').animate({scrollTop: $("#home-search").offset().top - 15});
+
+
+<% else %>
+  $(".home-thinking").hide();
+  $("#home-search-results").prepend("<div class='col-md-12 text-center home-no-results' style='margin-top:30px;'>Please try a different search term, or create a new list!</div>");
+<% end %>

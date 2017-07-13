@@ -1,0 +1,495 @@
+<% provide(:title, 'Add person') %>
+<center>
+  <% if flash[:error].present? %>
+    <div id="error_explanation">
+      <p><%= flash[:error] %></p>
+    </div>
+  <% end %>
+</center>
+<div class="hidden" id="add-person"></div>
+<div class="item hidden pal-explanation fixed-box" id="pal-explanation">
+  <h3>What is your physical activity level?</h3>
+  <p><b>Sedentary</b> individuals get no regular exercise. Their only physical activity is for regular daily activities such as moving about the home or office. Many of us in modern society are sedentary!</p>
+  <p><b>Low active</b> individuals get exercise equivalent to walking about 2 miles per day.</p>
+  <p><b>Active</b> individuals get exercise equivalent to walking about 7 miles per day. Examples of active individuals include construction workers or regular joggers.</p>
+  <p><b>Very active</b> individuals get exercise equivalent to walking about 15 miles per day. A competitive or professional athlete would be considered very active.</p>
+  <center>
+    <%= link_to "javascript:void(0);" do %>
+      <button class="btn" id="pal-explanation-got-it">Got it!</button>
+    <% end %>
+    <br><br>
+    <span id="pal-explanation-learn-more"><%= link_to "Learn more from the Food and Agriculture Organization of the United Nations", "http://www.fao.org/docrep/007/y5686e/y5686e07.htm", target: "_blank" %>
+    </span>
+  </center>
+</div>
+
+
+
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <%= form_tag(edit_person_submit_path, method: "get") do |f| %>
+      <section id="defaults">
+        <center>
+          <p style="font-size:1.5em;">
+            Edit this person's attributes and nutrition requirements.
+          </p>
+          <p>
+            Or, go <%= link_to "back to your list", list_path(@list) %>.
+          </p>
+        </center>
+        <div class="row">
+          <div class="col-md-6">
+            <%= label_tag :name, "NAME" %>
+            <%= text_field_tag :name, "", :id => 'person-name', :style => "text-align:center;", :value => @name %> 
+            <br>
+            <div class="hidden">
+              <div id="percentage-slider-container">
+                <input type="range" name="percentage-slider" id="percentage-slider" value="<%=@list.percentage%>" min="75" max="100" data-highlight="true" />
+                <%= number_field_tag :percentage, @list.percentage, id: 'percentage', class: "", percentage: @list.percentage %>
+              </div>
+            </div>
+            <%= label_tag :age, "AGE" %>
+            <%= number_field_tag(:age, @person_settings["age"], in: 2..120, :step => 1, :id => "age", :class => "input form-control text_field age-field-input", :style => "width:150px; text-align:center;display:inline-block;") %>
+            <br>
+          </div>
+
+          <% sex = @person_settings["sex"] %>
+          <div id="edit-person-sex" class="hidden"><%=sex%></div>
+          
+          <% female_checked = false; male_checked = false; decline_checked = false %>
+          <% if sex == "f" %>
+            <% female_checked = true %>
+          <% elsif sex == "m" %>
+            <% male_checked = true %>
+          <% else %> 
+            <% decline_checked = true %>
+          <% end %>
+          <div class="col-md-6">
+            <div class="col-md-12">
+              <%= label_tag :gender, "SEX" %>
+            </div>
+            <div class="col-md-4">
+              <label for="user_settings_sex_f" style="float:left;">Female</label>
+              <input type="radio" name="gender" id="user_settings_sex_f" <% if female_checked %> checked="true" <% end %> class="custom" style="float:left;">
+            </div>
+            <div class="col-md-4">
+              <label for="user_settings_sex_m" style="float:left;">Male</label>
+              <input type="radio" name="gender" id="user_settings_sex_m" <% if male_checked %> checked="true" <% end %> class="custom" style="float:left;">
+            </div>
+            <div class="col-md-4">
+              <label for="user_settings_sex_d" style="float:left;">Decline to say</label>
+              <input type="radio" name="gender" id="user_settings_sex_d" <% if decline_checked %> checked="true" <% end %> class="custom" style="float:left;">
+            </div>
+
+            <%= text_field_tag :sex, "", :id => 'add-person-sex', :style => "text-align:center;", :class => "hidden" %> 
+            <%= text_field_tag :list_id, @list.id, :style => "text-align:center;", :class => "hidden" %> 
+            <%= text_field_tag :orig_name, params[:name], :class => "hidden" %> 
+              <br>
+          </div>
+        </div>
+        <div class='span12'><hr></div>
+        <div class="row">
+          <div class="col-md-6">
+            <label for="height-slider">HEIGHT</label>
+            <div id="height-slider-container">
+              <div id="height-in-feet-inches"></div>
+              <input type="range" name="height-slider" id="height-slider" value="<%=@person_settings['height']%>" min="24" max="100" data-highlight="true" />
+            </div>
+            <%= number_field_tag :height, @person_settings["height"], id: 'height', class: "hidden" %>
+          </div>
+          <div class="col-md-6">
+            <label for="weight-slider">WEIGHT (LBS)</label>
+            <div id="weight-slider-container">
+              
+              <%= number_field_tag :weight, @person_settings["weight"], id: 'weight', class: "input form-control number_field weight-field-input", style: "text-align:center; max-width: 75px;" %>
+              <input type="range" name="slider" id="weight-slider" value="<%=@person_settings['weight']%>" min="40" max="800" data-highlight="true" />
+            </div>
+          </div>
+
+          
+        </div>
+        <div class='span12'><hr></div>
+        <div class="row">
+
+          <div class="col-md-12">
+            <%= label_tag :activity_level, "ACTIVITY LEVEL" %>
+            <span id="pal-explanation-link" style="font-size:0.75em;">
+              <%= link_to "What is this?", "#", href: "javascript:void(0)" %>
+            </span>
+          </div>
+          <% activity_level = @person_settings["activity_level"] %>
+          <div id="edit-person-activity-level" class="hidden"><%= activity_level %></div>
+          <% sedentary = false; low = false; active = false; very = false %>
+          <% if activity_level == 's' %>
+            <% sedentary = true %>
+            
+          <% elsif activity_level == 'l' %>
+            <% low = true %>
+          <% elsif activity_level == 'a' %> 
+            <% active = true %>
+          <% else %>
+            <% very = true %>
+          <% end %>
+         
+
+          <div class="col-md-3">
+            <div class="checkboxgroup">
+
+              <label for="user_settings_activity_level_s">Sedentary</label>
+              <input type="radio" name="radio-choice-1" id="user_settings_activity_level_s" <% if sedentary %> checked="true" <% end %> class="custom">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="checkboxgroup">
+              <label for="user_settings_activity_level_l">Low active</label>
+              <input type="radio" name="radio-choice-1" id="user_settings_activity_level_l" <% if low %> checked="true" <% end %> class="custom">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="checkboxgroup">
+              <label for="user_settings_activity_level_a">Active</label>
+              <input type="radio" name="radio-choice-1" id="user_settings_activity_level_a" <% if active %> checked="true" <% end %> class="custom">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="checkboxgroup">
+              <label for="user_settings_activity_level_v">Very active</label>
+              <input type="radio" name="radio-choice-1" id="user_settings_activity_level_v" <% if very %> checked="true" <% end %> class="custom">
+            </div>
+          </div>
+          <%= text_field_tag :activity_level, activity_level, :id => 'add-person-activity-level', :style => "text-align:center; display:none;" %> 
+        </div>
+        <div class='span12'><hr></div>
+        <div class="hidden">
+          <%= label_tag :nutrition_constraints, "DIETARY RESTRICTIONS" %>
+
+          <div class="col-md-3">
+
+            <% if @list.nutrition_constraints["unprocessed"] == "1" %>
+              <% unprocessed_checked = true %>
+            <% else %>
+              <% unprocessed_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :unprocessed, :id => 'unprocessed', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => unprocessed_checked, type: "checkbox" %>
+              <%= label_tag(:unprocessed, "Unprocessed") %>
+            </label>
+            <% if @list.nutrition_constraints["vegetarian"] == "1" %>
+              <% vegetarian_checked = true %>
+            <% else %>
+              <% vegetarian_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :vegetarian, :id => 'vegetarian', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => vegetarian_checked, type: "checkbox", onchange: 'clickVeg();', onkeyup: 'clickVeg();' %>
+              <%= label_tag(:vegetarian, "Vegetarian") %>
+            </label>
+            <% if @list.nutrition_constraints["pescatarian"] == "1" %>
+              <% pescatarian_checked = true %>
+            <% else %>
+              <% pescatarian_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :pescatarian, :id => 'pescatarian', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => pescatarian_checked, type: "checkbox", onchange: 'clickPesc();', onkeyup: 'clickPesc();' %>
+              <%= label_tag(:pescatarian, "Pescatarian") %>
+            </label>
+          </div>
+          <div class="col-md-3">
+            <% if @list.nutrition_constraints["red_meat_free"] == "1" %>
+              <% red_meat_free_checked = true %>
+            <% else %>
+              <% red_meat_free_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :red_meat_free, :id => 'red-meat-free', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => red_meat_free_checked, type: "checkbox", onchange: 'clickRedMeatFree();', onkeyup: 'clickRedMeatFree();' %>
+              <%= label_tag(:red_meat_free, "Red Meat-free") %>
+            </label>
+            <% if @list.nutrition_constraints["dairy_free"] == "1" %>
+              <% dairy_free_checked = true %>
+            <% else %>
+              <% dairy_free_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :dairy_free, :id => 'dairy-free', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => dairy_free_checked, type: "checkbox" %>
+              <%= label_tag(:dairy_free, "Dairy-free") %>
+            </label>
+
+
+            <% if @list.nutrition_constraints["soy_free"] == "1" %>
+              <% soy_free_checked = true %>
+            <% else %>
+              <% soy_free_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :soy_free, :id => 'soy-free', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => soy_free_checked, type: "checkbox" %>
+              <%= label_tag(:soy_free, "Soy-free") %>
+            </label>
+
+          </div>
+          <div class="col-md-3">
+            <% if @list.nutrition_constraints["peanut_free"] == "1" %>
+              <% peanut_free_checked = true %>
+            <% else %>
+              <% peanut_free_checked  = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :peanut_free, :id => 'peanut-free', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => peanut_free_checked, type: "checkbox" %>
+              <%= label_tag(:peanut_free, "Peanut-free") %>
+            </label>
+
+
+
+            <% if @list.nutrition_constraints["gluten_free"] == "1" %>
+              <% gluten_free_checked = true %>
+            <% else %>
+              <% gluten_free_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :gluten_free, :id => 'gluten-free', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => gluten_free_checked, type: "checkbox" %>
+              <%= label_tag(:gluten_free, "Gluten-free") %>
+            </label>
+
+
+
+            <% if @list.nutrition_constraints["egg_free"] == "1" %>
+              <% egg_free_checked = true %>
+            <% else %>
+              <% egg_free_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :egg_free, :id => 'egg-free', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => egg_free_checked, type: "checkbox" %>
+              <%= label_tag(:egg_free, "Egg-free") %>
+            </label>
+          </div>
+          <div class="col-md-3">
+
+
+
+            <% if @list.nutrition_constraints["kosher"] == "1" %>
+              <% kosher_checked = true %>
+            <% else %>
+              <% kosher_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :kosher, :id => 'kosher', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => kosher_checked, type: "checkbox" %>
+              <%= label_tag(:kosher, "Kosher") %>
+            </label>
+
+
+
+            <% if @list.nutrition_constraints["store_brand"] == "1" %>
+              <% store_brand_checked = true %>
+            <% else %>
+              <% store_brand_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :store_brand, :id => 'store-brand', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => store_brand_checked, type: "checkbox" %>
+              <%= label_tag(:store_brand, "Store brand") %>
+            </label>
+
+
+
+
+            <% if @list.nutrition_constraints["organic"] == "1" %>
+              <% organic_checked = true %>
+            <% else %>
+              <% organic_checked = false %>
+            <% end %>
+            <label>
+              <%= check_box_tag :organic, :id => 'organic', class: 'form-control input', :style => "width:50px; text-align:center;", :checked => organic_checked, type: "checkbox" %>
+              <%= label_tag(:organic, "Organic") %>
+            </label>
+          </div>
+        </div>
+      </section>
+<br><br>
+      <div>
+        <center>
+          Feel free to <%= link_to "view or edit this person's daily nutrition requirements", "javascript:void(0);", id: "daily-nutrition-requirements-link" %>.
+        </center>
+      </div>
+<br><br>
+      <section id="daily-nutrition-requirements" class="hidden">
+        <div class="row">
+          <div class="col-md-6">
+            Min Calories<%= number_field_tag(:min_calories, @person_settings["min_calories"], in: 50..4000, :step => 1, :class => "input form-control text_field", :id => "min-calories", :style => "width:150px; text-align:center;display:inline-block;") %><br>
+
+            Max Calories<%= number_field_tag(:max_calories, @person_settings["max_calories"], in: 50..4000, :step => 1, :class => "input form-control text_field", :id => "max-calories", :style => "width:150px; text-align:center;display:inline-block;") %><br>
+            
+            Min Fiber (g)<%= number_field_tag(:min_fiber, @person_settings["min_fiber"], in: 5..200, :step => 1, :class => "input form-control text_field", :id => "min-fiber", :style => "width:150px; text-align:center;display:inline-block;") %><br>
+
+            <%= hidden_field_tag :min_potassium, 1, class: 'form-control input', :style => "width:250px; text-align:center;display:inline-block;", :value => 1 %>
+
+            Min Vitamin A (% DV)<%= number_field_tag(:min_vitamin_a, @person_settings["min_vitamin_a"], in: 10..500, :step => 1, :class => "input form-control text_field", :id => "min-vitamin-a", :style => "width:150px; text-align:center;display:inline-block;") %><br>
+          </div>
+          <div class="col-md-6">
+            Min Vitamin C (% DV)<%= number_field_tag(:min_vitamin_c, @person_settings["min_vitamin_c"], in: 10..500, :step => 1, :class => "input form-control text_field", :id => "min-vitamin-c", :style => "width:150px; text-align:center;display:inline-block;") %><br>
+            Min Calcium (% DV)<%= number_field_tag(:min_calcium, @person_settings["min_calcium"], in: 10..500, :step => 1, :class => "input form-control text_field", :id => "min-calcium", :style => "width:150px; text-align:center;display:inline-block;") %><br>
+            Min Iron (% DV)<%= number_field_tag(:min_iron, @person_settings["min_iron"], in: 10..500, :step => 1, :class => "input form-control text_field", :id => "min-iron", :style => "width:150px; text-align:center;display:inline-block;") %><br>
+            Max Sodium (mg)<%= number_field_tag(:max_sodium, @person_settings["max_sodium"], in: 0..4000, :step => 1, :class => "input form-control text_field", :id => "max-sodium", :style => "width:150px; text-align:center;display:inline-block;") %>
+          </div>
+        </div>
+<br>
+        <%= hidden_field_tag :max_sugar, 500, :id => 'max-sugar', class: 'input form-control', :style => "width:50px; text-align:center;" %>
+        <div class="">
+
+            <% default_carbohydrates = @person_settings["carbohydrates"] %>
+
+
+            <% default_fat = @person_settings["fat"] %>
+
+            <% default_protein = @person_settings["protein"] %>
+
+
+          <% if default_carbohydrates == -1  %>
+            <% carb_flex_check = "checked" %>
+          <% else %>
+            <% carb_flex_check = false %>
+          <% end %>
+
+          <% if default_fat == -1  %>
+            <% fat_flex_check = "checked" %>
+          <% else %>
+            <% fat_flex_check = false %>
+          <% end %>
+
+          <% if default_protein == -1  %>
+            <% protein_flex_check = "checked" %>
+          <% else %>
+            <% protein_flex_check = false %>
+          <% end %>
+
+
+
+          <div id="default-carb" class="hidden"><%=default_carbohydrates%></div>
+          <div id="default-protein" class="hidden"><%=default_protein%></div>  
+          <div id="default-fat" class="hidden"><%=default_fat%></div>
+          <div class="col-md-12">
+            <center>
+              <br>PERCENTAGE OF CALORIES FROM MACRONUTRIENTS
+            </center>
+            <br>
+            <br>
+            <div id="must-be-hundred">
+              <span id="must-be-hundred-span"></span>
+              <span id="counter"></span>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="col-md-4">
+                <div class="user-carbohydrates-super-container">
+                  <label for="user-carbohydrates-slider">CARBOHYDRATES</label>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="carb-click" class="flexible-label">Flexible</label>
+                      <input class="input form-control carbtest-checkbox macronutrient-checkbox" type="checkbox" name="carbtest" id="carb-click"
+                      <% if carb_flex_check %>
+                        checked="checked"
+                      <% end %>
+                      >
+                    </div>
+                  </div>
+                  <div id="user-carbohydrates-slider-container">
+                    <input type="range" name="user-carbohydrates-slider" id="user-carbohydrates-slider" value="<%=default_carbohydrates%>" min="10" max="80" data-highlight="true" />
+
+                    <%= number_field_tag :carbohydrates, params[:carbohydrates], id: 'user-carbohydrates', class: "", value: default_carbohydrates, style: "max-width: 50px;text-align:center;", :readonly => true %>% calories from carbs
+                  </div>
+                </div>
+                <div class='span12'><hr></div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="user-fat-super-container">
+                  <label for="user-fat-slider">FAT</label>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="fat-click" class="flexible-label">Flexible</label>
+
+                      <input class="input form-control fat-checkbox macronutrient-checkbox" type="checkbox" name="fat" id="fat-click"
+                      <% if fat_flex_check %>
+                        checked="checked"
+                      <% end %>
+                      >
+                    </div>
+                  </div>
+                  <div id="user-fat-slider-container">
+                    <input type="range" name="user-fat-slider" id="user-fat-slider" value="<%=default_fat%>" min="10" max="80" data-highlight="true" />
+
+                    <%= number_field_tag :fat, params[:fat], id: 'user-fat', class: "", value: default_fat, style: "max-width: 50px; text-align:center;", :readonly => true %>% calories from fat
+                  </div>
+                </div>
+                <div class='span12'><hr></div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="user-protein-super-container">
+                  <label for="user-protein-slider">PROTEIN</label>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="protein-click" class="flexible-label">Flexible</label>
+
+                      <input class="input form-control proteintest-checkbox macronutrient-checkbox" type="checkbox" name="proteintest" id="protein-click"
+
+                      <% if protein_flex_check %>
+                        checked="checked"
+                      <% end %>
+                      >
+                    </div>
+                  </div>
+                  <div id="user-protein-slider-container">
+                    <input type="range" name="user-protein-slider" id="user-protein-slider" value="<%=default_protein%>" min="10" max="80" data-highlight="true" />
+                    <%= number_field_tag :protein, params[:protein], id: 'user-protein', class: "", value: default_protein, style: "max-width: 50px;text-align:center;", :readonly => true %>% calories from protein
+                  </div>
+                </div>
+                <div class='span12'><hr></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> 
+
+      <center>
+        <%= label_tag :newbudget, "UPDATE BUDGET" %>
+        <%= number_field_tag(:newbudget, @list.max_price, in: 10..500, :step => 1, :id => "newbudget", :class => "input form-control text_field newbudget-field-input", :style => "width:150px; text-align:center;display:inline-block;") %>
+        <br>
+
+        <%= submit_tag "SAVE", class: "btn wide-button", :id => "submit-button", :data => {disable_with: "please wait"} %>
+
+        <div id="name-error" class="hidden client-side-error">
+          Please choose a name for your list. You can also generate a silly one!
+        </div>
+        <div id="days-error" class="hidden client-side-error">
+          Please select the number of days for this grocery list. It can be between 1 and 31.
+        </div>
+        <div id="percentage-error" class="hidden client-side-error">
+          Please select the percentage of nutrition you want this grocery list to provide. If you're not sure, choose 80, which assumes you will eat some snacks and meals out.
+        </div>
+        <div id="percentage-error-little" class="hidden client-side-error">
+          Please select the percentage of nutrition you want this grocery list to provide. You must select a number that is greater than 20. If you're not sure, choose 80, which assumes you will eat some snacks and meals out.
+        </div>
+        <div id="budget-error" class="hidden client-side-error">
+          Please select your budget in dollars for this grocery list.
+        </div>
+        <div id="age-error" class="hidden client-side-error">
+          Please select your age in years.
+        </div>
+        <div id="sex-error" class="hidden client-side-error">
+          Please select your biological sex. You may select "Decline to Say."
+        </div>
+        <% if user_signed_in? %>
+          <div id="height-weight-error" class="hidden client-side-error">
+            Please select your height in feet and inches and your weight in pounds.
+          </div>
+        <% else %>
+          <div id="height-weight-error" class="hidden client-side-error">
+            Please select your height in feet and inches and your weight in pounds. <%= link_to "Build a user profile", new_user_registration_path %> to save time!
+          </div>
+        <% end %>
+      </center>
+    <% end %>
+  </div>
+  <div class="col-md-1"></div>
+</div>

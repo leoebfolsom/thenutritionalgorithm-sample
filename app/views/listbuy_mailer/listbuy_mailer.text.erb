@@ -1,0 +1,28 @@
+<% if @user != @listbuying_user %>
+Hello <%=@user.name%>,
+
+Great news! <%= @listbuying_user.name %> has bought groceries from your list, <%= @list.name %>.
+
+You have received 10 beans for having your list bought, bringing your bean total to <%= @user.points %> beans.
+
+Thank you for being such an inspiring grocery list creator!
+
+Best regards,
+
+Leo
+<% else %>
+
+Hello <%=@user.name%>,
+
+Congratulations on logging a grocery purchase to your profile!
+
+You have received 10 beans for logging your purchase, bringing your bean total to <%= @user.points %> beans.
+
+You can find a summary of your purchases right here:
+https://www.thenutritionalgorithm.com/users/#{@user.id}?from_list_buys=true"
+
+Best regards,
+
+Leo
+
+<% end %>

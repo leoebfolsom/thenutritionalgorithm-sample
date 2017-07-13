@@ -1,0 +1,27 @@
+<div class="col-md-4 search-result-grand-container">
+  <div class="item-grand-div item search-result">
+    <div class="preview-details-info hidden" style="display:inline;">
+      <ul>
+        <li><%= f.name.split.map(&:capitalize).join(' ') %></li>
+        <% if f.aisle != "Produce" %> <li><%= f.aisle %></li><% end %>
+        <li>Price: $<%= '%.2f' % f.price %></li>
+        <li>Calories: <%= "#{f.calories}" %></li>
+        <li>Carbohydrates: <%= "#{f.carbohydrates} g"%></li>
+        <li>Fat: <%= "#{f.fat} g"%></li>
+        <li>Protein: <%= "#{f.protein} g"%> </li>
+        <li>Sugar: <%= "#{f.sugar} g"%> </li>
+        <li>Fiber: <%= "#{f.fiber} g"%> </li>
+        <li>Vit. A: <%= "#{f.vitamin_a} %DV"%> </li>
+        <li>Vit. C: <%= "#{f.vitamin_c} %DV"%> </li>
+        <li>Calcium: <%= "#{f.calcium} %DV"%> </li>
+        <li>Iron: <%= "#{f.iron} %DV"%> </li>
+        <li>Sodium: <%= "#{f.sodium} mg"%> </li>
+        <% if f.ingredients != nil %>
+          <li>Ingredients:
+            <%= "#{f.ingredients}"%>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

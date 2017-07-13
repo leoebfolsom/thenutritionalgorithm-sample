@@ -1,0 +1,16 @@
+<% if @eligible_foods.length != 0 %>
+  $("#browse-results-container").html("");
+  <% @eligible_foods.each do |f| %>
+    $("#browse-results-container").append("<%= j render 'shared/search_result', :f => Food.find(f), l: @list_id, from: 'browse' %>");
+  <% end %>
+
+<% else %>
+  $("#browse-results-container").html("There are no remaining foods in this category.");
+<% end %>
+//$('#browse-results-container').animate({scrollTop: $('#browse-results-container').offset().top - 15}, 'slow');
+//$('#browse-foods-box-list').animate({
+//   scrollTop: 0
+//}, 'slow');
+//var position = $("#browse-results-container").position().top;
+//$("#browse-foods-box-list").animate({scrollTop: position});
+//$('html, body').animate({scrollTop: $('#browse-results-container').offset().top - 15});

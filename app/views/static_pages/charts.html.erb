@@ -1,0 +1,75 @@
+<% provide(:title, "charts") %>
+
+<div class="row">
+  <div class="col-md-12 home-how-it-works" style="margin: 30px 0;">
+    <%= line_chart Activity.where.not(user_id:[2,nil]).group_by_day(:created_at, week_start: Time.now.midnight.strftime('%a').downcase).select('distinct user_id').count, xtitle: "Days", ytitle: "Active users", title: "Daily Active Users", id: "chartkick-dau" %>
+  </div>
+
+
+  <div class="col-md-12 home-how-it-works" style="margin: 30px 0;">
+    <%= line_chart Activity.where.not(user_id:[2,nil]).group_by_week(:created_at, week_start: (Time.now.midnight+1.day).strftime('%a').downcase).select('distinct user_id').count, xtitle: "Weeks", ytitle: "Active users", title: "Weekly Active Users", id: "chartkick-wau" %>
+  </div>
+  <% last_week = Activity.where.not(user_id:[2,nil]).where("created_at < ? AND created_at > ?",Time.now.midnight - 1.week,Time.now.midnight - 2.weeks).pluck(:user_id).uniq %>
+  <% this_week = Activity.where.not(user_id:[2,nil]).where("created_at > ?",Time.now.midnight - 1.week).pluck(:user_id).uniq %>
+  <% both = (this_week & last_week) %>
+
+  <div class="col-md-12" style="margin: 30px 0;">
+    <div class="col-md-12 text-center">
+      <%= (((last_week.length - (last_week - this_week).length).to_f/last_week.length.to_f)*100).round %>% of last week's active users have also been active this week.
+    </div>
+
+    <div class="col-md-4 col-md-offset-2 home-how-it-works text-center">
+      <div style="font-size:1.25em;">Active last week</div>
+      <% ( both + (last_week - both)).each do |u| %>
+        <% if User.exists?(u) %>
+          <% user = User.find(u) %>
+          <div>
+            <% if !this_week.include?(u) %>
+              <%= link_to user.name, user, style: "opacity:0.6;" %>
+            <% else %>
+              <%= link_to user.name, user %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+
+
+    </div>
+
+    <div class="col-md-4 home-how-it-works text-center">
+      <div style="font-size:1.25em;">Active this week</div>
+      <% ( both + (this_week - both)).each do |u| %>
+        <% if User.exists?(u) %>
+          <% user = User.find(u) %>
+          <div>
+            <% if last_week.include?(u) %>
+              <%= link_to user.name, user %>
+            <% else %>
+              <%= link_to user.name, user, style: "font-style:italic;" %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>  
+
+    </div>
+  </div>
+
+  <div class="col-md-12 home-how-it-works" style="margin: 30px 0;">
+    <% a = Activity.where("user_id NOT IN (?) AND (attribute_updated != 'empty' OR attribute_updated IS NULL)", [2]) %>
+    <%= line_chart [["fork","lists","Forks"],["spoon","lists","Spoons"],["build_list","lists","Lists"],["create_list_buy","lists","List Purchases"],["create","posts","Dishes"],["create","comments","Comments"]].map { |n|
+      {name: n[2], data: a.where(action:n[0],controller:n[1],is_notification:nil).group_by_week(:created_at, week_start: (Time.now.midnight+1.day).strftime('%a').downcase).count} }, {colors: ["green","blue","orange","purple","black","gray"], xtitle: "Time", ytitle: "Number of Action", title: "Actions per Week: Each User Counts Multiple Times", id: "chartkick-actions", library: {legend: {position: "top", maxLines:5} } } %>
+  </div>
+
+  <div class="col-md-12 home-how-it-works" style="margin: 30px 0;">
+    <% a = Activity.where("user_id NOT IN (?) AND (attribute_updated != 'empty' OR attribute_updated IS NULL)", [2]) %>
+    <%= line_chart [["fork","lists","Forks"],["spoon","lists","Spoons"],["build_list","lists","New Lists"],["create_list_buy","lists","List Purchases"],["create","posts","New Dishes"],["create","comments","Comments"]].map { |n|
+      {name: n[2], data: a.where(action:n[0],controller:n[1],is_notification:nil).group_by_week(:created_at, week_start: (Time.now.midnight+1.day).strftime('%a').downcase).select('distinct user_id').count} }, {colors: ["green","blue","orange","purple","black","gray"], xtitle: "Time", ytitle: "Number of Actions", title: "Actions per Week: Each User Counts Only Once", id: "chartkick-actions-one-per-user", library: {legend: {position: "top", maxLines:5} } } %>
+  </div>
+<% 
+=begin %> 
+  <div class="col-md-12">
+    <%= line_chart User.all.group_by_week(:created_at, week_start: (Time.now+1.day).strftime('%a').downcase).count, xtitle: "Time", ytitle: "Signups", title: "User Signups per Week", id: "chartkick-signups" %>
+  </div> 
+<% 
+=end %> 
+</div>

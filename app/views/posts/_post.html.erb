@@ -1,0 +1,167 @@
+<li class="post-li" id="dish-<%=post.id%>" style="text-align:left; padding-top: 30px;">
+  <a href="dish-<%=post.id%>"></a>
+  <span class="fb-share-button" 
+    data-href="http://www.thenutritionalgorithm.com/lists/<%=post.list.id%>/#dish-<%=post.id%>"
+    data-layout="button_count">
+  </span>
+  <span>
+    <%= link_to "#", href: "javascript:void(0)", class: "scroll-to-comments" do %>
+      <i class="fa fa-comment" aria-hidden="true"></i>
+    <% end %>
+  </span>
+
+
+
+
+
+<% 
+=begin %> 
+  <span class="smaller-text">
+   Updated <%=time_ago_in_words(post.updated_at).capitalize%> ago. 
+  </span>
+<% 
+=end %> 
+  <div>
+    <div class="list-group-item">
+
+
+
+
+
+      <div class="text-center">
+        <% if User.exists?(post.original_author) %>
+          <% original_author = User.find(post.original_author) %>
+          <% if Post.exists?(post.parent_dish) %>
+            <% parent_dish = Post.find(post.parent_dish) %>
+            <div class="smaller-text">
+              <%= link_to "An earlier version of this dish", "http://www.thenutritionalgorithm.com/lists/#{parent_dish.list_id}/#dish-#{post.parent_dish}" %>
+               was written by <%= link_to original_author.name, original_author %>.
+            </div>
+          <% end %>
+          
+
+          
+        <% end %>
+        <span style="font-size:1.25em;">
+          <%= post.title %>
+        </span>
+        <span class="smaller-text"> by
+          <% if User.exists?(post.user_id) %>
+            <%= link_to post.user.name, post.user %>
+          <% else %>
+            a user that no longer exists 
+          <% end %>
+
+        </span>
+
+
+        <% if (controller.controller_name == "posts" && controller.action_name == "index") || (controller.controller_name == "users" && controller.action_name == "user_dishes") ||
+          (controller.controller_name == "lists" && controller.action_name == "index") ||
+          (controller.controller_name == "static_pages" && controller.action_name == "home")
+         %>
+          <div class="smaller-text">Grocery list:
+            <% if List.exists?(post.list_id) %>
+              <%= link_to post.list.name, post.list %>
+            <% else %>
+              a list that no longer exists 
+            <% end %>
+          </div>
+        <% end %>
+      
+        <div>
+        <% post.images.each do |i| %>
+          <div class="init-opacity-zero" style="opacity:0; width: 100px; height: 100px; overflow:hidden; display:inline-block; margin: 5px;">
+            <img src="<%= i.image_url %>" class="dish-image" />
+          </div>
+        <% end %>
+        </div>
+
+
+        <% if post.user == current_user || (current_user == nil && post.list.user.id == 75) %>
+          <div><%= link_to "add images", "/images/new?post_id=#{post.id}", :class => "add-image-to-post" %></div>
+        <% end %>
+
+
+      </div>
+
+      <div style="margin: 0px">
+        <% if post.instagram_user != nil %>
+          <span class="smaller-text">Check out <%= link_to "the instagram post that inspired this dish", post.instagram_url, target: "_blank" %> by <%= link_to "@"+post.instagram_user, post.instagram_user_url, target: "_blank" %>.</span>
+        <% end %>
+        <%= simple_format(auto_link(post.body), {}, wrapper_tag: "div") %>
+
+      </div>
+
+      <% post.images.each do |i| %>
+        <%= render "images/image", :image => i %>
+      <% end %>
+
+
+      <% if post.user == current_user || (current_user == nil && post.list.user.id == 75) %>
+        <div class="smaller-text" style="text-align: left;">
+          <%= link_to "edit dish text", "#", :class => "edit-post", href: "javascript:void(0)" %> | 
+          <%= link_to "add an image to your dish", "/images/new?post_id=#{post.id}", :class => "add-image-to-post" %> | 
+          <%= link_to post, method: :delete, :class => "delete-post", :remote => true, data: { confirm: "You sure?" } do %>  
+            delete
+          <% end %>          
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <% if post.user == current_user || (current_user == nil && post.list.user.id == 75)%>
+    <div class="post-body-edit-div hidden">
+      <%= form_for(post, :html => {:class => "form-inline", :style => "max-width: 100%; padding: 0 15px;" }) do |f| %>
+        <%= f.text_field(:title, :value=>post.title, :class=>"input form-control post-body-edit", :style=>"width: 100%; text-align:left;") %>
+        <%= f.text_area(:body, :value=>post.body, :class=>"input form-control post-body-text-area post-body-edit", :style=>"width: 100%; text-align:left;") %>
+        <%= f.submit "UPDATE", :style => "padding: 6.4px;width: 100%;", :class => "post-body-edit-submit" %>
+      <% end %>
+    </div>
+  <% end %>
+  <div>
+
+    <%= link_to "HIDE COMMENTS", "#", href: "javascript:void(0)", class: "hide-comments" %>
+    <%= link_to "SHOW COMMENTS", "#", href: "javascript:void(0)", class: "show-comments", style: "display:none;" %>
+
+  </div>
+
+  <div class="list-group-item post-comments-container">
+
+    <ul class="post-comments" id="post-comments-<%=post.id%>" style="margin: 0px;">
+      <% if post.comments.length > 0 %>
+        <% post.comments.each do |c| %>
+          
+          <%= render 'comments/comment', :comment => c, :post => post %>
+        <% end %>
+      <% else %>
+        <% if current_user %>
+          There are no comments on this dish yet. <%=current_user.name%>, say something!
+        <% end %>
+      <% end %>
+    </ul>
+    <% if current_user %>
+
+      <%= form_for Comment.new, remote: true do |f| %>
+        <p>
+          <% comment_content_text_area_id = "comment-content-input-post-"+post.id.to_s %>
+          <%= f.text_area :content, placeholder: "Your comment here.", id: comment_content_text_area_id, class: "comment-content-field" %>
+        </p>
+        <p>
+          <% comment_user_id = "comment-user_id-input-post-"+post.id.to_s %>
+          <%= f.hidden_field :user_id, :value => current_user.id, id: comment_user_id %>
+        </p>
+        <p>
+          <% commentable_id = "comment-commentable_id-input-post-"+post.id.to_s %>
+          <%= f.hidden_field :commentable_id, :value => post.id, id: commentable_id %>
+        </p>
+        <p>
+          <% commentable_type = "comment-commentable_type-input-post-"+post.id.to_s %>
+          <%= f.hidden_field :commentable_type, :value => "Post", id: commentable_type %>
+        </p>
+        <p><%= f.submit "Submit", class: "comment-submit" %></p>
+      <% end %>
+    <% else %>
+      <div class="comment-submit"><%= link_to "Build a user profile", new_user_registration_path %> to leave a comment.</div>
+    <% end %>
+  </div>
+  
+</li>

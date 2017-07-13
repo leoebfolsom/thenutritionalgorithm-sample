@@ -1,0 +1,18 @@
+<% provide(:title, 'All foods') %>
+<h2>Foods You've Created</h2>
+<center>
+  <%= link_to '/foods/new' do %>
+    <button class="btn wide-button">CREATE</button>
+  <% end %>
+</center>
+
+
+<%= will_paginate %>
+<div class="row">
+  <div class="col-md-2 col-md-offset-5">
+
+    <%= render @foods %>
+
+  </div>
+</div>
+<%= will_paginate %>

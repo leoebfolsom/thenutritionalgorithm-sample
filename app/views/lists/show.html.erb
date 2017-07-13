@@ -1,0 +1,1609 @@
+<% provide(:title, @list.name) %>
+<span id="list_id" class="hidden">
+  <%=@list_id%>    
+</span>
+<div class="transparency hidden"></div>
+<span id="successfully-added" class="hidden">
+  <%=@successfully_added%>
+</span>
+<span id="did-not-add" class="hidden">
+  <%=@did_not_add%>
+</span>
+<% if current_user != nil %>
+  <% if @list.user == current_user %>
+    <div class="hidden" id="list-user-is-current-user"></div>
+  <% end %>
+<% end %>
+
+
+<%
+=begin %>
+<% if @successfully_added != [] && @successfully_added != nil %>
+  <center>
+    <div class="item hidden" 
+         id="items-added-to-peapod" 
+         style="
+                margin-right: auto;
+                margin-left: auto;
+                width: 50%;
+                border-color: #3DB21A; 
+                background-color: white; 
+                position:fixed;
+                top: 2;
+                z-index:2;
+                display:inline-block;
+                right: 0;
+                left: 0;
+              ">
+      Items were added to Peapod! Navigate to your Peapod cart by clicking <b>the cart button in the top</b> right to complete the purchase. Thank you for being patient while it loads.<br><br>
+
+      <% if @did_not_add != [] && @did_not_add != nil %>
+        Unfortunately, <b>we were not able to add the following items</b> to your cart. You may also notice slight differences in the price of items. We are working on improving our database so it will be completely up to date!<br>
+        <br>
+        <ul style="text-align:left; list-style-type:circle;">
+          <% @did_not_add.map(&:to_i).each do |d| %>
+            <li><%= Quantity.find(d).food.name.split.map(&:capitalize).join(' ') %> |</li>
+          <% end %>
+        </ul>
+      <% end %>
+      <br> 
+      <span id="items-added-to-peapod-hide"><%= link_to "Close this window.", "#", href: "javascript:void(0)" %>
+      </span>
+    </div>
+  </center>
+<% end %>
+
+<div>
+
+  <%= link_to buy_list_path(:code => params[:code], :data => {disable_with: "Please wait."}, :list_id => @list_id, :target => "_blank"), :class => "btn hidden", :rel => "external", :id => "buy-list" do %>
+    <button>Buy this list.</button>
+  <% end %>
+
+<% if current_user != nil %>
+
+      <div id="bought-groceries-congratulations-container" class="hidden fixed-box">
+        <div class="close-link-container">
+          <div id="close-congratulations-list-bought" class="close-box-link">
+            <%= link_to "\xe2\x9c\x95".html_safe, "#", href: "javascript:void(0)" %>
+          </div>
+        </div>
+        <center>
+          <div>Congratulations! You are buying a healthy and affordable grocery list.</div>
+
+
+          <%= link_to send_checklist_mailer_path(:list_id => @list_id, :user_id => current_user.id), :remote => true, :class => "" do %>
+            <button class="btn wide-button send-checklist-mailer-button">EMAIL ME THE LIST</button>
+          <% end %>
+          <%= link_to build_list_path do %>
+            <button class="btn wide-button">NEW LIST</button>
+          <% end %>
+          <%= link_to current_user do %>
+            <button class="btn wide-button">YOUR PROFILE</button>
+          <% end %>
+
+        </center>
+      </div>
+    <% end %>
+
+    <div id="bought-groceries-container" style ="z-index: 4; position: fixed; width: 100%; top: 80%;">
+      <center>
+        <%= link_to "#", href: "javascript:void(0)", :class => "hidden", :id => "bought-groceries-link" do %>
+          <button class="btn wide-button">OPTIONS</button>
+        <% end %>
+      </center>
+    </div>
+
+
+
+  <div class="row">
+    <div id="list-view-items-container" class="hidden col-md-12">
+      <div class="track-active col-md-6">
+        <%= link_to "#", href: "javascript:void(0)", :class => "track-buy track-active" do %>
+          <div class="text-center add-foods-both track-buy-col">
+            BUY
+          </div>
+        <% end %>
+      </div>
+
+
+      <div class="col-md-6">
+        <%= link_to "#", href: "javascript:void(0)", :class => "track-eat" do %>
+          <div class="text-center add-foods-both track-eat-col">
+          
+            EAT
+          
+          </div>
+        <% end %>
+      </div>
+      <div id="list-view-items-container-items">
+        <div id="track-buy-container">
+          <center>
+            <div id="bring-checklist-to-store" class="hidden">
+              What have you bought?
+            </div>
+            <div>
+              <br>Check off items as you buy them.
+            </div>
+
+            <%= link_to "#", href: "javascript:void(0)", :class => "hidden show-full-view-link" do %>
+              <button class="wide-button btn">BACK TO FULL VIEW</button>
+            <% end %>
+
+          </center>
+          <% @root_cat_names.each do |r| %>
+            <div class="root-cat-container-items-list-view">
+              <% root_cat_id = r.gsub(/[\s,&]/ ,"") %>
+              <div class="col-md-12 root-cat-title-list-view" id="<%=root_cat_id%>-title-list-view"><h4 style="background:lightgray;"><%=r%></h4></div>
+              <div id="<%=root_cat_id%>-items-list-view" class="root-cat-items-list-view">
+                <% @quantities.each do |q| %>
+                  <% if q.food.root_cat_name == r %>
+                    <%= render 'list_view_items_core', :q => q %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>      
+          <% end %>
+
+          <div class="root-cat-container-items-list-view">
+            <div class="col-md-12 root-cat-title-list-view"><h4 style="background:lightgray;">Foods that transcend category</h4></div>
+            <div id="nil-category-items-list-view" class="root-cat-items-list-view">
+              <% @quantities.each do |q| %>
+                <% if q.food.root_cat_name == nil %>
+                  <%= render 'list_view_items_core', :q => q %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div id="track-eat-container" class="hidden">
+          <center>
+            <div id="bring-checklist-to-store">
+              What have you eaten?
+            </div>
+            <div>
+              <br>Check off items as you eat them.
+            </div>
+
+            <%= link_to "#", href: "javascript:void(0)", :class => "hidden show-full-view-link" do %>
+              <button class="wide-button btn">BACK TO FULL VIEW</button>
+            <% end %>
+
+          </center>
+          <% @root_cat_names.each do |r| %>
+            <div class="root-cat-container-items-list-view">
+              <% root_cat_id = r.gsub(/[\s,&]/ ,"") %>
+              <div class="col-md-12 root-cat-title-list-view" id="<%=root_cat_id%>-title-list-view"><h4 style="background:lightgray;"><%=r%></h4></div>
+              <div id="<%=root_cat_id%>-items-list-view-eat" class="root-cat-items-list-view">
+                <% @quantities.each do |q| %>
+                  <% if q.food.root_cat_name == r %>
+                    <%= render 'list_view_items_core_eat', :q => q %>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>      
+          <% end %>
+          
+          <div class="root-cat-container-items-list-view">
+            <div class="col-md-12 root-cat-title-list-view"><h4 style="background:lightgray;">Foods that transcend category</h4></div>
+            <div id="nil-category-items-list-view-eat" class="root-cat-items-list-view">
+              <% @quantities.each do |q| %>
+                <% if q.food.root_cat_name == nil %>
+                  <%= render 'list_view_items_core_eat', :q => q %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+<%
+=end %>
+
+
+
+
+<!-- GUEST LIKED MODAL -->
+<div class="modal fade" id="guest-liked" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        Create a profile to add foods to your favorites.
+
+      </div>
+      <center>              
+        <%= link_to new_user_registration_path do %>
+          <button class="btn wide-button green-button" style="width:40%;">JOIN NOW!</button>
+        <% end %>
+      </center>
+
+    </div>
+  </div>
+</div> 
+
+
+<!-- EDIT TITLE MODAL -->
+<div class="modal fade" id="edit-title-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="edit-title-modal-close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div id="list-title-edit-container" class="">
+          <%= form_for(@list, :remote => true, :html => {:class => "", :style => "margin: 0px auto;"}) do |f| %>
+            <%= f.text_field(:name, :value=>@list.name, :id => "list-title-edit", :style => "margin:5px 0px;") %>
+            <div style="font-size: 0.75em; font-weight: lighter">
+              Choose a descriptive name or <%= link_to "generate a silly random name.", create_random_list_name_path, :remote => true %>
+            </div>
+            <div class="text-center">
+              <%= f.submit "SAVE NAME", class: "btn wide-button green-button img-responsive", :id => "list-title-edit-submit", :style => "margin: 0px; padding: 0px;" %>
+            </div>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div> 
+
+
+<!-- EDIT DESCRIPTION MODAL -->
+<div class="modal fade" id="edit-description-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="edit-description-modal-close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div id="list-note-edit-container" class="">
+          <%= form_for(@list, :remote => true, :html => {}) do |f| %>
+            <%= f.text_area(:note, :value=>@list.note, :id => "list-note-edit", :style => "min-height:40px;") %>
+            <div class="smaller-text" style="color:gray;"><span id="list-note-characters-remaining"></span> characters remaining.</div>
+            <div class="text-center">
+              <%= f.submit "SAVE DESCRIPTION", class: "btn wide-button green-button img-responsive", :id => "list-note-edit-submit", :style => "margin: 0px; padding: 0px;"  %>
+            </div>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div> 
+
+<!-- EDIT PRIVATE NOTE MODAL -->
+<div class="modal fade" id="edit-private-note-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="edit-private-note-modal-close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div id="list-private-note-edit-container" class="">
+          <%= form_for(@list, :remote => true, :html => {}) do |f| %>
+            <%= f.text_area(:private_note, :value=>@list.private_note, :id => "list-private-note-edit", :style => "min-height:125px;", :placeholder => "remember to buy cat food, also toothpaste") %>
+            <div class="text-center">
+              <%= f.submit "SAVE NOTE", class: "btn wide-button green-button img-responsive", :id => "list-private-note-edit-submit", :style => "margin: 0px; padding: 0px;"  %>
+            </div>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div> 
+
+<!-- PHOTO MODAL -->
+<% if current_user == @list.user || (current_user == nil && @list.user.id == 75) %>
+  <div class="modal fade" id="photo-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="photo-modal-close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= form_for(@list, html: { class: 'directUpload', data: { 'form-data' => (@s3_direct_post.fields), 'url' => @s3_direct_post.url, 'host' => URI.parse(@s3_direct_post.url).host } }) do |f| %>
+
+
+            <div class="field">
+              <%= f.file_field :image, :style => "margin: 0px;" %>
+            </div>             
+            <div class="actions">
+              <%= f.submit "SAVE PHOTO", :class => "btn wide-button green-button img-responsive hidden", :style => "margin: 0px; padding: 0px;"  %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div> 
+<% end %>
+
+
+      
+<div class="modal fade" id="forkExplanation" tabindex="-1" role="dialog" aria-labelledby="#forkExplanationLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+
+        <% if current_user %>
+          <div class="text-center">
+            Fork to create a new version of a list that you can edit.
+          </div>
+          <div class="text-center">
+            <%= link_to fork_path(:list_id => @list.id) do  %> <!--#-->
+
+
+              <%= image_tag "fork_horizontal.png", {:class => "img-responsive fork-spoon-image", :style => "max-height:40px;
+              display:inline-block;
+              margin:2px;         
+              -webkit-border-radius: 40px;
+                -moz-border-radius: 40px;
+                border-radius: 40px;"} %>
+            <% end %> 
+          </div>
+        <% else %>
+          <div class="text-center">
+            Fork to create a new version of a list that you can edit.
+          </div>
+          <div class="text-center">
+            <%= link_to new_user_registration_path do %>
+               <button class="btn wide-button green-button">CREATE A PROFILE</button>
+            <% end %>           
+          </div>   
+          <div class="text-center">
+            Create a profile to begin forking lists!
+          </div>
+        <% end %>
+
+
+      </div>
+      <div class="modal-footer hidden">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="text-center hide-when-settings-are-shown fixed-bottom-bar" style="margin-left: 0px;position:fixed; bottom:0px; width: 100%; background-color:#555555; z-index:199;overflow: visible;">
+
+  <a href="#" class="smaller-text" data-toggle="modal" data-target="#forkExplanation" style="color:white; font-size:0.75em;">
+    <%= image_tag "fork_horizontal.png", {:class => "img-responsive fork-spoon-image", :style => "max-height:15px;
+      display:inline;
+      float:left;
+      margin:2px;
+      vertical-align:bottom;              
+      -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;"} %>
+    <span style="display:inline;float:left;margin-bottom:-25px;">
+      ?
+    </span>
+  </a>
+
+
+  <div style="margin: 0 auto;">
+
+    <span id="total-price" style="color:white; padding-right:15px;">
+      $<%='%.2f' % @list.total_price.to_f%> 
+    </span>
+
+    <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+      <span style="float:right; color:white;margin-right:15px;">
+        <%= link_to "#", class: "show-edit-list-parameters-link", style: "color:white;" do %>
+          <i class="fa fa-cog" aria-hidden="true"></i>LIST SETTINGS
+        <% end %>
+      </span>
+    <% end %>
+  </div>
+
+</div>
+
+<div class="text-center" style="margin-left: -5px;position:fixed; bottom:0; width: 100%; background-color:white; z-index:98;">
+  <span style="float:right;" id="hide-edit-list-parameters-link" class="hidden">
+    <%= link_to "Hide list settings.", "#", href: "javascript:void(0)" %>
+  </span>
+</div>
+
+
+<div class="text-center" style="margin-left: -5px;position:fixed; bottom:0; right: 0; width: 50px; background-color:#f1f1f1; z-index:98;">
+
+  <%= link_to "javascript:void(0)" do %>
+    <span style="float:right;" class="hidden" id="show-fixed-bottom-bar">SHOW
+    </span>
+  <% end %>
+</div>
+
+
+
+
+
+
+
+<div id="full-view-container" style="margin-top:-10px;">
+
+  <!-- BEGIN #list-main-nine-md -->
+
+
+
+
+
+  <div class="col-md-12 col-sm-12 col-xs-12 " id="list-main-nine-md" style="padding:0px;">
+    <div class="col-md-12 col-sm-12 col-xs-12 hide-when-settings-are-shown" style="padding:0px 5px;">
+      <% if current_user != @list.user && @list.user.id != 75 %>
+        <div class="col-md-1 col-sm-1 col-xs-4" style="padding:0px;"> 
+          <% if @list.user.image != nil %>
+            <% user_image = @list.user.image %>
+          <% else %>
+            <% user_image = "apple-touch-icon-180x180.png" %>
+          <% end %>
+          <% if @list.user.id != 75 %>
+            <%= link_to @list.user do %>
+              <div class="tiny-text"><%=@list.user.name%></div>
+              <%= image_tag(user_image, style: "max-width:50px; max-height: 50px;") %>
+            <% end %>
+            <div class="hidden tiny-text">
+              <%= image_tag "Lentils_red_and_brown.png", {:class => "",style: "max-width: 15px;", "data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Lentil"} %>
+              <span data-toggle="modal" data-target="#beansModal">
+                <%= link_to "#{@list.user.points}", "#", {:class => "", "data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Collect beans to unlock achievements. Everyone starts as a lentil."} %>
+              </span>
+            </div>
+          <% else %>
+            <%= link_to new_user_registration_path do %>
+              <div class="tiny-text"><%=@list.user.name%></div>
+              <%= image_tag user_image, {style: "max-width:50px; max-height: 50px;","data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Create your free profile today!"  } %>
+            <% end %>   
+          <% end %>
+        </div>
+        
+        <% if @list.image != nil %>
+          <div class="col-md-3 col-sm-3 col-xs-8" style="padding-left: 0px;">
+        <% else %>
+          <div class="col-md-7 col-sm-7 col-xs-8" style="padding-left: 0px;">
+        <% end %>
+<%
+=begin %>
+          <% if @list.posts.count > 0 %>
+          <% else %>
+            <% if @list.image != nil %>
+              <div class="col-md-7 col-sm-7 col-xs-9" style="padding-left: 0px;">
+            <% else %>
+              <div class="col-md-11 col-sm-11 col-xs-9" style="padding-left: 0px;">
+            <% end %>
+            
+          <% end %>
+
+        <% else %>
+          <% if @list.posts.count > 0 %>
+            <div class="col-md-8 col-sm-8 col-xs-12" style="padding-left: 0px;">
+          <% else %>
+
+
+
+
+<%
+=end %>
+
+
+      <% end %>
+      
+
+
+      <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+        <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 0px;">
+          <div id="list-title" style="display:inline-block;" data-toggle="modal" data-target="#edit-title-modal">
+            <span class="smaller-text">
+              <a><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+            </span>
+            <span id="list-title-main" style="display:inline;">
+              <%=@list.name.split.map(&:capitalize).join(' ') %> 
+            </span>
+          </div>
+          
+        </div>
+
+      <% elsif current_user %>
+        <div id="list-title-visitor" style="display:inline-block;">
+          <span id="list-title-main" style="display:inline">
+            <%=@list.name.split.map(&:capitalize).join(' ') %>
+          </span>
+        </div>
+      <% else %>
+
+        <div id="list-title-visitor" style="display:inline-block;">
+          <span id="list-title-main" style="display:inline">
+            <%=@list.name.split.map(&:capitalize).join(' ') %>
+          </span>
+        </div>
+
+      <% end %>
+        <!-- BEGIN LIST HEADER -->
+      <% if @parent_list != nil %>
+        <div class="smaller-text smaller-text col-md-12 col-xs-12 col-sm-12" style="padding:0px;">
+          Forked from <%= link_to @parent_list.name, @parent_list %> by <%= link_to @parent_list.user.name, @parent_list.user, {:class => ""} %>.
+        </div>
+      <% end %>
+
+
+      <% if @list.user == current_user || (@list.user.id == 75 && current_user == nil) %>
+
+        <div class="col-md-6 col-sm-6 col-xs-6 text-center-container" style="padding:0px;">
+          <% list_private_note = @list.private_note %>
+          <% if list_private_note == "" %>
+            <% list_private_note = "Your private notepad." %>
+          <% end %>
+
+              
+          <div class="list-private-note" style="float:left;">
+            <span class="smaller-text" style="color: gray;" data-toggle="modal" data-target="#edit-private-note-modal">
+              <%=" "%><a><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+            </span>
+          </div>
+          <div id="list-private-note" class="list-private-note" style="display:inline;">
+            <div id="list-private-note-main" class="smaller-text" style="hyphens: auto;margin-left:15px;" data-toggle="modal" data-target="#edit-private-note-modal">
+              <%= simple_format(list_private_note.gsub("\r\n", "<br />"), {}, wrapper_tag: "span") %>           
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-6 smaller-text" id="curate-toggle" style="padding: 0px; float:right;">
+          <a><i class='fa fa-pencil-square-o' aria-hidden='true'></i></a>
+          Share ideas and photos.
+        </div>
+      <% end %>
+
+
+      <div class="col-md-12 col-sm-12 col-xs-12 text-center-container" style="padding:0px; margin-top:15px;">
+        <% list_note = @list.note %>
+        <% if current_user != nil || @list.user.id == 75 %>
+          <% if list_note == "" &&  @list.user != current_user && @list.user.id != 75%>
+            <% list_note = nil %>
+          <% elsif list_note == "" && @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+            <% list_note = "Write a description of your list." %>
+          <% end %>
+        <% else %>
+          <% if list_note == "" %>
+            <% list_note = nil %>
+          <% end %>
+        <% end %>
+
+
+        <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+        
+            
+          <div class="list-note curate-list hidden" style="float:left;">
+            <span class="smaller-text" style="color: gray;" data-toggle="modal" data-target="#edit-description-modal">
+              <%=" "%><a><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+            </span>
+          </div>
+          <div id="list-note" class="list-note curate-list hidden" style="display:inline;">
+            <div id="list-note-main" class="smaller-text" style="hyphens: auto;" data-toggle="modal" data-target="#edit-description-modal">
+              <%= simple_format(truncate(list_note, :length => 250).gsub("\r\n", "<br />"), {}, wrapper_tag: "span") %>
+              <% if @list.note.length > 250 %>
+                <%= link_to "Read more", "#", :id => "small-text-link" %>
+              <% end %>               
+            </div>
+          </div>
+          
+        <% else %>
+
+
+
+          <% if list_note != nil %>
+            <div id="list-note-view">
+              <span id="list-note-main-view" class="smaller-text">
+                <span id="list-note-main" style="hyphens: auto;">
+                  <%= simple_format(truncate(list_note, :length => 250).gsub("\r\n", "<br />"), {}, wrapper_tag: "div") %>
+                </span>
+              </span>
+            </div>
+          <% end %>
+        <% end %>
+
+
+
+
+      </div>
+
+
+
+
+
+      <% if @list.image != nil || @list.user == current_user || (@list.user.id == 75 && current_user == nil) %>
+        <div class="col-md-12 col-sm-12 col-xs-12 curate-list hidden" style="margin:0;padding:0;">
+
+          <% if current_user == @list.user || (@list.user.id == 75 && current_user == nil)  %>
+            <span id="camera" class="smaller-text" style="position:absolute; left:0;">
+              <%= link_to "javascript:void(0);", {:id => "camera-link", "data-toggle" => "modal", "data-target" => "#photo-modal"} do %>
+                <i class="fa fa-camera" aria-hidden="true"></i>
+              <% end %>
+
+            </span>
+            
+          <% end %>
+          <% if @list.image != nil %>
+            <%= image_tag @list.image, style: "max-width: 95%; max-height: 250px;" %>
+          <% else %>
+            <div class="smaller-text" id="add-picture" data-toggle="modal" data-target="#photo-modal" style="max-width: 95%; max-height: 250px; margin-left:15px;">
+              Add a picture of your groceries.
+            </div>
+          <% end %> 
+        </div>
+      <% end %>
+
+      <% if @list.user == current_user || (@list.user.id == 75 && current_user == nil) %>
+        <div class="col-md-12 col-sm-12 col-xs-12 curate-list hidden smaller-text" style="margin:0;padding:0;">
+          <%= link_to "javascript:void(0)" do %>
+            <div id="write-a-dish" class="" style="margin-left: 15px; padding:0px;">Write a dish.
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+
+      
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+      
+
+  </div>
+  <% if @posts.length > 0 %>
+    <div class="col-md-12 col-sm-12 col-xs-12 hide-when-settings-are-shown" style="padding:0px 5px;"">
+      <div>DISHES ABOUT THIS LIST</div>
+
+      <% @posts.each do |p| %>
+        <% if p.images.length > 0 %>
+          
+          
+          <%= link_to "#", id: "read-more-dish-#{p.id}", class: "read-more-dish" do %>
+            <div style="display:inline-block">
+
+              <div class="init-opacity-zero" style="margin: 5px;display:inline-block;">
+                <img src="<%= p.images.last.image_url %>" class="", style= 'max-width: 100px; max-height: 100px' />
+
+              </div>
+              <div style="text-align:center;display:none;" class="smaller-text"><%= p.title %></div>
+
+            </div>
+          <% end %>
+        <% else %>
+          <%= link_to "#", id: "read-more-dish-#{p.id}", class: "read-more-dish" do %>
+            <div style="display:inline-block">
+
+              <div style="width: 100px; height: 100px; overflow:hidden; margin: 5px;display:inline-block;">
+                <%= image_tag "forkspoon_circle.svg", {:class => "img-responsive fork-spoon-image", :style => "opacity:0.5;"} %>
+              </div><br>
+              <div style="width:100px;text-align:center;margin: 5px; display:none;" class="smaller-text"><%= p.title %></div>
+            </div>
+
+          <% end %>   
+
+        <% end %>
+      <% end %>
+
+    </div>
+  <% end %>
+
+
+  <div style="position:fixed;z-index:100;
+      padding:0px;
+      margin: 0 auto;
+      width:130px;
+      left: 0;
+      right: 0;
+      bottom: 125px;">
+
+
+
+    <% if (current_user == nil && @list.user.id == 75) || @list.user == current_user %>
+        <%= link_to shuffle_stepwise_path(:list_id => @list_id, :mode => "opt"), :remote => true, :class => "shuffle-click fixed-bottom-bar hide-when-settings-are-shown", :style => "padding: 0px;" do %>
+          <button class="btn list-buttons wide-button green-button img-responsive" id="suggestions-button" style="padding:0px;margin:0px;">SUGGESTIONS</button>
+        <% end %>
+    <% end %>
+
+
+
+      <!-- the ADD FOOD button should link to search_and_add_path(:list_id => @list_id) to populate browse, if browse is active -->
+<%
+=begin %>  
+
+      <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+        <%= link_to "#", :remote => true, style: "padding:0px;", class: "fixed-bottom-bar hide-when-settings-are-shown show-add-block search-click-list" do %>
+          <button class="btn list-buttons wide-button green-button img-responsive" id="add-block-button" data-toggle="tooltip" data-placement="bottom" title="">ADD FOOD
+          </button>
+        <% end %>
+      <% end %>
+<%
+=end %>  
+
+
+  </div>
+
+
+  <div class="fixed-bottom-bar" id="section-one" style="position:fixed;
+  bottom:20px;
+  margin-left:0px;
+  width:100%;
+  background-color:#cccccc;
+  z-index:99;">
+    <%= link_to "javascript:void(0)" do %>
+      <span id="hide-fixed-bottom-bar" style="position:absolute;z-index:100;right:5px;">HIDE</span>
+    <% end %>
+    <div id="nutrition-totals" class="text-center center-block hide-when-settings-are-shown">
+      <%= render 'nutrition' %>
+    </div>
+  </div> 
+
+
+
+
+
+
+
+
+
+
+
+  <% if current_user != nil || @list.user.id == 75 %>
+    <% if @list.user == current_user || @list.user.id == 75 %>
+      <div class="col-md-12  col-sm-12 col-xs-12 text-center list-header hide-when-settings-are-shown">
+
+
+
+
+
+        <div id="add-block" style="display:none;">
+          <div id="hide-add-block" class="text-center smaller-text" style="display:none;color:gray;">
+            <i class="fa fa-angle-up fa-2x fa-lg" aria-hidden="true"></i>
+            <br>ALL SET<BR><BR><BR>
+          </div>
+          <%= link_to search_and_add_path(:list_id => @list_id), :class => "search-click-list", :remote => true do %>
+            <button class="btn list-buttons wide-button green-button img-responsive hidden" id="search-and-add-button">SEARCH + ADD</button>
+          <% end %>
+
+
+
+          <%= link_to shuffle_stepwise_path(:list_id => @list_id, :mode => "auto"), :remote => true, :class => "shuffle-click" do %>
+            <button class="btn list-buttons wide-button green-button img-responsive hidden" id="autocomplete-button">AUTOCOMPLETE</button>
+          <% end %>
+        </div>
+
+      
+        <% if current_user %>
+          <%= link_to send_checklist_mailer_path(:list_id => @list_id, :user_id => current_user.id), :class => "hidden" do %>
+            <button class="btn list-buttons send-checklist-mailer-button wide-button green-button img-responsive" id="email-me-the-list" data-toggle="tooltip" data-placement="bottom" title="">EMAIL ME THE LIST</button>
+          <% end %>
+        <% end %>
+        <div class="hidden">
+          <center>
+          Groceries for friends or family? <%= link_to "Count their nutrition needs too", add_person_path(:list_id => @list_id) %>! (This is in beta.)
+          </center>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+    <!-- END LIST HEADER -->
+
+
+    
+
+    <!-- BEGIN EDIT NUTRITION SETTINGS -->
+    <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+      <% m_checked = false %>
+      <% f_checked = false %>
+      <% d_checked = false %>
+      <% if @list_sex == 'd' %>
+        <% d_checked = true %>
+      <% elsif @list_sex == 'm' %>
+        <% m_checked = true %>
+      <% else %>
+        <% f_checked = true %>
+      <% end %>
+      <% if @list_activity_level == nil %>
+        <% @list_activity_level = 's' %>
+      <% end %>
+      <% s_checked = false %>
+      <% l_checked = false %>
+      <% a_checked = false %>
+      <% v_checked = false %>
+      <% if @list_activity_level == 's' %>
+        <% s_checked = true %>
+      <% elsif @list_activity_level == 'l' %>
+        <% l_checked = true %>
+      <% elsif @list_activity_level == 'a' %>
+        <% a_checked = true %>
+      <% else %>
+        <% v_checked = true %>
+      <% end %>
+      <% if @carbohydrates_percentage == "" || @carbohydrates_percentage.to_i == -1  %>
+        <% default_carbohydrates = -1 %>
+        <% carb_flex_check = "checked" %>
+      <% else %>
+        <% default_carbohydrates = @carbohydrates_percentage.to_i %>
+        <% carb_flex_check = false %>
+      <% end %>
+
+      <% if @fat_percentage == "" || @fat_percentage.to_i == -1  %>
+        <% default_fat = -1 %>
+        <% fat_flex_check = "checked" %>
+      <% else %>
+        <% default_fat = @fat_percentage.to_i %>
+        <% fat_flex_check = false %>
+      <% end %>
+      <% if @protein_percentage == "" || @protein_percentage.to_i == -1  %>
+        <% default_protein = -1 %>
+        <% protein_flex_check = "checked" %>
+      <% else %>
+        <% default_protein = @protein_percentage.to_i %>
+        <% protein_flex_check = false %>
+      <% end %>
+
+      <!-- BEGIN #edit-list-parameters -->
+      <div id="edit-list-parameters" class="hidden">
+<!-- BEGIN form_for n -->
+
+      <div id="max-price-show" style="display:none">
+          <span id="max-price-show-main">
+          Budget: $<%='%.2f' % @list.max_price%>
+        </span>
+        <span>
+          <%=" "%>
+        </span>
+        <span>
+          <a><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        </span>
+      </div>
+      <center>
+        <div id="max-price-show-edit-container" class="hidden">
+          <%= form_for(@list, :remote => true, :html => {:class => "", :style => "margin: 0px auto;"}) do |f| %>
+            <%= f.text_field(:max_price, :value=>@list.max_price, :id => "") %>
+          <% end %>
+        </div>
+      </center>
+
+
+
+<%= form_for(@list,  :html => {:class => "", :style => "margin: 0px auto;"}) do |f| %>
+        <center>
+          <div style="min-height: 100px;">
+            <%= f.submit "SAVE LIST SETTINGS", :id => "update-list-submit-button", :class => "btn wide-button green-button settings-submit-button img-responsive", :style => "position:fixed; z-index: 100;
+              padding:10px;
+margin: 0 auto;
+width:200px;
+left: 0;
+right: 0;
+" %>
+            <div id="settings-saved" class="hidden">SAVED</div>
+          </div>
+          <div id="user-macronutrient-error" class="hidden client-side-error">
+              Please review your macronutrient settings before saving your changes.
+          </div>
+        </center>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+          
+          <label for="days-slider">BUDGET($)</label><BR>
+          <%= f.text_field(:max_price, :value=>@list.max_price, :id => "max-price-show-edit", :class => "input form-control number_field", :style => "text-align:center; max-width: 75px;display:inline;") %>
+        </div>
+
+        <div class='span12'><hr></div>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+          <label for="days-slider">DAYS</label><br>
+          <div class="text-center">How many days of food?
+          </div>
+          <div id="days-slider-display"></div>
+          <%= f.number_field :days, id: 'days', in: 1..14, value: @list_days, :class => "input form-control number_field", :style => "text-align:center; max-width: 75px;display:inline;" %>
+        </div>
+
+
+
+          <% init_percentage = @list_percentage %>
+          <% if init_percentage == "" || init_percentage == nil %>
+            <% init_percentage = "85" %>
+          <% end %>
+
+
+
+        <div class='span12'><hr></div>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+
+          <label for="percentage-slider">PERCENTAGE OF NUTRITION</label>
+          <div class="center-block">
+            The rest is snacking, spontaneous, and eating out.
+          </div>
+          <%= f.number_field :percentage, id: 'percentage', in: 10..100, class: "input form-control text_field", value: init_percentage, style: "text-align:center; max-width: 75px;display:inline;"%><span style="display:inline;">%</span>
+
+        </div>
+
+
+
+        <div class='span12'><hr></div>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+
+            <label for="list[age]">AGE</label>
+            <center>
+            <%= f.number_field(:age, in: 1..120, :step => 1, :id => "age", :class => "input form-control text_field age-field-input", :style => "text-align:center; max-width: 75px;", :value => @list_age) %>
+            </center>
+            <br>
+        </div>
+
+
+        <div class='span12'><hr></div>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+          <%= f.label :gender, "SEX" %><br>
+          <div style="margin-left:35%; text-align:left;">
+            
+            <%= f.radio_button :gender, 'f', :checked => f_checked, :style => "display:inline-block; width:10%;" %>
+            <%= f.label :gender, 'Female', :value => 'f' %><br>
+
+            <%= f.radio_button :gender, 'm', :checked => m_checked, :style => "display:inline-block; width:10%;" %>
+            <%= f.label :gender, 'Male', :value => 'm' %><br>
+
+            <%= f.radio_button :gender, 'd', :checked => d_checked, :style => "display:inline-block; width:10%;" %>
+            <%= f.label :gender, 'Decline to say', :value => 'd' %>
+          </div>
+        </div>
+
+
+        <div>
+<!-- BEGIN fields_for n -->
+<%= f.fields_for :nutrition_constraints do |n| %> 
+          <div class="hidden">
+            <%= n.number_field(:min_potassium, :value => 1) %>
+            <%= n.number_field(:max_sugar, :value => 500) %>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <div id="height-slider-container">
+              <label for="height-slider">HEIGHT</label>
+              <input type="range" name="height-slider" id="height-slider" value="<%=@constraints["height"]%>" min="24" max="100" data-highlight="true" />
+              <div id="height-in-feet-inches"></div>
+              <br>
+              <%= n.number_field :height, id: 'height', class: "hidden", value: @constraints["height"] %>
+            </div>
+          </div>
+
+          <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+            <label for="weight-slider">WEIGHT (LBS)</label>
+            <div id="weight-slider-container">
+              <input type="range" name="slider" id="weight-slider" value="<%=@constraints["weight"]%>" min="20" max="800" data-highlight="true" class="hidden" />
+              <center>
+              <%= n.number_field :weight, id: 'weight', class: "input form-control number_field weight-field-input", value: @constraints["weight"], style: "text-align:center; max-width: 75px;" %>
+              </center>
+              <br>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <label for="activity-level">ACTIVITY LEVEL</label>
+            <div id="pal-explanation-link" class="little hidden">
+              <%= link_to " What is this?", "#", href: "javascript:void(0)" %>
+            </div>
+          </div>
+          <div style="margin-left:35%; text-align:left;">
+              <%= n.radio_button :activity_level, 's', :checked => s_checked, :style => "width:10%;" %>
+              <%= n.label :activity_level, 'Sedentary', :value => 's' %>
+              <br>
+              <%= n.radio_button :activity_level, 'l', :checked => l_checked, :style => "width:10%;" %>
+              <%= n.label :activity_level, 'Low active', :value => 'l' %>
+              <br>
+              <%= n.radio_button :activity_level, 'a', :checked => a_checked, :style => "width:10%;" %>
+              <%= n.label :activity_level, 'Active', :value => 'a' %>
+              <br>
+              <%= n.radio_button :activity_level, 'v', :checked => v_checked, :style => "width:10%;" %>
+              <%= n.label :activity_level, 'Very active', :value => 'v' %>
+          </div>
+        </div>
+        <div class='span12'><hr></div>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center dietary_restrictions">
+          <br><br>
+          <label>DIETARY RESTRICTIONS</label>
+        </div>
+    
+          
+        <div style="margin-left:35%; text-align:left;">
+
+          <% if @constraints["unprocessed"] == "1" %>
+            <% unprocessed_checked = true %>
+          <% else %>
+            <% unprocessed_checked = false %>
+          <% end %>
+          <%= n.check_box :unprocessed, :id => 'unprocessed', class: 'form-control input hidden', :style => "display:inline-block; width:10%;", :checked => unprocessed_checked, type: "checkbox" %>
+
+
+          <% if @constraints["vegetarian"] == "1" %>
+            <% vegetarian_checked = true %>
+          <% else %>
+            <% vegetarian_checked = false %>
+          <% end %>
+          <%= n.check_box :vegetarian, :id => 'vegetarian', class: 'input form-control', :style => "display:inline-block; width:10%;", :checked => vegetarian_checked, type: "checkbox" %>
+          <%= n.label(:vegetarian, "Vegetarian") %>
+          <br>
+
+
+          <% if @constraints["pescatarian"] == "1" %>
+            <% pescatarian_checked = true %>
+          <% else %>
+            <% pescatarian_checked = false %>
+          <% end %>
+          <%= n.check_box :pescatarian, :id => 'pescatarian', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => pescatarian_checked, type: "checkbox" %>
+          <%= n.label(:pescatarian, "Pescatarian") %>
+          <br>
+
+          <% if @constraints["red_meat_free"] == "1" %>
+            <% red_meat_free_checked = true %>
+          <% else %>
+            <% red_meat_free_checked = false %>
+          <% end %>  
+          <%= n.check_box :red_meat_free, :id => 'red-meat-free', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => red_meat_free_checked, type: "checkbox" %>
+          <%= n.label(:red_meat_free, "Red Meat-free") %>
+          <br>
+
+          <% if @constraints["dairy_free"] == "1" %>
+            <% dairy_free_checked = true %>
+          <% else %>
+            <% dairy_free_checked = false %>
+          <% end %>
+          <%= n.check_box :dairy_free, :id => 'dairy-free', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => dairy_free_checked, type: "checkbox" %>
+          <%= n.label(:dairy_free, "Dairy-free") %>
+          <br>
+
+          <% if @constraints["soy_free"] == "1" %>
+            <% soy_free_checked = true %>
+          <% else %>
+            <% soy_free_checked = false %>
+          <% end %>
+          <%= n.check_box :soy_free, :id => 'soy-free', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => soy_free_checked, type: "checkbox" %>
+          <%= n.label(:soy_free, "Soy-free") %>
+          <br>
+
+          <% if @constraints["egg_free"] == "1" %>
+            <% egg_free_checked = true %>
+          <% else %>
+            <% egg_free_checked = false %>
+          <% end %>
+          <%= n.check_box :egg_free, :id => 'egg-free', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => egg_free_checked, type: "checkbox" %>
+          <%= n.label(:egg_free, "Egg-free") %>
+          <br>
+
+          <% if @constraints["gluten_free"] == "1" %>
+            <% gluten_free_checked = true %>
+          <% else %>
+            <% gluten_free_checked = false %>
+          <% end %>
+          <%= n.check_box :gluten_free, :id => 'gluten-free', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => gluten_free_checked, type: "checkbox" %>
+          <%= n.label(:gluten_free, "Gluten-free") %>
+          <br>
+
+          <% if @constraints["kosher"] == "1" %>
+            <% kosher_checked = true %>
+          <% else %>
+            <% kosher_checked = false %>
+          <% end %>
+
+          <div class="hidden">
+            <%= n.check_box :kosher, :id => 'kosher', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => kosher_checked, type: "checkbox" %>
+            <%= n.label(:kosher, "Kosher") %>
+            <% if @constraints["store_brand"] == "1" %>
+              <% store_brand_checked = true %>
+            <% else %>
+              <% store_brand_checked = false %>
+            <% end %>
+            <%= n.check_box :store_brand, :id => 'store-brand', class: 'form-control input', :style => "display:inline-block; display:inline-block; width:10%;", :checked => store_brand_checked, type: "checkbox" %>
+            <%= n.label(:store_brand, "Store brand") %>
+          </div>
+
+
+          <% if @constraints["organic"] == "1" %>
+            <% organic_checked = true %>
+          <% else %>
+            <% organic_checked = false %>
+          <% end %>
+          <%= n.check_box :organic, :id => 'organic', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => organic_checked, type: "checkbox" %>
+          <%= n.label(:organic, "Organic") %>
+          <br>
+
+          <% if @constraints["peanut_free"] == "1" %>
+            <% peanut_free_checked = true %>
+          <% else %>
+            <% peanut_free_checked  = false %>
+          <% end %>
+          <%= n.check_box :peanut_free, :id => 'peanut-free', class: 'form-control input', :style => "display:inline-block; width:10%;", :checked => peanut_free_checked, type: "checkbox" %>
+          <%= n.label(:peanut_free, "Peanut-free") %>
+
+        </div>
+
+        <div class='span12'><hr></div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="col-md-12 text-center center-block">
+            <div class="field">
+              <%= n.label :custom, "CUSTOM DIETARY RESTRICTIONS" %>
+              <div class="smaller-text">
+                Add commas between terms. Your custom restrictions will not be suggested or available in search.
+              </div>
+              <center>
+                <%= n.text_field :custom, :value => @constraints["custom"], :class => "text-center center-block center", :style => "text-align:center;" %>
+              </center>
+            </div>
+          </div>
+        </div>
+        <div class='span12'><hr></div>
+        <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+
+            <label>NUTRIENTS</label><br>
+
+        </div>
+        <div style="margin-left:20%; text-align:left;">
+          Min Calories<%= n.number_field(:min_calories, in: 50..6000, :step => 1, :value => @constraints["min_calories"].to_i, :class => "input form-control text_field", :id => "min-calories", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+          Max Calories<%= n.number_field(:max_calories, in: 50..6000, :step => 1, :value => @constraints["max_calories"].to_i, :class => "input form-control text_field", :id => "max-calories", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+          Min Vitamin A (% DV)<%= n.number_field(:min_vitamin_a, in: 10..500, :step => 1, :value => @constraints["min_vitamin_a"].to_i, :class => "input form-control text_field", :id => "min-vitamin-a", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+          Min Vitamin C (% DV)<%= n.number_field(:min_vitamin_c, in: 10..500, :step => 1, :value => @constraints["min_vitamin_c"].to_i, :class => "input form-control text_field", :id => "min-vitamin-c", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+
+          Min Fiber (g)<%= n.number_field(:min_fiber, in: 5..200, :step => 1, :value => @constraints["min_fiber"].to_i, :class => "input form-control text_field", :id => "min-fiber", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+          Min Calcium (% DV)<%= n.number_field(:min_calcium, in: 10..500, :step => 1, :value => @constraints["min_calcium"].to_i, :class => "input form-control text_field", :id => "min-calcium", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+          Min Iron (% DV)<%= n.number_field(:min_iron, in: 10..500, :step => 1, :value => @constraints["min_iron"].to_i, :class => "input form-control text_field", :id => "min-iron", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+          Max Sodium (mg)<%= n.number_field(:max_sodium, in: 0..4000, :step => 1, :value => @constraints["max_sodium"].to_i, :class => "input form-control text_field", :id => "max-sodium", :style => "width:100px; text-align:center; display: inline-block;") %><br>
+
+        </div>
+
+        <div id="is-user-profile" class="hidden"></div>
+        <div id="default-carb" class="hidden"><%=default_carbohydrates%></div>
+        <div id="default-protein" class="hidden"><%=default_protein%></div>  
+        <div id="default-fat" class="hidden"><%=default_fat%></div>
+        <div class='span12'><hr></div>
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="col-md-12">PERCENTAGE OF CALORIES FROM MACRONUTRIENTS
+            <br>
+            <br>
+            <div id="must-be-hundred" style="text-align:left;">
+              <span id="must-be-hundred-span"></span>
+              <span id="counter"></span>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12">
+              <div class="col-md-4">
+                <div class="user-carbohydrates-super-container">
+                  <label for="user-carbohydrates-slider">CARBOHYDRATES</label>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="carb-click" class="flexible-label">Flexible</label>
+                      <input class="input form-control carbtest-checkbox macronutrient-checkbox" type="checkbox" name="carbtest" id="carb-click"
+                      <% if carb_flex_check %>
+                        checked="checked"
+                      <% end %>
+                      >
+                    </div>
+                  </div>
+                  <div id="user-carbohydrates-slider-container">
+                    <%= n.range_field(:carbohydrates, in: 1..100, :value=>default_carbohydrates,:class=>"input form-control bfh-number", :id=>"user-carbohydrates", :style=> "padding:0px; margin: 5px auto;") %>
+                    <div class="tiny-text">
+                      <span id="carbohydrates-list-show"><%=default_carbohydrates%></span>% calories from carbs.
+                    </div>
+                  </div>
+                </div>
+                <div class='span12'><hr></div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="user-fat-super-container">
+                  <label for="user-fat-slider">FAT</label>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="fat-click" class="flexible-label">Flexible</label>
+
+                      <input class="input form-control fat-checkbox macronutrient-checkbox" type="checkbox" name="fat" id="fat-click"
+                      <% if fat_flex_check %>
+                        checked="checked"
+                      <% end %>
+                      >
+                    </div>
+                  </div>
+                  <div id="user-fat-slider-container">
+                    <%= n.range_field(:fat, in: 1..100, :value=>default_fat,:class=>"input form-control bfh-number", :id=>"user-fat", :style=> "padding:0px; margin: 5px auto;") %>
+                    <div class="tiny-text">
+                      <span id="fat-list-show"><%=default_fat%></span>% calories from fat.
+                    </div>
+                  </div>
+                </div>
+                <div class='span12'><hr></div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="user-protein-super-container">
+                  <label for="user-protein-slider">PROTEIN</label>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label for="protein-click" class="flexible-label">Flexible</label>
+
+                      <input class="input form-control proteintest-checkbox macronutrient-checkbox" type="checkbox" name="proteintest" id="protein-click"
+
+                      <% if protein_flex_check %>
+                        checked="checked"
+                      <% end %>
+                      >
+                    </div>
+                  </div>
+                  <div id="user-protein-slider-container">
+                    <%= n.range_field(:protein, in: 1..100, :value=>default_protein,:class=>"input form-control bfh-number", :id=>"user-protein", :style=> "padding:0px; margin: 5px auto;") %>
+                    <div class="tiny-text">
+                      <span id="protein-list-show"><%=default_protein%></span>% calories from protein.
+                    </div>
+                  </div>
+                </div>
+                <div class='span12'><hr></div>
+              </div>
+            </div>
+          </div>
+        </div>
+<% end %>
+<!-- END fields_for n -->
+<% end %>
+<!-- END form_for f -->
+      </div>
+        <!-- END #edit-list-parameters -->
+    <% end %>
+
+    <!-- END EDIT NUTRITION SETTINGS -->
+    
+
+    <!-- BEGIN LIST MAIN BODY -->
+    <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+      <div id="section-two">
+        <div id="stepwise-response-box-container" class="search-box-container text-center hidden" style="min-height:200px;">
+          <div class="hidden" id="hidden-preview-details-div-shuffle-stepwise" >
+            
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <span class="shuffle-stepwise-enough hidden close-box-link close-add-food-box">
+                <%= link_to "\xe2\x9c\x95".html_safe, "javascript:void(0)" %>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12">    
+            <%= render 'stepwise_response_box', l: @list %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+      
+      <!-- END BUTTON BOXES -->
+      
+
+      <!-- BEGIN LIST ITEMS -->
+    <div id="list-standard" class="text-center col-md-12 col-sm-12 col-xs-12" style="">
+      <!-- BEGIN INDIVIDUAL QUANTITIES -->
+      <div id="individual-quantities" class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px; min-height:200px; text-align:left;">
+        <% if @list.user == current_user || (current_user == nil && @list.user.id == 75) %>
+
+
+        
+          <div id="browse-categories" class="text-center" style='margin-top:5px;padding:0px;'>
+            <%= link_to "#", href: "javascript:void(0)", :class => "" do %>
+              <div class="" id="browse-text" style="max-width:100%;font-size:0.75em;opacity:0.5; margin: -15px auto 5px;"><div class='tiny-text'>ADD FROM FREQUENTS AND FAVORITES</div></div>
+            <% end %>
+          </div>
+
+
+          <div id="search-box-container" class="hidden">
+
+
+
+            <!-- render 'shared/search_box', :list_id => @list_id -->
+
+
+            <div class="col-md-12 col-xs-12 col-sm-12 browse-categories-buttons">
+              <div id="add-foods-frequents-2" class="browse-categories-buttons col-md-6 col-sm-6 col-xs-6 text-center add-foods-frequents-2" style=''>
+                <%= link_to "#", href: "javascript:void(0)", :class => "frequent-foods-click-list-2" do %>
+                  
+                  <button class="btn wide-button white-skinny-button" style="max-width:100%;">FREQUENTS</button>
+
+                <% end %>
+              </div>
+              <div id="add-foods-likes-2" class="browse-categories-buttons col-md-6 col-sm-6 col-xs-6 text-center add-foods-likes-2" style=''>
+                <%= link_to "#", href: "javascript:void(0)", :class => "likes-foods-click-list-2" do %>
+                  <button class="btn wide-button white-skinny-button" style="max-width:100%;">FAVORITES</button>
+                <% end %>
+              </div>
+
+
+
+<%
+=begin %>
+              <div id="browse-by-aisle" class="browse-categories-buttons col-md-4 col-sm-4 col-xs-4 text-center add-foods-likes-2" style=''>
+                <%= link_to "#", href: "javascript:void(0)", :class => "" do %>
+                  <button class="btn wide-button white-skinny-button" style="max-width:100%;">BY AISLE</button>
+                <% end %>
+              </div>
+
+
+<%
+=end %>
+
+
+            </div>
+            
+
+            <div id="frequent-foods-box-list-2" class="browse-categories-boxes search-box-container hidden col-md-12 col-sm-12 col-xs-12" style="width:94%; margin: 0 3%;">
+              <div class="close-link-container row close-add-food-box">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="close-box-link" id="close-by-aisle-box-link">
+                    <%= link_to "\xe2\x9c\x95".html_safe, "#", href: "javascript:void(0)" %>
+                  </div>
+                </div>
+              </div>
+              
+              
+              <% if current_user == nil %>
+                <div style="margin: 0px auto;">
+                  <div class="smaller-text text-center">
+                    <%= link_to new_user_registration_path do %>Create a free profile<% end %> to easily add your regular foods.
+                  </div>
+                  <% @frequent_foods.first(20).each do |a| %>
+                    <% if Food.exists?(a) %>
+                      <%= render 'shared/search_result', :f => Food.find(a), l: @list_id, from: 'frequent' %>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% else %>
+                <% if @frequent_foods.length == 0 %>
+                  <div  style="margin: 60px auto;">
+                    Once you've created a few grocery lists, you can come here to find foods that you frequently add.
+                  </div>
+                <% end %>
+                <% @frequent_foods.first(20).each do |a| %>
+                  <% if Food.exists?(a) %>
+                    <%= render 'shared/search_result', :f => Food.find(a), l: @list_id, from: 'frequent' %>
+                  <% end %>
+                <% end %>
+              
+              <% end %>
+            </div>
+            <div id="top-foods-box-list" class="browse-categories-boxes search-box-container hidden col-md-12 col-sm-12 col-xs-12" style="width:94%; margin: 0 3%;">
+              <div class="close-link-container row close-add-food-box">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="close-box-link" id="close-top-foods-box-link">
+                    <%= link_to "\xe2\x9c\x95".html_safe, "#", href: "javascript:void(0)" %>
+                  </div>
+                </div>
+              </div>
+              <% if current_user == nil %>
+                <div class="smaller-text text-center col-md-12 col-sm-12 col-xs-12" style="margin: 0px auto;">
+                  <%= link_to new_user_registration_path do %>Create a free profile<% end %> to easily add your favorite foods.
+                </div>
+                <% @eligible_favorites.each do |a| %>
+                  <% if Food.exists?(a) %>
+                    <%= render 'shared/search_result', :f => Food.find(a), l: @list_id, from: 'top' %>
+                  <% end %>
+                <% end %>
+              <% elsif @eligible_favorites.length == 0 %>
+                <div style="margin: 60px auto;">
+                  <center>You can favorite any food on your grocery list or someone else's list.</center>
+                </div>
+              <% else %>
+                <% @eligible_favorites.each do |a| %>
+                  <% if Food.exists?(a) %>
+                    <%= render 'shared/search_result', :f => Food.find(a), l: @list_id, from: 'top' %>
+                  <% end %>
+                <% end %>
+              
+              <% end %>
+            </div>
+            <div id="by-aisle-box-list" class="browse-categories-boxes search-box-container hidden col-md-12 col-sm-12 col-xs-12" style="width:94%; margin: 0 3%; min-height:250px;">
+              <div class="close-link-container row close-add-food-box">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                  <div class="close-box-link" id="close-frequent-foods-box-link">
+                    <%= link_to "\xe2\x9c\x95".html_safe, "#", href: "javascript:void(0)" %>
+                  </div>
+                </div>
+              </div>
+              
+              
+            
+              <div class="smaller-text" style="position:absolute;">
+                <% @root_cat_names_browse.each do |r| %>
+                  <%= link_to browse_path(:root_cat => r, :list_id => @list.id), :class => "browse-by-aisle-click", :remote => true, :style => "font-size:0.75em" do %>
+                    <span><%= r %></span>
+                  <% end %> | 
+                <% end %>
+
+           
+              </div>
+              <div id="browse-results-container" class="smaller-text col-md-12 col-sm-12 col-xs-12" style="margin-top:75px;">
+              </div>
+           
+              
+            </div>
+          </div>
+          <%= render 'shared/search_box', :list_id => @list_id %>
+
+          
+        <% end %>
+
+        
+        <% @root_cat_names.each do |r| %>
+          <div class="root-cat-container-items">
+            <% root_cat_id = r.gsub(/[\s,&]/ ,"") %>
+            <div class="col-md-12 col-sm-12 col-xs-12 root-cat-title" id="<%=root_cat_id%>-title" style="padding-left:5px;text-align:left;">
+              <%=r%>
+            </div>
+            <div id="<%=root_cat_id%>-items" class="root-cat-items">
+              <% @quantities.each do |q| %>
+                <% if q.food.root_cat_name == r %>
+                  <%= render 'items_core', :q => q %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>      
+        <% end %>
+        <div class="root-cat-container-items">
+          <div class="col-md-12 col-sm-12 col-xs-12 root-cat-title" id="nil-category" style="padding-left:5px;text-align:left;">
+            Foods that transcend category
+          </div>
+          <div id="nil-category-items" class="root-cat-items">
+            <% @quantities.each do |q| %>
+              <% if q.food.root_cat_name == nil %>
+                <%= render 'items_core', :q => q %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- END INDIVIDUAL QUANTITIES -->
+
+      
+
+    </div>
+      <!-- END LIST ITEMS -->
+    <div style="height:1px; margin-bottom: 800px;width:100%; background-color:white;" id="below-list-standard" class="col-md-12 col-sm-12 col-xs-12"></div>
+
+    </div>
+    <!-- END LIST MAIN BODY -->
+
+  </div>
+
+  <!-- END #list-main-nine-md -->
+
+
+
+
+
+
+
+<!-- BEGIN DISHES -->
+  <div id="dishes-container" class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px;">
+  <!-- BEGIN PUBLISHED A DISH -->
+    <% if @list.user == current_user || @list.user.id == 75 %>
+
+      <div style="font-size:1.5em; color:gray; text-align:center; margin-bottom: 15px;">Dish about your list.</div>
+      <div class="text-center" style="margin-bottom: 30px;">A dish is a story about your grocery list.</div>
+
+      <div class="col-md-12 col-sm-12 col-xs-12" id="post-congrats" style="display:none;">
+        <div class="text-center" style="margin: 30px auto;">
+          Congratulations! You have published a dish. You can scroll down to read it and add images.
+        </div>
+      </div>
+
+      <% var_display_input = "" %>
+      <% var_display_hidden = "display:none;" %>
+      <div class="col-md-12 col-sm-12 col-xs-12" id="posts-about-this-list" style="<%=var_display_hidden%>">
+        <div class="text-center hidden" style="font-size:1.25em;">
+          <i class="fa fa-angle-down fa-3x fa-lg" aria-hidden="true" style="color:gray;"></i>
+        </div>
+      </div>
+
+
+      <div class="col-md-12 col-sm-12 col-xs-12" id="large-post-row" style="<%=var_display_input%>">
+        <div id="large-post-hide" class="text-center hidden smaller-text" style="color:gray;">
+          <i class="fa fa-angle-up fa-2x fa-lg" aria-hidden="true"></i>
+          <br>hide
+        </div>
+
+
+
+
+
+        <div id="dish-block" class="text-center">
+          <a href="javascript:void(0)"><span id="instagram-dish-click" class="">DISH VIA INSTAGRAM</span></a><br>or<br> 
+
+          <a href="javascript:void(0)"><span id="original-dish-click" class="">WRITE A NEW DISH</span></a>
+
+        </div>
+
+
+
+
+        <div id="instagram-dish-block" style="margin: 30px 0px; display:none;">
+          <div class="text-center" style="font-size:1.25em; margin-bottom:30px">
+            Paste the share URL and press Enter.
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <%= form_tag({action: "instagram_dish", controller: "lists"}, :method => "get", :remote => true) do %>
+                <%= hidden_field_tag :list_id, params[:list_id], :value => @list_id %>
+                <div class="btn-group" style="width:500px; max-width: 100%;">
+                  <%= text_field_tag :url, params[:url], placeholder: "instagram.com/p/urW4ckyur1", class: "text-field-clearable", style: "text-align:center; width:500px; max-width: 100%;" %>
+                  <span class="text-field-clear glyphicon glyphicon-remove-circle"></span>
+                </div>
+                <br>
+                <%= submit_tag "Search", :name => nil, :class => "hidden" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div id="original-dish-block" style="display:none; margin: 30px 0px;">
+          <div class="text-center" style="font-size:1.25em; margin-bottom: 30px;">
+            Write a brand new dish. Add pictures once you've saved it.
+          </div>
+          <%= render "shared/new_post" %>
+        </div>
+      </div>
+    <% end %>
+    <!-- END PUBLISHED A DISH -->
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 0px; margin-bottom: 50px;">
+      <ul id="list-posts" style="margin: 0px;">
+        <% if @posts.length > 0 %>
+          <% @posts.each do |p| %>
+            <%= link_to "scroll to list &uarr;".html_safe, "#", href: "javascript:void(0)", class: "scroll-to-top-of-list", style: "float:right;margin-top:30px;" %>
+            <%= render 'posts/post', :post => p %>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <!-- END DISHES -->
+
+        
+</div>
+<!-- END list full view container -->

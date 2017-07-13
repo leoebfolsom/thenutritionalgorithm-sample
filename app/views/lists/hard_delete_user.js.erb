@@ -1,0 +1,3 @@
+var b  = '<%=@quantity_id%>'+'-list-view-item';
+$("span:contains('"+b+"')").parentsUntil(".root-cat-items-list-view").remove();
+<%= render "update_nutrition", list: @list %>

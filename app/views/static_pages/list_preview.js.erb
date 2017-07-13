@@ -1,0 +1,4 @@
+var id = "#modal-body-<%=@list_id%>";
+<% List.find(@list_id).quantities.each do |q| %>
+  $(id).append("<%= j render 'list_preview_item', :q => q %>");
+<% end %>

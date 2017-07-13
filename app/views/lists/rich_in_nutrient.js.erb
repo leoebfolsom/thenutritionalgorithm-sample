@@ -1,0 +1,25 @@
+<% if @nutrient == "sodium" || @nutrient == "sugar" %>
+  $("#search-results-container").html("<h4>Low ratio of <%=@nutrient%> to calories are:</h4>");
+<% else %>
+  <% if @price != 'price' %>
+    $("#search-results-container").html("<h4>High ratio of <%=@nutrient.gsub('_',' ')%> : calories | <%= j link_to 'High ratio of '+@nutrient.gsub('_',' ')+' : price', rich_in_nutrient_path(:nutrient => @nutrient, :list_id => @list_id, :price => 'price'), class: 'specific-nutrient', :remote => true %></h4>");
+  <% else %>
+    $("#search-results-container").html("<h4><%= j link_to 'High ratio of '+@nutrient.gsub('_',' ')+' : calories', rich_in_nutrient_path(:nutrient => @nutrient, :list_id => @list_id), class: 'specific-nutrient', :remote => true %> | High ratio of <%=@nutrient.gsub('_',' ')%> : price</h4>");    
+  <% end %>
+<% end %>
+$(document).on("click", ".specific-nutrient", function(event) {
+  $("#search-results-container").html("Hmm. Food for thought. The nutrition algorithm will let you know in just a moment.");
+});
+<% if @foodsearch.length > 0 %>
+  <% @foodsearch.each do |f| %>
+    $("#search-results-container").append("<%= j render 'shared/search_result', :f => Food.find(f), l: @list_id %>");
+  <% end %>
+
+<% else %>
+  $("#search-results-container").append("Unfortunately, there were no results. We will look into what went wrong with the search and resolve it as soon as possible.");
+<% end %>
+
+
+<% if @foodsearch.length == 0 %>
+  $("#search-results-container").html("<div style='margin-bottom:30px;font-size:1.25em;color:#D63B3B;'><%=@no_results%></div>");
+<% end %>

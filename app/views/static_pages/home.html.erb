@@ -1,0 +1,797 @@
+<div class="hidden" id="hidden-preview-details-div-home-game">
+  
+</div>
+
+<div class="grand-home-container">
+
+  <% if user_signed_in? %>
+    <span id="onboard-indicator" class="hidden" style="background-color:red;">
+      <% if @onboard == "Z" %>
+        <%= 1 %>
+      <% else %>
+        <%= 0 %>
+      <% end %>
+    </span>
+  
+    <div class="col-md-12 col-sm-12 col-xs-12 home-main">
+      
+<%
+=begin %>
+
+    
+      <% if current_user.admin? %>
+        <% if !current_user.subscribed? %>
+          <div id="membership-info">
+            <center>
+              <h2>THE NUTRITION ALGORITHM</h2>
+
+
+
+
+
+
+              <div style="font-size:1.25em;">
+                Good, healthy food within your budget.
+              </div>
+              <br>
+              <% if (Time.now - 7.days) > current_user.created_at %>
+                Please enjoy your 7-day free trial.
+                <br><br>
+                Your trial ends on <%= (current_user.created_at + 7.days).strftime("%A") %>, so now is the time to build some grocery lists!
+                <br><br>         
+              <% end %>
+              <%= form_tag subscribe_path(1), :method => :put do %>
+                <article>    
+                  <label class="amount"> 
+                    <span>You can become a member for $4.99/mo. The first month is free!</span><br>
+                    <span style="font-size:0.75em;"><a href="#">Learn more about the awesome benefits of membership.</a></span>
+                  </label> 
+                </article>
+                <script src="https://checkout.stripe.com/checkout.js" 
+                  class="stripe-button" data-key="<%=
+                  Rails.configuration.stripe[:publishable_key] %>"
+                  data-description="A month's subscription"
+                  data-amount="499" 
+                  data-locale="auto"
+                  data-zip-code="true">
+                </script>
+              <% end %>
+            </center>
+          </div>
+        <% end %>
+      <% end %>
+
+
+
+
+
+
+        <p>
+          <%= link_to "If you're enjoying your free trial, please subscribe today!", new_subscribe_path %>
+        </p>
+        <%= form_tag subscribe_path(1), :method => :put do %>
+          <% @plans.each do |plan| %>
+            <div class='plan'>
+            <h1><%= plan[:name] %></h1>
+            <p>$<%= plan[:amount]/100 %></p>
+            <%= form_tag('/new', {method: :post, plan: plan}) do %>
+              <input name="plan_id" type="hidden" value="<%= plan[:id] %>">  
+              </input>
+            <% end %>
+            <script src="https://checkout.stripe.com/checkout.js"  
+            class="stripe-button"
+              data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+              data-description="A month's subscription"
+              data-amount= (plan[:amount])
+              data-locale="auto"></script>
+            </div>
+          <% end %>
+        <% end %>
+
+
+
+
+
+      <!--  <div id="home-items" class="col-md-12 parallax-window home-section-background" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/ROSEMARY.jpg' %>"> -->
+
+
+
+<%
+=end %>
+      
+      <div id="user-profile-view-favorites" class=" text-center hidden">
+        <% if @onboard != "Z" %>
+          <div style="font-size:1.5em; margin: 5px 15px;">WELCOME!</div>
+          <div style="margin: 0 5px;">
+          Please tell us a bit about yourself to build your personal profile.<br><span style="font-size:0.75em;">This information will be not be shared with any outside parties.</span>
+          </div>
+          <%= render 'devise/registrations/edit_from_home', user: @user %>
+          
+          <div class="col-md-12 col-sm-12 col-xs-12" style="height:300px;"></div>
+
+        <% end %> 
+      </div>
+      
+
+      <div class="hidden" id="onboarded-user">
+
+        <div class="home-row">
+          <div class="col-md-12 col-sm-12 col-xs-12 text-center" style="padding: 30px 0px;">
+
+
+          <section class="stats hidden">
+            <%= render 'shared/stats' %>
+          </section>
+
+      
+            <div>
+              <%= link_to build_list_path(:from => "home_grid") do %>
+                  
+                  <button class="btn wide-button green-button" style="margin-top: 0px;">CREATE</button>
+                  <i class='fa fa-plus fa-3x' style="color:gray;vertical-align:middle; display:none;"></i>
+              <% end %> 
+              <%= link_to "#", href: "javascript:void(0)", :id => "browse-from-home", :style => "position: absolute; margin-left:30px; display:none;" do %>
+                <i class="fa fa-search fa-2x" aria-hidden="true"></i>
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="browse" class="">
+
+          <div class="col-md-12 col-sm-12 col-xs-12 text-center browse-show hidden" style="margin-bottom: 15px; padding: 0px;">
+            <%= form_tag({action: "home_search", controller: "static_pages"}, :method => "get", :remote => true) do %>
+              <div class="btn-group" style="width:300px;">
+                <%= text_field_tag :search, params[:search], placeholder: "Search for a grocery list", class: "text-field-clearable", style: "text-align:center; margin: 0px;", id: "home-search" %>
+                <span class="text-field-clear glyphicon glyphicon-remove-circle" style="margin-top:5px;"></span>
+              </div>
+              <%= submit_tag "Search", :name => nil, :class => "hidden search-submit btn wide-button green-button img-responsive" %>
+            <% end %>
+            <div class = "tiny-text" style="color:gray;">
+              Search for a food (like tofu) or a style of eating (like paleo).
+            </div>
+          </div>
+ 
+          <div class="col-md-12 col-sm-12 col-xs-12 browse-show" id="home-search-results-container hidden" style="">
+            <div id="home-search-results">
+            </div>
+          </div>
+
+          <%= render 'shared/feed' %>
+
+<%
+=begin %>
+
+          <% Post.joins(:images).uniq.sample(12).each do |p| %>
+
+            <div class="col-md-6 col-sm-12 col-xs-12 text-center" style="margin-bottom:30px;">
+              <div class='span12'><hr></div>
+
+              <% post_link = "http://www.thenutritionalgorithm.com/lists/"+p.list.id.to_s+"/#dish-"+p.id.to_s %>
+
+              <%= link_to post_link do %>
+                <div>
+
+                  <%= image_tag p.images.sample.image_url, :class => "", :style => "max-width:300px; max-width: 100%; max-height:300px; margin:0px auto;display:block;" %>
+                  
+                </div>
+                <div class="smaller-text">
+                  <%= "#{p.title}" %>
+
+
+
+
+
+                </div>
+              <% end %>
+              <% if User.exists?(p.user_id) %>
+                <div class="smaller-text">
+                <% if p.original_author == nil %>by
+                <% else %>forked by
+                <% end %>
+                
+                <%= link_to p.user.name, p.user %>
+                </div>
+              <% end %>
+              <div class="smaller-text" style="max-width:300px; margin: 0 auto;">
+                <%= simple_format(truncate(p.body, :length => 250).gsub("\r\n", "<br />"), {}, wrapper_tag: "span") %>
+                <%= link_to post_link do %>
+                  <div>
+                  Read more
+                  </div>
+                <% end %>
+              </div>
+
+              
+            </div>
+          <% end %>
+
+<%
+=end %>
+<%
+=begin %>
+          <div class="col-md-12 col-sm-12 col-xs-12 home-how-it-works" style="margin-top: 60px;" >
+            <center>Recent activity</center>
+            <% @activities.each do |a| %>
+              <%= render 'shared/activity', activity: a %>
+            <% end %>
+          </div>
+<%
+=end %>
+<%
+=begin %>
+          <% if @list_result_good_for_you.length > 0 %>
+            
+            
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <h2>These are some grocery lists you might like.</h2>
+              <div class="home-category-loading text-center hidden">Loading.</div>
+
+              
+              <% @list_result_good_for_you.each do |l| %>
+                <% list = List.find(l) %>
+                <% if list.quantities.length > 3 %>
+                  <div class="col-md-3 col-sm-4 col-xs-6 text-center">
+                    
+                    <% if list.image != nil && list.image != "" %>
+                      <% image_url = list.image %>
+                    <% elsif list.posts.length > 0 && list.posts.joins(:images).uniq.sample != nil %>
+                      <% image_url = list.posts.joins(:images).uniq.sample.images.first.image_url %>
+                    <% else %>
+                      <% image_url = nil#list.foods.sample.image %>
+                    <% end %>
+
+                    <%= link_to list do %>
+                      <div style="display:inline-block">
+                        <div class="tiny-text">
+                          <%= "$#{list.total_price.to_f.round(2)} over #{list.days} days." %>
+                        </div>
+                        <div style="width: 100px; height: 100px; margin-bottom: 45px; overflow:hidden; display:inline-block;">
+
+                          <% if image_url %>
+                            <%= image_tag image_url, :class => "dish-image" %>
+                          <% else %>
+                            <% list.foods.sample(4).each do |f| %>
+                              <%= image_tag f.image, :style => "max-width: 49px; float:left;"%>
+                            <% end %>
+                          <% end %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+
+          <% end %>
+          <div class="col-md-12 col-sm-12 col-xs-12 home-how-it-works">
+            <h2>These are some dishes you might like.</h2>
+            
+          </div>
+          <% if @dish %>
+            <div class="col-md-12 col-sm-12 col-xs-12 home-how-it-works">
+              <h2>This is one of today's featured dishes. Check it out!</h2>
+              <ul style="margin:0px;">
+              <%= render 'posts/post', post: @dish %>
+              </ul>
+            </div>
+          <% end %>
+<%
+=end %>
+        </div>
+      </div>
+    </div>
+  <% else %>   
+<% 
+=begin %> 
+
+            <div class="hidden">
+
+              Build your smartest grocery list ever.
+
+              Algorithmically generated grocery lists that meet all your needs at once.
+
+              optimize your nutrition and budget. 
+
+              don't compromise your budget for your nutrition or your nutrition for your budget.
+
+              get smarter about food.
+
+              save money live better
+
+              save money eat healthier
+
+              Spend less. Eat healthier.
+
+              eat healthy for less money.
+
+              the algorithm makes it possible to eat well for less money.
+
+              Healthy food can be affordable.
+
+              no need to choose between healthy and affordable food.
+            </div>
+<% 
+=end %>
+
+
+    <%= render 'devise/registrations/edit_from_home_test', user: User.find(75) %>
+
+    <div class="col-md-12 col-sm-12 col-xs-12  home-main">
+      <div class="text-center">
+        <i class="fa fa-angle-down fa-4x" aria-hidden="true"></i>
+      </div>
+
+      <div id="home-items" class="col-md-12 col-sm-12 col-xs-12  parallax-window" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/ROSEMARY.jpg' %>">
+
+        <div class="text-center home-section-background">
+          <div id="home-intro">
+            <div style="font-size: 1.75em;">
+              Spend less. Eat better.
+            </div>
+            <div class="text-center">
+              <div style="font-size: 1.25em; display:none;">
+                Build and share algorithmically generated, nutritionally optimized grocery lists.
+              </div>
+              <div style="font-size: 1.25em;">
+                Build your smartest grocery list ever.
+              </div>
+              <br>
+              <%= link_to build_list_path(:from => "home_grid_guest") do %>
+                <button class="btn wide-button green-button" style="width:40%;">DEMO</button>
+              <% end %>
+              <%= link_to new_user_registration_path do %>
+                <button class="btn wide-button green-button" style="width:40%;">JOIN NOW!</button>
+              <% end %>
+            </div>
+          </div>
+          <div style="padding: 15px;">
+            The nutrition algorithm helps you meet your unique nutrition needs at the best price.
+          </div>
+
+
+
+          <div class="col-md-12 col-sm-12 col-xs-12" style="padding: 30px 0;">
+            <div class="col-md-2 col-sm-4 col-xs-4 col-md-offset-3" style="padding:5px;">
+              <div style="color:gray;"><i class='fa fa-file-text-o fa-4x' aria-hidden='true'></i></div>
+              <div style="margin-top:15px;">WRITE LIST</div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-4" style="padding:5px;">
+              <div style="color:gray;"><i class='fa fa-lightbulb-o fa-4x' aria-hidden='true'></i></div>
+              <DIV style="margin-top:15px;">GET FACTS</DIV>
+            </div>
+            <div class="col-md-2 col-sm-4 col-xs-4" style="padding:5px;">
+              <div style="color:gray;"><i class='fa fa-shopping-cart fa-4x' aria-hidden='true'></i></div>
+              <div style="margin-top:15px;">BUY FOOD</div>
+            </div>
+          </div>
+          <div style="padding: 15px;">
+            Join the community of users who are discovering new ways to eat well.
+          </div>
+
+
+          <i class="fa fa-angle-down fa-4x" aria-hidden="true"></i>
+        </div>
+
+
+   
+<% 
+=begin %> 
+
+          <div class="home-section hidden">
+
+            <div class="row home-row">
+              <%= link_to "#", :remote => true, :class => "preview-of-list-click no-decoration-link" do %>
+                <div class="col-md-4 home-how-it-works text-center">  
+                  <center>  
+                    <i class='fa fa-shopping-cart fa-5x home-icons'></i>
+                  </center>
+                  <div class="home-h1"><h1>GROCERY LISTS</h1></div>
+                  <div class="home-how-it-works-text">
+                    Build nutritious, affordable grocery lists. The nutrition algorithm keeps track of the facts.
+                  </div>
+                  <button class="btn wide-button green-button">
+                    PREVIEW A LIST
+                  </button>
+                </div>
+              <% end %>
+
+              <%= link_to "#", :remote => true, :class => "preview-of-dish-click no-decoration-link" do %>
+                <div class="col-md-4 home-how-it-works text-center">
+                  <center>
+                    <i class='fa fa-photo fa-5x home-icons'></i>
+                  </center>
+                  <div class="home-h1"><h1>DISHES</h1></div>
+                  <div class="home-how-it-works-text">
+                  Dishes are stories about grocery lists. Share your ideas and learn from others.
+                  </div>
+                  <button class="btn wide-button green-button">PREVIEW A DISH</button>
+                </div>
+              <% end %>
+
+              <%= link_to static_chart_generate_path, :remote => true, :class => "preview-of-charts-click no-decoration-link" do %>
+                <div class="col-md-4 home-how-it-works text-center">  
+                  <center>  
+                    <i class='fa fa-pie-chart fa-5x home-icons'></i>
+                  </center>
+                  <div class="home-h1">
+                    <h1>TRACKING</h1>
+                  </div>
+                  <div class="home-how-it-works-text">
+                    Make smart, informed decisions about your food to meet your health goals.
+                  </div>
+                  
+                  <button class="btn wide-button green-button">
+                    PREVIEW TRACKING
+                  </button>
+                </div>
+              <% end %>
+            </div>
+          </div>
+   
+<% 
+=end %> 
+
+
+
+      </div>
+    </div>
+    <div id="yogurt" class="col-md-12 col-sm-12 col-xs-12 parallax-window" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/YOGURT.jpg' %>" style="padding-left: -15px;">
+    </div>
+
+
+    <div id="home-preview " class="col-md-12 col-sm-12 col-xs-12">
+      <div class="home-section-padding">
+        <h1>
+          <div style="font-size:1.25em;">CREATE GROCERY LISTS</div>
+        </h1>
+        <div style="font-size:1.25em;" class="text-center">As you build your list, keep track of nutrition and cost.</div>
+      </div>
+    </div>
+
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center center-block">
+      <div class="list-preview" style="max-width:400px;width:90%; margin: 0 auto;">
+        <%= image_tag "list_preview.png", style: "max-width: 400px; width:90%;" %>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12  home-section" style="margin-top:30px;">
+      <div style="font-size:1.25em; margin-top:15px;" class="text-center">When you're ready, bring a mobile checklist to the grocery store.</div>
+    </div>
+
+    <div class="col-md-12 col-sm-12 col-xs-12  home-section" style="height:30px;">
+    </div>
+
+    <div class="text-center">
+      <div style="font-size: 1.75em;">
+        Spend less. Eat better.
+      </div>
+      <%= link_to build_list_path(:from => "home_grid_guest") do %>
+        <button class="btn wide-button green-button" style="width:40%;">DEMO</button>
+      <% end %>
+      <%= link_to new_user_registration_path do %>
+        <button class="btn wide-button green-button" style="width:40%;">JOIN NOW!</button>
+      <% end %>
+      <br>
+      <i class="fa fa-angle-down fa-4x" aria-hidden="true"></i>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12  parallax-window" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/PEAR.jpg' %>">
+    </div>
+    <div id="home-preview-dish" class="col-md-12 col-sm-12 col-xs-12  home-section">
+      <div class="home-section-padding">
+        <h1>
+          <div style="font-size:1.25em;">DISH ABOUT FOOD</div>
+        </h1>
+        <div style="font-size:1.25em;" class="text-center">Share ideas and recipes, and learn from other users.</div>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center center-block">
+      <div class="list-preview" style="max-width:400px;width:90%; margin: 0 auto;">
+        <%= image_tag "dish_preview.png", style: "max-width: 400px; width:90%;", class: "center-block" %>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12  home-section" style="margin-top:30px;">
+      <div style="font-size:1.25em; margin-top:15px;" class="text-center">Fork another user's list to create your own version.</div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12  home-section" style="height:30px;">
+    </div>
+    <div class="text-center">
+      <div style="font-size: 1.75em;">
+        Spend less. Eat better.
+      </div>
+      <%= link_to build_list_path(:from => "home_grid_guest") do %>
+        <button class="btn wide-button green-button" style="width:40%;">DEMO</button>
+      <% end %>
+      <%= link_to new_user_registration_path do %>
+        <button class="btn wide-button green-button" style="width:40%;">JOIN NOW!</button>
+      <% end %>
+      <br>
+      <i class="fa fa-angle-down fa-4x" aria-hidden="true"></i>
+    </div>
+
+
+
+
+
+
+    <div class="col-md-12 col-sm-12 col-xs-12  home-section" style="height:30px;">
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12  parallax-window" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/SARDINES.jpg' %>">
+    </div>
+
+    <div id="home-about" class="col-md-12 col-sm-12 col-xs-12 home-section">
+      <div class="home-section-padding">
+        <h1>
+          <div>FROM THE FOUNDER</div>
+        </h1>
+        <div><center>~ or ~</center></div>
+        <h1>
+          <div>WHO DID THIS, AND WHY?</div>
+        </h1>
+
+        <div class="col-md-6">
+          <%= image_tag "https://s3.amazonaws.com/tna-main/BrownLeo_VIPphoto.JPG", width: "100%", style: "margin-bottom:30px;" %>
+        </div>
+        <div class="col-md-6">
+          <p>
+            Thank you for visiting the nutrition algorithm! Welcome to a different way of thinking about food.
+          </p>
+          <p>
+            My name is Leo Brown. When I was 19, I was diagnosed with diabetes. This forced me to think about food in a way that I never had. I had to stop eating some of my favorite foods and start measuring everything that went into my body.
+          </p>
+          <p>
+            I eventually decided that I couldn’t choose between healthy and inexpensive food: I needed both. This is hard, but not impossible. The nutrition algorithm is designed to make it easier for everyone. It solves a problem that is hard to do on the back of an envelope, but easy for a computer.
+          </p>
+          <p>
+            I am not a dietitian or a computer programmer, but after realizing that the nutrition algorithm did not exist, I learned what I needed to build it. I recently earned a Master of Public Health degree at Harvard, which has helped me understand the complexities of chronic disease, behavior change, and our food system.
+          </p>
+          <p>
+            I hope my efforts will help many people find ways of eating healthy for less money that are currently hidden in plain sight, just around the corner of the grocery store.
+          </p>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12" style="min-height:50px;"></div>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12  home-section" style="height:30px;">
+    </div>
+    <div class="text-center">
+      <div style="font-size: 1.75em;">
+        Spend less. Eat better.
+      </div>
+      <%= link_to build_list_path(:from => "home_grid_guest") do %>
+        <button class="btn wide-button green-button" style="width:40%;">DEMO</button>
+      <% end %>
+      <%= link_to new_user_registration_path do %>
+        <button class="btn wide-button green-button" style="width:40%;">JOIN NOW!</button>
+      <% end %>
+      <div class="col-md-12 col-sm-12 col-xs-12  home-section" style="height:30px;">
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12  parallax-window" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/EGGS.jpg' %>">
+    </div>
+  </div>
+<% 
+=begin %> 
+      <div class="col-md-12">
+        <div class='span12'><hr></div>
+        <div id="charts-hidden" style="opacity:0;">
+          <h2>Calories over Time</h2>
+          <%= line_chart @line_chart_calories, xtitle: "Time", ytitle: "Average calories per day", id: "chartkick-calories" %>
+          <h2>Spend ($) over Time</h2>
+          <%= line_chart @line_chart_price, xtitle: "Time", ytitle: "Average spend ($) per day", id: "chartkick-price" %>
+        </div>
+      </div>
+
+
+
+
+
+
+      <div id="home-fun" class="col-md-12 hidden home-section">
+        <div class="home-section-padding">
+          <h1>
+            <div id="fun-title" class="big-title">FUN</div>
+          </h1>
+          <div class="home-how-it-works-text text-center">Do you enjoy fun?
+          </div>
+          <div class="row home-row">
+            <div class="col-md-4 home-how-it-works">
+              <center>
+                <i class='fa fa-smile-o fa-5x home-icons'></i>
+              </center>
+              <h1>THE GAME</h1>
+              <div class="home-how-it-works-text">
+                Play The Game to build your taste profile. Like, Dislike, or Meh food.
+              </div>
+              <center>
+                <%= link_to skip_liker_path(:from => "home_grid"), id: "user-likes-box-link", remote: true do %>
+                  <button class="btn wide-button">PLAY</button>
+                <% end %>
+              </center>
+            </div>
+            <div class="col-md-4 home-how-it-works">
+              <center>
+                <i class='fa fa-random fa-5x home-icons'></i>
+              </center>
+              <h1>RANDOM</h1>
+              <div class="home-how-it-works-text">
+                Each of your grocery lists will have a name. Sometimes, they will be silly.
+              </div>
+              <center>
+                <%= link_to create_random_list_name_path(:from => "home_grid"), remote: true do %>
+                  <button class="btn wide-button">GENERATE</button>
+                <% end %>
+              </center>
+              <div id="random-list-name">
+                <div style="max-width: 1px;">
+                  <%= hidden_field_tag(:n, '', :id => "list-title-edit") %>
+                </div>
+                <span id="list-title-main" style="font-size: 0.75em;"></span>
+              </div>
+            </div>      
+            <div class="col-md-4 home-how-it-works">
+              <center>
+                <i class='fa fa-meh-o fa-5x home-icons'></i>
+              </center>
+              <h1>NO FUN?</h1>
+              <div class="home-how-it-works-text">
+                Please contact us immediately.
+              </div>
+              <div style="margin-left:15px;">
+                Not having fun? <%= link_to "Email us at admin@thenutritionalgorithm.com", "mailto:admin@thenutritionalgorithm.com", target: :_blank %> so that we may resolve the incident as quickly as possible.
+              </div>
+            </div>  
+          </div>
+        </div>
+
+        <div id="user-likes-box-container" class="hidden fixed-box text-center">
+          <div id="stepwise-response-box">
+            <div>
+              <div class="row">
+                <div class="col-md-12">
+                  <span class="user-likes-enough close-box-link">
+                    <%= link_to "\xe2\x9c\x95".html_safe, "#" %>
+                  </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="liker-title">
+                    <center>
+                      Do you like it?
+                    </center>
+                    <br><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="row">        
+                <div id="likes-response" class="col-md-12">
+                </div>
+              </div>
+              <div class="row">        
+                <div class="col-md-4" style="margin-bottom:30px;">
+                  <%= link_to "<i class='fa fa-thumbs-o-down fa-2x'></i><br />No.".html_safe, hard_delete_user_from_profile_path, :remote => true, :id => "disliker", :class => 'liker' %>
+                </div>
+                <div class="col-md-4" style="margin-bottom:30px;">
+                  <%= link_to "Meh.", skip_liker_path, :remote => true, :id => "skipliker", :class => 'liker' %>
+                </div>
+                <div class="col-md-4" style="margin-bottom:30px;">
+                  <%= link_to "<i class='fa fa-thumbs-o-up fa-2x'></i><br />Yes!".html_safe, user_favorite_path, :remote => true, :id => "liker", :class => 'liker' %>                
+                </div>
+              </div>
+            </div>
+            <center>
+              <div>
+                Sign up with your email or Facebook account to start building your profile!
+              </div>
+              <button class="btn wide-button">
+                <%= link_to "SIGN UP", new_user_registration_path %>
+              </button>
+            </center>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+      <div id="home-faq" class="col-md-12 home-section">
+        <div class="home-section-padding">
+          <h1>
+            <div class="big-title">FAQ</div>
+          </h1>
+          <p style="margin-bottom:30px;">
+            Thank you for your interest in the nutrition algorithm! Please <%= link_to "email us at admin@thenutritionalgorithm.com", "mailto:admin@thenutritionalgorithm.com", target: :_blank %> if you have a question that is not answered here. You can also tweet <%= link_to "@thenutritional", "http://twitter.com/thenutritional", :target => :_blank %>, <%= link_to "post your question on Facebook", "http://facebook.com/thenutritionalgorithm", :target => :_blank %>, or share your thoughts on <%= link_to "this anonymous Google Form", "http://goo.gl/forms/puj23Pb2mX", target: :_blank %>.
+          </p>
+          <h4>
+            Is the nutrition algorithm a substitute for my doctor, dietitian, or health care provider?
+          </h4>
+          <p style="margin-bottom:30px;">
+            It is not. The nutrition algorithm is meant to provide information, but not health care. We hope the nutrition algorithm will help you make decisions that are healthy and aligned with what your health care provider recommends. We encourage you to discuss your use of the nutrition algorithm with your health care provider.
+          </p>
+
+          <h4>
+            How does the nutrition algorithm know my nutrition needs?
+          </h4>
+          <p style="margin-bottom:30px;">
+            Every person's nutrition needs are different. Your approximate nutrition needs are determined by the nutrition algorithm based on your age, sex, height, weight, and activity level. The calculation is based on guidelines published by the Institutes of Medicine and the United States Department of Agriculture (USDA).
+          </p>
+
+          <h4>
+            Can I still eat my favorite foods?
+          </h4>
+          <p style="margin-bottom:30px;">
+            Sure! The nutrition algorithm builds grocery lists that are healthy when considered as a whole. That leaves room for small amounts of 'unhealthy' food, including the unhealthy food that you love to eat. <b>It would be easy to eat healthy if we never ate our favorite unhealthy foods.</b> The nutrition algorithm shows you how to incorporate your all of your favorite foods into a healthy diet.
+          </p>
+
+          <h4>
+            Why does the nutrition algorithm only take into account certain nutrition metrics?
+          </h4>
+          <p style="margin-bottom:30px;">
+            The nutrition algorithm only considers nutrition metrics that are listed on the Nutrition Facts label. Eating what the nutrition algorithm recommends does not guarantee a healthy diet.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="col-md-12 parallax-window hidden" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/PEAR.jpg' %>">
+      </div>
+
+      <div id="home-contact" class="col-md-12 home-section">
+        <div class="home-section-padding">
+          <h1>
+            <div class="big-title">CONTACT</div>
+          </h1>
+
+
+
+          <p>
+            Please <%= link_to "email us at admin@thenutritionalgorithm.com", "mailto:admin@thenutritionalgorithm.com", target: :_blank, class: "text-link" %> if you'd like to talk more about the nutrition algorithm, including questions, suggestions, or any other comments. We would very much like to hear from you!
+          </p>
+          <p>
+            You can also follow the nutrition algorithm's active, hopefully entertaining, maybe even useful profiles on:
+            <%= link_to "facebook", "http://facebook.com/thenutritionalgorithm", :target => :_blank, class: "text-link" %> | 
+            <%= link_to "twitter", "http://twitter.com/thenutritional", :target => :_blank %> |
+            <%= link_to "youtube", "https://www.youtube.com/channel/UCSEjE3Iq9bPC9HedvsVuUwA", :target => :_blank %>.
+          </p>
+        </div>
+      </div>
+
+
+      <div id="yogurt" class="col-md-12 parallax-window" data-parallax="scroll" data-image-src="<%= asset_path 'https://s3.amazonaws.com/tna-main/YOGURT.jpg' %>">
+      </div>
+
+    <div id="hide-or-show-food-feed" class="food-feed-media" style="position: fixed; bottom: 5px; right: 5px; z-index: 7;">
+      <button class="btn wide-button food-feed-button">HIDE FOOD FEED</button>
+    </div>
+
+
+    <div class="food-feed-media food-feed-parent">
+      <div class="food-feed">
+        <h2>
+          FOOD FEED
+        </h2>
+        <div>
+          The nutrition algorithm is all about exploring, sharing, and learning together.
+        </div>
+        <br>
+        <div style="text-align:left;">
+          <% @activities.each do |a| %>
+            <%= render 'shared/activity', activity: a %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+<% 
+=end %> 
+  <% end %>
+  
+</div>
+
+
+
+

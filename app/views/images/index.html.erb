@@ -1,0 +1,11 @@
+<% provide(:title, 'All images') %>
+<%= will_paginate %>
+<h1>
+  <div class="big-title">IMAGES</div>
+</h1>
+
+<ul>
+  <%= render @images %>
+</ul>
+
+<%= will_paginate %>

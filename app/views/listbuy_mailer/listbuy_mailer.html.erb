@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+
+    <% if @user != @listbuying_user %>
+      <%= link_to image_tag("https://s3.amazonaws.com/tna-main/tna_handwritten.svg", style: "max-width:500px; width: 100%"), "https://www.thenutritionalgorithm.com", :target => "_blank" %>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">Hello <%=@user.name%>,</p>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+
+        Great news! <%= @listbuying_user.name %> has bought groceries from your list, <%= link_to "#{@list.name}", "https://www.thenutritionalgorithm.com/lists/#{@list.id}", :target => "_blank" %>.
+      </p>
+      <% if @listbuying_user.image != nil %> 
+        <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+
+          <img style="max-width:200px;" src="<%='https://'+@listbuying_user.image.gsub('//tna','tna')%>" alt="user_photo">
+          <span style="font-size:2em; padding-left: 30px;">&#128077;&#x1f60b;</span>
+        </p>
+      <% end %>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+
+        You have received 10 beans for having your list bought, bringing your bean total to <%= @user.points %> beans.
+      </p>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+
+        Thank you for being such an inspiring grocery list creator!
+      </p>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+Best regards,</p>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+Leo</p>
+    <% else %>
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+Hello <%=@user.name%>,</p>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+Congratulations on logging a grocery purchase to your profile!</p>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+You have received 10 beans for logging your purchase, bringing your bean total to <%= @user.points %> beans.</p>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+You can find a summary of your purchases <%= link_to "right here on your profile", "https://www.thenutritionalgorithm.com/users/#{@user.id}?from_list_buys=true", :target => "_blank" %>.</p>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+Best regards,</p>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+Leo</p>
+
+
+    <% end %>
+  </body>
+</html>

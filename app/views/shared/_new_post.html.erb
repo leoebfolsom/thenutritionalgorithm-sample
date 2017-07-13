@@ -1,0 +1,18 @@
+<div>
+  <center>
+    <%= form_for(@post, :html => { :style => "max-width: 100%; padding: 0 15px;" }, remote: true) do |q| %>
+      <%= render 'shared/error_messages', object: @post %>
+      <%= q.hidden_field :list_id, class: 'form-control', :value => @list.id %>
+      <% if current_user %>
+        <%= q.hidden_field :user_id, class: 'form-control', :value => current_user.id %>
+      <% else %>
+        <%= q.hidden_field :user_id, class: 'form-control', :value => 75 %>
+      <% end %>
+      <%= q.text_field(:title, :class=>"input form-control text_field", :style=>"max-width: 100%; width: 500px; text-align:left;",  :id => "new-dish-title", placeholder: "Give your dish a nice title.") %>
+      <%= q.text_area(:body, :class=>"input form-control text_field post-body-text-area", :id => "new-dish-body", :style=>"max-width: 100%;  width: 500px; text-align:left;", placeholder: "A recipe, an idea, a simple update.\n.\nUse punctuation creatively to format your dish, an add photos after you've dished.") %>
+
+      <%= q.submit "SAVE DISH", :style => "padding: 6.4px;max-width: 100%; width: 500px;", :id=>"post-submit"%>
+    <% end %>
+  </center>
+  
+</div>

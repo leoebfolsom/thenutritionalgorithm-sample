@@ -1,0 +1,6 @@
+<% if @dislikes.any? %>
+  $("#user-dislikes").html("");
+  <% @dislikes.each do |l| %>
+    $("#user-dislikes").append("<%= j render 'shared/dislike', f: l, user: @user %>");
+  <% end %>
+<% end%>

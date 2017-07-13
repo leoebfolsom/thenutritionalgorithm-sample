@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <center>
+      <%= link_to image_tag("https://s3.amazonaws.com/tna-main/tna_handwritten.svg", style: "max-width:500px; width: 100%"), "https://www.thenutritionalgorithm.com", :target => "_blank" %>
+      <div style="width:100%;height:50px;"></div>
+      
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none; font-size:1.5em;">Hi <%= @resource.name.split.map(&:capitalize).join(' ') %>, it's great to meet you.</p>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+      We'd like to make sure we got your email address right.
+      </p>
+
+      <%= link_to confirmation_url(@resource, confirmation_token: @token) do %>
+      <button style='background-color:rgb(51, 204, 102);
+                      background-image:none;
+                      border-bottom-color:transparent;
+                      border-bottom-left-radius:28px;
+                      border-bottom-right-radius:28px;
+                      border-bottom-style:solid;
+                      border-bottom-width:1px;
+                      border-image-outset:initial;
+                      border-image-repeat:initial;
+                      border-image-slice:initial;
+                      border-image-source:initial;
+                      border-image-width:initial;
+                      border-left-color:transparent;
+                      border-left-style:solid;
+                      border-left-width:1px;
+                      border-right-color:transparent;
+                      border-right-style:solid;
+                      border-right-width:1px;
+                      border-top-color:transparent;
+                      border-top-left-radius:28px;
+                      border-top-right-radius:28px;
+                      border-top-style:solid;
+                      border-top-width:1px;
+                      color:white;
+                      font-size:1.25em;
+                      font-stretch:inherit;
+                      font-style:inherit;
+                      font-weight:normal;
+                      line-height:1.42857;
+                      margin:0px;
+                      padding:6px;
+                      cursor:pointer;
+                      display:inline-block;
+                      vertical-align:middle;
+                      width:300px;
+                      height:50px;'
+
+      >
+      Yes, it's me! Let's get started.
+      </button>
+      <% end %>
+      <div style="width:100%;height:50px;"></div>
+
+      <p style="font-family:Montserrat, sans-serif; text-shadow:none;">
+      If you have any questions, please email us at <%= link_to "admin@thenutritionalgorithm.com", "mailto:admin@thenutritionalgorithm.com", target: :_blank, style: "text-decoration: none;color:#218E00" %>.
+      </p>
+
+    </center>
+  </body>
+</html>

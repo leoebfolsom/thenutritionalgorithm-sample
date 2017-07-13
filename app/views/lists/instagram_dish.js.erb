@@ -1,0 +1,11 @@
+<% if @something_went_wrong != true %>
+  $("<%= j render 'posts/post', :post => @new_dish %>").appendTo("#list-posts").hide().slideDown();
+  $('html, body').animate({scrollTop: $("#dish-<%=@new_dish.id%>").offset().top - 15}, 'slow');
+  $(".init-opacity-zero").css("opacity",1);
+
+  $(".dish-image").each(function(i, obj) {
+    $(this).css("max-height","100px");
+  });
+<% else %>
+  alert("Unfortunately, we couldn't find that instagram post. Please try a different URL.");
+<% end %>

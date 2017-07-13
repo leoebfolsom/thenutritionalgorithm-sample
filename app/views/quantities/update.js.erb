@@ -1,0 +1,24 @@
+<% if @strikethrough_init == @strikethrough_now && @ate_init == @ate_now %>
+ // if ("<%=@quantity.food.root_cat_name%>" != "") {
+ //   var root_cat_id = '<%=@quantity.food.root_cat_name%>'.replace(/[^A-Z0-9]/ig, "").replace('amp', '');
+ //   var id = "#"+root_cat_id+"-items";
+ //   var id_list_view = id+"-list-view";
+ //   var id_list_view_eat = id+"-list-view-eat";
+ // } else {
+ //   var id = "#"+"nil-category-items";
+ //   var id_list_view = id+"-list-view";
+ //   var id_list_view_eat = id+"-list-view-eat";
+ // }
+ // var b  = '<%=@quantity_id%>'+'-list-view-item';
+ //. $("span:contains('"+b+"')").parent().hide();
+ // var c  = '<%=@quantity_id%>'+'-list-view-item-eat';
+ // $("span:contains('"+c+"')").parent().hide();
+ // $(id_list_view).prepend("<%= j render 'lists/list_view_items_core', :q => @quantity %>");
+ // $(id_list_view_eat).prepend("<%= j render 'lists/list_view_items_core_eat', :q => @quantity %>");
+
+ // $(".strikethrough-checkbox").prev().css("max-width","90%");
+ // $(".ate-checkbox").prev().css("max-width","90%");
+//  $(".quantity-field-input").css("width","100px");
+<% end %>
+<%= render "lists/update_nutrition", list: @list %>
+$(".item-grand-div").css("background-color","white");

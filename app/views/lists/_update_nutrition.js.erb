@@ -1,0 +1,192 @@
+$("#calories-success").html("<%= (list.total_calories/list.days).to_i %>");
+$("#carbohydrates-success").html("<%= (list.total_carbohydrates/list.days).to_i %>");
+$("#fat-success").html("<%= (list.total_fat/list.days).to_i %>");
+$("#protein-success").html("<%= (list.total_protein/list.days).to_i %>");
+$("#total-price").html("$<%= (list.total_price).to_f.round(2) %>");
+$("#total-fiber-day").html("<%= (list.total_fiber/list.days).to_i %>");
+$("#total-vitamin_a-day").html("<%= (list.total_vitamin_a/list.days).to_i %>");
+$("#total-vitamin_c-day").html("<%= (list.total_vitamin_c/list.days).to_i %>");
+$("#total-calcium-day").html("<%= (list.total_calcium/list.days).to_i %>");
+$("#total-iron-day").html("<%= (list.total_iron/list.days).to_i %>");
+$("#total-sodium-day").html("<%= (list.total_sodium/list.days).to_i %>");
+$("#total-sugar-day").html("<%= (list.total_sugar/list.days).to_i %>");
+$("#total-carbohydrates-list").html("<%= (list.total_carbohydrates/list.days).to_i %>");
+$("#total-fat-list").html("<%= (list.total_fat/list.days).to_i %>");
+$("#total-protein-list").html("<%= (list.total_protein/list.days).to_i %>");
+
+
+<% constraints = list.nutrition_constraints %>
+
+
+<% @min_cal_day = constraints["min_calories"].to_i %>
+<% @max_cal_day = constraints["max_calories"].to_i %>
+<% @min_carbohydrates_day = (constraints["min_carbohydrates"].to_i).round %>
+<% @max_carbohydrates_day = (constraints["max_carbohydrates"].to_i).round %>
+<% @min_fat_day = (constraints["min_fat"].to_i).round %>
+<% @max_fat_day = (constraints["max_fat"].to_i).round %>
+<% @min_protein_day = (constraints["min_protein"].to_i).round %>
+<% @max_protein_day = (constraints["max_protein"].to_i).round %>
+
+<% @min_fiber_day = constraints["min_fiber"].to_i %>
+<% @max_sodium_day = constraints["max_sodium"].to_i %>
+<% @max_sugar_day = constraints["max_sugar"].to_i %>
+
+<% @min_vitamin_a_day = constraints["min_vitamin_a"].to_i %>
+<% @max_vitamin_a_day = constraints["max_vitamin_a"].to_i %>
+<% @min_vitamin_c_day = constraints["min_vitamin_c"].to_i %>
+<% @max_vitamin_c_day = constraints["max_vitamin_c"].to_i %>
+<% @min_iron_day = constraints["min_iron"].to_i %>
+<% @max_iron_day = constraints["max_iron"].to_i %>
+<% @min_calcium_day = constraints["min_calcium"].to_i %>
+<% @max_calcium_day = constraints["max_calcium"].to_i %>
+
+
+
+<% list_users = constraints["list_users"] %>
+<% if list_users != nil && list_users.length > 0 %>
+
+  <% list_users.keys.each do |l| %>
+    <% @min_cal_day += list_users[l]["min_calories"].to_i %>
+    <% @max_cal_day += list_users[l]["max_calories"].to_i %>
+    <% @min_carbohydrates_day += list_users[l]["min_carbohydrates"].to_i %>
+    <% @max_carbohydrates_day += list_users[l]["max_carbohydrates"].to_i %>
+    <% @min_fat_day += list_users[l]["min_fat"].to_i %>
+    <% @max_fat_day += list_users[l]["max_fat"].to_i %>
+    <% @min_protein_day += list_users[l]["min_protein"].to_i %>
+    <% @max_protein_day += list_users[l]["max_protein"].to_i %>
+    <% @min_iron_day += list_users[l]["min_iron"].to_i %>
+    <% @max_iron_day += list_users[l]["max_iron"].to_i %>
+    <% @min_calcium_day += list_users[l]["min_calcium"].to_i %>
+    <% @max_calcium_day += list_users[l]["max_calcium"].to_i %>
+    <% @min_vitamin_a_day += list_users[l]["min_vitamin_a"].to_i %>
+    <% @max_vitamin_a_day += list_users[l]["max_vitamin_a"].to_i %>
+    <% @min_vitamin_c_day += list_users[l]["min_vitamin_c"].to_i %>
+    <% @max_vitamin_c_day += list_users[l]["max_vitamin_c"].to_i %>
+    <% @max_sodium_day += list_users[l]["max_sodium"].to_i %>
+    <% @max_sugar_day += list_users[l]["max_sugar"].to_i %>
+    <% @min_fiber_day += list_users[l]["min_fiber"].to_i %>
+  <% end %>
+<% end %>
+
+
+
+
+
+<% list_days = list.days.to_i %>
+
+
+<% list_days = list.days %>
+
+<% @progress_min_calories = ((list.total_calories.to_f/list_days)/@min_cal_day)*100 %>
+<% @progress_max_calories = ((list.total_calories.to_f/list_days)/@max_cal_day)*100 %>
+<% if @progress_min_calories < 100 %>
+  <% @progress_calories = @progress_min_calories.round %>
+<% elsif @progress_max_calories > 100 %>
+  <% @progress_calories = @progress_max_calories.round %>
+<% else %>
+  <% @progress_calories = 100 %>
+<% end %>
+
+<% @progress_min_carbohydrates = ((list.total_carbohydrates.to_f/list_days)/@min_carbohydrates_day)*100 %>
+<% @progress_max_carbohydrates = ((list.total_carbohydrates.to_f/list_days)/@max_carbohydrates_day)*100 %>
+<% if @progress_min_carbohydrates < 100 %>
+  <% @progress_carbohydrates = @progress_min_carbohydrates.round %>
+<% elsif @progress_max_carbohydrates > 100 %>
+  <% @progress_carbohydrates = @progress_max_carbohydrates.round %>
+<% else %>
+  <% @progress_carbohydrates = 100 %>
+<% end %>
+
+<% @progress_min_fat = ((list.total_fat.to_f/list_days)/@min_fat_day)*100 %>
+<% @progress_max_fat = ((list.total_fat.to_f/list_days)/@max_fat_day)*100 %>
+<% if @progress_min_fat < 100 %>
+  <% @progress_fat = @progress_min_fat.round %>
+<% elsif @progress_max_fat > 100 %>
+  <% @progress_fat = @progress_max_fat.round %>
+<% else %>
+  <% @progress_fat = 100 %>
+<% end %>
+
+<% @progress_min_protein = ((list.total_protein.to_f/list_days)/@min_protein_day)*100 %>
+<% @progress_max_protein = ((list.total_protein.to_f/list_days)/@max_protein_day)*100 %>
+<% if @progress_min_protein < 100 %>
+  <% @progress_protein = @progress_min_protein.round %>
+<% elsif @progress_max_protein > 100 %>
+  <% @progress_protein = @progress_max_protein.round %>
+<% else %>
+  <% @progress_protein = 100 %>
+<% end %>
+
+
+<% @progress_fiber = (((@list.total_fiber.to_f/list_days)/@min_fiber_day)*100).round %>
+
+<% @progress_sodium = (((@list.total_sodium.to_f/list_days)/@max_sodium_day)*100).round %>
+
+
+<% @progress_min_vitamin_a = (((@list.total_vitamin_a.to_f/list_days)/@min_vitamin_a_day)*100).round %>
+<% @progress_max_vitamin_a = (((@list.total_vitamin_a.to_f/list_days)/@max_vitamin_a_day)*100).round %>
+<% if @progress_min_vitamin_a < 100 %>
+  <% @progress_vitamin_a = @progress_min_vitamin_a.round %>
+<% elsif @progress_max_vitamin_a > 100 %>
+  <% @progress_vitamin_a = @progress_max_vitamin_a.round %>
+<% else %>
+  <% @progress_vitamin_a = 100 %>
+<% end %>
+
+
+<% @progress_min_vitamin_c = (((@list.total_vitamin_c.to_f/list_days)/@min_vitamin_c_day)*100).round %>
+<% @progress_max_vitamin_c = (((@list.total_vitamin_c.to_f/list_days)/@max_vitamin_c_day)*100).round %>
+<% if @progress_min_vitamin_c < 100 %>
+  <% @progress_vitamin_c = @progress_min_vitamin_c.round %>
+<% elsif @progress_max_vitamin_c > 100 %>
+  <% @progress_vitamin_c = @progress_max_vitamin_c.round %>
+<% else %>
+  <% @progress_vitamin_c = 100 %>
+<% end %>
+
+
+<% @progress_min_iron = (((@list.total_iron.to_f/list_days)/@min_iron_day)*100).round %>
+<% @progress_max_iron = (((@list.total_iron.to_f/list_days)/@max_iron_day)*100).round %>
+<% if @progress_min_iron < 100 %>
+  <% @progress_iron = @progress_min_iron.round %>
+<% elsif @progress_max_iron > 100 %>
+  <% @progress_iron = @progress_max_iron.round %>
+<% else %>
+  <% @progress_iron = 100 %>
+<% end %>
+
+
+<% @progress_min_calcium = (((@list.total_calcium.to_f/list_days)/@min_calcium_day)*100).round %>
+<% @progress_max_calcium = (((@list.total_calcium.to_f/list_days)/@max_calcium_day)*100).round %>
+<% if @progress_min_calcium < 100 %>
+  <% @progress_calcium = @progress_min_calcium.round %>
+<% elsif @progress_max_calcium > 100 %>
+  <% @progress_calcium = @progress_max_calcium.round %>
+<% else %>
+  <% @progress_calcium = 100 %>
+<% end %>
+
+
+
+
+
+
+
+
+if ($("#calories-progress").length != 0) {
+  changePercentageMaxOrMin('#progressbar-calories', Math.round(parseFloat("<%= @progress_calories %>")));
+  changePercentageMaxOrMin('#progressbar-carbohydrates', Math.round(parseFloat("<%= @progress_carbohydrates %>")));
+  changePercentageMaxOrMin('#progressbar-fat', Math.round(parseFloat("<%= @progress_fat %>")));
+  changePercentageMaxOrMin('#progressbar-protein', Math.round(parseFloat("<%= @progress_protein %>")));
+  changePercentageMin('#progressbar-fiber', parseFloat("<%= @progress_fiber %>"));
+  changePercentageMax('#progressbar-sodium', parseFloat("<%= @progress_sodium %>"));
+  changePercentageMaxOrMin('#progressbar-vitamin_a', parseFloat("<%= @progress_vitamin_a %>"));
+  changePercentageMaxOrMin('#progressbar-vitamin_c', parseFloat("<%= @progress_vitamin_c %>"));
+  changePercentageMaxOrMin('#progressbar-calcium', parseFloat("<%= @progress_calcium %>"));
+  changePercentageMaxOrMin('#progressbar-iron', parseFloat("<%= @progress_iron %>"));
+}
+pieMacro();
+rootCat();
+pantry();
+//$(".item-grand-div").css("background-color","white");
+//quantityArrows();

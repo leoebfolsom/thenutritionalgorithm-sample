@@ -1,0 +1,16 @@
+if ("<%=@quantity.food.root_cat_name%>" != "") {
+  var root_cat_id = '<%=@quantity.food.root_cat_name%>'.replace(/[^A-Z0-9]/ig, "").replace('amp', '');
+  var id = "#"+root_cat_id+"-items";
+  var id_list_view = id+"-list-view";
+  var id_list_view_eat = id+"-list-view-eat";
+} else {
+  var id = "#"+"nil-category-items";
+  var id_list_view = id+"-list-view";
+  var id_list_view_eat = id+"-list-view-eat";
+}
+$(id_list_view).prepend("<%= j render 'lists/list_view_items_core', :q => @quantity %>");
+$(id_list_view_eat).prepend("<%= j render 'lists/list_view_items_core_eat', :q => @quantity %>");
+$(id).prepend("<%= j render 'lists/items_core', :q => @quantity %>");
+//$('#list-view-items-container-items').prepend("<%= j render 'lists/list_view_items_core', :q => @quantity %>");
+<%= render "lists/update_nutrition", list: @list %>
+$(".item-grand-div").css("background-color","white");

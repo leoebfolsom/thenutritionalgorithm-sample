@@ -1,0 +1,8 @@
+var id="#post-comments-<%=@post_id%>";
+var input_id="#comment-content-input-post-<%=@post_id%>";
+$(id).html("");
+<% post = Post.find(@post_id) %>
+<% @commentable.comments.each do |p| %>
+  $("<%= j render 'comments/comment', :comment => p, :post => post %>").appendTo(id);
+<% end %>
+$(input_id).val("");

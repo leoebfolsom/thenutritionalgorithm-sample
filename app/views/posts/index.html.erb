@@ -1,0 +1,26 @@
+<% provide(:title, 'All posts') %>
+<%= will_paginate %>
+<h1>
+  <div class="big-title">DISHES</div>
+</h1>
+<center>
+  <div class="home-how-it-works-text">
+    If you have something you want to share about food and groceries, you can write it in a dish.
+  </div>
+  <div>
+    <% if current_user %>
+      You can write a dish about <%= link_to build_list_path(:from => "posts") do %>a new list<% end %> or <%= link_to user_path(current_user, :from => "posts") do %>one you've already created<% end %>.
+    <% else %>
+      <button class="btn wide-button">
+        <%= link_to "SIGN UP", new_user_registration_path %>
+      </button>
+    <% end %>
+  </div>
+</center>
+<div class="col-md-12" style="padding: 0px;">
+  <ul style="margin: 0px;">
+    <%= render @posts %>
+  </ul>
+</div>
+
+<%= will_paginate %>

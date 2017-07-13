@@ -1,0 +1,122 @@
+<nav class="navbar navbar-default" style="margin: 0 -15px; padding: 0 5px;">
+  <div>
+    
+
+        <!--  -->
+      
+      <% if current_user %>
+      <div class="navbar-header" style="float:left; max-width:20%;">
+        <%= link_to "https://www.thenutritionalgorithm.com" do %>
+        <%= image_tag("forkspoon_circle.svg", class: "navbar-brand", style:"width:100%") %>
+        <% end %>
+      <% else %>
+      <div class="navbar-header" style="float:left; max-width:40%; margin-top:-10px;">
+        <%= link_to "https://www.thenutritionalgorithm.com" do %>
+        <%= image_tag("https://s3.amazonaws.com/tna-main/tna_handwritten.svg", class: "navbar-brand", style:"width:90%; padding-left: 15px;") %>
+        <% end %>
+
+      <% end %>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <% if user_signed_in? %>
+        <!-- Modal -->
+        <% if current_user.image != nil %>
+          <% user_image = current_user.image %>
+        <% else %>
+          <% user_image = "apple-touch-icon-180x180.png" %>
+        <% end %>
+
+
+
+        <li style="float:right;">
+          <%= link_to "SIGN OUT", destroy_user_session_path %>  
+        </li>
+        <li style="float:right;">
+          <%= link_to user_path(current_user, :from => "header") do %>
+            <div style="vertical-align:top;">
+            <%= image_tag(user_image, style: "max-width: 40px;", id: "header-profile-pic") %>
+              <span style="vertical-align:top" class="menu-mobile-hide">
+              <%= current_user.name %>
+              </span>
+            </div>
+          <% end %>
+        </li>
+        <% notifications = Activity.where(is_notification:1,user_id_to_be_notified:current_user.id).order("created_at desc").first(10) %>
+        <% unseen_notifications_count = Activity.where(user_id_to_be_notified:current_user.id,seen:0,is_notification:1).count %>
+        <li class="dropdown menu-mobile-hide" id="notifications" style="float:right;">
+          <a href="#" id="notifications-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Notifications">
+            
+              
+
+              <% if unseen_notifications_count != 0 %>
+                <i class="fa fa-bell fa-2x" aria-hidden="true"></i>
+              <% else %>
+                <i class="fa fa-bell-o fa-2x" aria-hidden="true"></i>
+              <% end %>
+
+
+            </span>
+            <span id="unseen-activities-count">
+              <% if unseen_notifications_count != 0 %>
+                <%= unseen_notifications_count %>
+              <% end %>
+            </span>
+          </a>
+          <ul class="dropdown-menu">
+            <% if notifications.length > 0 %>
+              <% notifications.each do |a| %>
+                <% post = Post.find(a.post_id) %>
+                <% list_id = post.list_id %>
+                <% if a.action == "like" %>
+
+                  <% comment = Comment.find(a.comment_id) %>
+                  <% liker = User.find(a.user_id) %>
+                  
+                  <% string = "#{liker.name} liked your comment." %>
+
+                <% elsif a.controller == "comments" %>
+                  <% commenter = User.find(a.user_id) %>
+
+                  <% if current_user == post.user %>
+                    <% string = "#{commenter.name} commented on your post, #{post.title}." %>
+                  <% else %>
+                    <% string = "#{commenter.name} commented on #{post.user.name}'s post, #{post.title}." %>
+                  <% end %>
+
+                <% end %>
+
+                <% if !a.created_at.blank? %>
+                  <% string += "<br><span class='timestamp smaller-text gray'>#{time_ago_in_words(a.created_at).capitalize} ago.</span>" %>
+                <% end %>
+
+                <li class="notification-li smaller-text"><%= link_to "#{string}".html_safe, "http://www.thenutritionalgorithm.com/lists/#{list_id}/#dish-#{a.post_id}", style: "white-space:normal" %>
+                </li>
+              <% end %>
+            <% else %>
+              <li class="notification-li">
+                <span class='timestamp smaller-text gray'>You have no notifications.</span>
+              </li>
+            <% end %>
+
+          </ul>
+        </li>
+        <li style="float:right;">
+          <%= link_to build_list_path(:from => "header"), style: "vertical-align:top;" do %>
+            <i class='fa fa-plus fa-2x' data-toggle='tooltip' data-placement='bottom' title='Create a new list'></i>
+            <span style="vertical-align:top;display:none;">CREATE</span>
+          <% end %>
+        </li>
+      <% else %>
+
+        <li style="float:right;">
+          <%= link_to "SIGN UP", new_user_registration_path %>
+        </li>
+        <li style="float:right;">
+          <%= link_to "LOG IN", new_user_session_path %>  
+        </li>
+        
+      <% end %>
+    </ul>
+  </div><!-- /.container-fluid -->
+</nav>

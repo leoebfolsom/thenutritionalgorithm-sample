@@ -1,0 +1,57 @@
+<li>
+  <div>
+    
+    <% activity_ip = activity.ip %>
+    <% if activity.user_id != nil || activity.user_id == 75 %>
+      <div class="list-group-item">
+    <% else %>
+      <div class="list-group-item user-id-is-nil">
+    <% end %>
+        <div class="smaller-text"><%=activity.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("%m/%d/%Y")%> at <%=activity.created_at.in_time_zone('Eastern Time (US & Canada)').strftime("at %I:%M%p")%> Eastern Time.</div>
+        <%= activity.controller %>, <%= activity.action %> | 
+        <% if activity.arrived_from != "" && activity.arrived_from != nil && activity.action != "search" && activity.action != "search(failed)"%>
+          From: <%= activity.arrived_from %> | 
+        <% elsif activity.action == "search(failed)" %>
+          Failed search term: <%= activity.arrived_from %> | 
+        <% elsif activity.action == "search" %>
+          Successful search term: <%= activity.arrived_from %> | 
+        <% end %>
+        <% if activity.list_id != nil %>
+          <% if List.exists?(activity.list_id) %>
+            <%=link_to List.find(activity.list_id).name, List.find(activity.list_id) %> | 
+          <% else %>
+            The list no longer exists. | 
+          <% end %>
+        <% end %>
+        <% if activity.attribute_updated != nil && activity.attribute_updated != "empty" %>
+          Updated <%= activity.attribute_updated %> | 
+        <% end %>
+        <% if activity.forked_list_id != nil %>
+          <% if List.exists?(activity.forked_list_id) %>
+            Forked from this list: <%= link_to List.find(activity.forked_list_id).name, List.find(activity.forked_list_id) %> | 
+          <% else %>
+            Forked from a list that no longer exists. | 
+          <% end %>
+        <% end %>
+        <% if activity.viewed_user_id != nil %>
+          <% if User.exists?(activity.viewed_user_id) %>
+            <%= link_to User.find(activity.viewed_user_id).name, User.find(activity.viewed_user_id) %>'s profile was viewed. | 
+          <% else %>
+            The user that was viewed no longer exists. | 
+          <% end %>
+        <% end %>
+        <% if activity.user_id == nil %>
+          IP is: <%= activity_ip %>
+        <% else %>
+          <% if User.exists?(activity.user_id) %>
+            <%= link_to activity.user.name, activity.user %>
+          <% else %>
+            The user no longer exists.
+          <% end %>
+        <% end %>
+      </div>
+
+
+
+  </div>
+</li>

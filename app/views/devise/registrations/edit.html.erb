@@ -1,0 +1,55 @@
+<div class="row">
+
+  <div class="col-md-4 col-md-offset-4">
+    <div style="margin-top: 30px;">
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= devise_error_messages! %>
+
+          <div class="field">
+            <%= f.label :email, "Email:" %>
+            <%= f.email_field :email, autofocus: true %>
+          </div>
+          <br>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div>
+            Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+          </div>
+        <% end %>
+        <section id="password-change">
+
+            <div class="field">
+              <%= f.label :password, "New password:" %>
+              <%= f.password_field :password, autocomplete: "off" %>
+            </div>
+            <br>
+            <div class="field">
+              <%= f.label :password_confirmation, "Confirm new password:" %>
+              <%= f.password_field :password_confirmation, autocomplete: "off" %>
+            </div>
+            <br>
+            <div class="field">
+              <%= f.label :current_password, "Current password:" %>
+              <%= f.password_field :current_password, autocomplete: "off" %>
+            </div>
+            <br>
+
+        </section>
+        <div class="actions">
+          <%= f.submit "Update" %>
+        </div>
+        <br><br>
+        If you don't have a password because you created your account through Facebook and you would like to set a password, 
+        <%= link_to "click here to receive a password reset link in your email.", logged_in_reset_path %>
+        <br />
+      <% end %>
+    </div>
+    <br><br><br><br><br><br>
+    <br><br><br><br><br><br>
+    ______
+    <p>
+      <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %>
+    </p>
+  </div>
+
+</div>

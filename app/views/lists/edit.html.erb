@@ -1,0 +1,13 @@
+<% provide(:title, 'Edit list') %>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@list, :html => { :class => "form-inline" }) do |f| %>
+      <%= render 'shared/error_messages', object: @list %>
+        <%= f.fields_for :nutrition_constraints do |n| %>
+          <%= n.label :new_field, "THE NEW FIELD" %>
+          <%= n.text_field :new_field, class: 'form-control input', :id => 'new-field', :style => "width:250px; text-align:center;" %> 
+      <% end %>
+      <%= f.submit "SAVE", class: "btn wide-button", :id => "submit-button", :data => {disable_with: "please wait"} %>
+    <% end %>
+  </div>
+</div>

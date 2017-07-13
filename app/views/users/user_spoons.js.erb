@@ -1,0 +1,8 @@
+/*<% if @spoons.any? %>
+  $("#no-spoons").html("");
+  <% @spoons.each do |l| %>
+    $("#user-spoons").append("<%= j render 'shared/list', list: List.find(l), display_name: true %>");
+  <% end %>  
+<% else %>
+  $("#no-spoons").removeClass("hidden");
+<% end%>*/

@@ -1,0 +1,24 @@
+<footer class="footer">
+  <% if user_signed_in? %>
+    <center>
+      <small>
+        <%= link_to "home", root_path %> | <%= link_to "about", about_path %> |  <%= link_to "faq", faq_path %> | <%= link_to "contact", contact_path %> <br /><%= link_to "terms of service and privacy policy", terms_of_service_and_privacy_policy_path %>
+      </small>
+    </center>
+  <% else %>
+    <center>
+      <small>
+        <%= link_to "the nutrition algorithm", root_path %> | <%= link_to "faq", faq_path %> | <%= link_to "contact", contact_path %> | <%= link_to "terms of service and privacy policy", terms_of_service_and_privacy_policy_path %>
+      </small>
+    </center>
+  <% end %>
+  <div style="height:30px;">
+  </div>
+
+  <div class="fb-like" data-href="https://www.facebook.com/thenutritionalgorithm" data-layout="standard" data-action="like" data-show-faces="true" data-share="true">
+    
+  </div>
+
+  <div style="height:30px;"></div>
+  
+</footer>

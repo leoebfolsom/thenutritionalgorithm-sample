@@ -1,0 +1,6 @@
+<div class="col-md-4">
+  <% if q.food.image != "" %>
+    <%= image_tag(q.food.image, style:"max-width:90%;max-height:50px;") %><br>
+  <% end %>
+  <%= q.food.name.split.map(&:capitalize).join(' ') %>  
+</div>

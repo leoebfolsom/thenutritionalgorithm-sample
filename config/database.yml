@@ -1,0 +1,27 @@
+development:
+
+  host: localhost
+  adapter: postgresql
+  encoding: UTF8
+  pool: 5
+  username: <%= ENV['USERNAME'] %>
+  password: <%= ENV['PASSWORD'] %>
+  database: thenutritionalgorithm_development
+
+test:
+  host: localhost
+  adapter: postgresql
+  encoding: UTF8
+  pool: 5
+  username: <%= ENV['USERNAME'] %>
+  password: <%= ENV['PASSWORD'] %>
+  database: thenutritionalgorithm_test
+
+production:
+  host: <%= ENV['IP'] %>
+  adapter: postgresql
+  encoding: UTF8
+  pool: 5
+  username: <%= ENV['USERNAME'] %>
+  password: <%= ENV['PASSWORD'] %>
+  database: thenutritionalgorithm_production

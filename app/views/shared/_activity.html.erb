@@ -1,0 +1,180 @@
+<% if Quantity.where(list_id:activity.list_id).length > 0 %>
+  <% if List.exists?(activity.list_id) && 
+    User.exists?(activity.user_id) && 
+    (activity.forked_list_id == nil || 
+    List.exists?(activity.forked_list_id)) %>
+
+    <div class="col-md-12 col-sm-12 col-xs-12 activity-top" style="margin: 30px 0px;">
+      
+      <% list = List.find(activity.list_id) %>
+      <% user = User.find(activity.user_id) %>
+      <% if activity.post_id != nil %>
+        <% if Post.exists?(activity.post_id) %>
+          <% post = Post.find(activity.post_id) %>
+          <% post_link = "http://www.thenutritionalgorithm.com/lists/"+post.list.id.to_s+"/#dish-"+post.id.to_s %>
+        <% end %>
+      <% end %>
+      <% if activity.comment_id != nil %>
+        <% if Comment.exists?(activity.comment_id) %>
+          <% comment = Comment.find(activity.comment_id) %>
+        <% end %>
+      <% end %>
+      <% if activity.image_id != nil %>
+        <% if Image.exists?(activity.image_id) %>
+          <% image = Image.find(activity.image_id) %>
+        <% end %>
+      <% end %>
+
+      <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0px;">
+        <div class="pull-right">
+        <% if activity.user_id != nil %>
+          <% if user.image != nil %>
+            <% user_image = user.image %>
+          <% else %>
+            <% user_image = "apple-touch-icon-180x180.png" %>
+          <% end %>
+          <% if user.id != 75 %>
+            <%= link_to user do %>
+          <% end %>
+          <%= image_tag(user_image, style: "width: 75px;") %>
+          <% if false#user.id != 75 %>
+              <div class="tiny-text">
+                <%= image_tag "Lentils_red_and_brown.png", {:class => "",style: "max-width: 15px;", "data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Lentil"} %>
+                <span data-toggle="modal" data-target="#beansModal">
+                  <%= link_to "#{user.points}", "#", {:class => "", "data-toggle"=>"tooltip", "data-placement" => "bottom", "title" => "Collect beans to unlock achievements. Everyone starts as a lentil."} %>
+                </span>
+
+              </div>
+          
+          <% end %>
+          <% end %>
+        <% end %>
+        </div>
+      </div>
+
+      <div class="col-md-10 col-sm-10 col-xs-10 activity-main">
+        <% if activity.action == "build_list" %>
+          <div class="activity-event"><%= link_to user.name, user %> created a new list called 
+            <% if list.image == nil || list.image == "" %>
+              <%= link_to list.name, list %>.
+            <% else %>
+              <%= link_to (list.name+".<br>"+image_tag(list.image, style: "max-width:100%; max-height:125px;")).html_safe, list %>
+            <% end %>
+          </div>
+        
+        <% elsif activity.action == "update" %>
+
+          <% if activity.attribute_updated == "note" %>
+            <div class="activity-event"><%= link_to user.name, user %> wrote a description of
+              <% if list.image == nil || list.image == "" %>
+                <%= link_to list.name, list %>.
+              <% else %>
+                <%= link_to (list.name+".<br>"+image_tag(list.image, style: "max-width:100%; max-height:125px;")).html_safe, list %>
+              <% end %>
+            </div>
+
+          <% elsif activity.attribute_updated == "image" %>
+
+            <div class="activity-event">
+              <%= link_to user.name, user %> added a photo to 
+              <%= link_to (list.name+".<br>"+image_tag(list.image, style: "max-width:100%; max-height:125px;")).html_safe, list %>  
+            </div>
+
+          <% elsif activity.controller == "images" && image  %>
+            <div class="activity-event">
+              <%= link_to user.name, user %> added a photo to 
+              <%= link_to (image.post.list.name+".<br>"+image_tag(image.image_url, style: "max-width:100%; max-height:125px;")).html_safe, post_link %>
+            </div>
+
+          <% elsif activity.controller == "posts" %>
+
+            <div class="activity-event">
+              <%= link_to user.name, user %> updated their dish, 
+
+              <% if post.images.length > 0 %>
+
+                <%= link_to (post.title+".<br>"+image_tag(post.images.first.image_url, style: "max-width:100%; max-height:125px;")).html_safe, post_link %>
+                
+              <% elsif post.list.image == nil || post.list.image == "" %>
+
+                <%= link_to (post.title+".<br>"+image_tag(post.list.image, style: "max-width:100%; max-height:125px;")).html_safe, post_link %>      
+              <% else %>
+                <%= link_to post.title, post_link %>.
+              <% end %>
+
+            </div>
+          <% end %>
+
+
+        <% elsif activity.action == "create" && activity.controller == "images" && image  %>
+
+          <div class="activity-event">
+            <%= link_to user.name, user %> added a photo to their dish, <%= link_to (post.title+".<br>"+image_tag(image.image_url, style: "max-width:100%; max-height:125px;")).html_safe, post_link %>    
+          </div>
+
+        <% elsif activity.action == "create" && activity.controller == "posts" %>
+
+            <div class="activity-event">
+              <%= link_to user.name, user %> wrote a new dish, <%= link_to post.title, post_link %>, about <%= link_to list.name, post.list %>.
+            </div>
+        <% elsif activity.action == "create" && activity.controller == "comments" %>
+            
+            <div class="activity-event">
+              <%= link_to user.name, user %> commented on <%= link_to post.user.name, post.user %>'s dish, <%=link_to post.title, post_link %>.
+            </div>
+        <% elsif activity.action == "fork" %>
+          <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px;">
+            <%= image_tag "fork_black.svg", :style => "height:100px;" %>
+          </div>
+          <div class="col-md-11 col-sm-11 col-xs-11">
+            <% forked_list = List.find(activity.forked_list_id) %>
+            <div class="activity-event"><%= link_to user.name, user %> forked <%= link_to forked_list.user.name, forked_list.user %>'s list, <%= link_to forked_list.name, forked_list %>, to create <%= link_to list.name, list %>.
+            </div>
+          </div>
+
+
+
+        <% elsif activity.action == "spoon" %>
+
+
+          <div class="col-md-1 col-sm-1 col-xs-1" style="padding:0px;">
+            <%= image_tag "spoon_black.svg", :style => "height:100px;" %>
+          </div>
+          <div class="col-md-11 col-sm-11 col-xs-11">
+            <div class="activity-event"><%= link_to user.name, user %> spooned <%= link_to list.user.name, list.user %>'s list, <%= link_to list.name, list %>.
+            </div>
+          </div>
+
+
+
+        <% end %>
+
+        <% if activity.attribute_updated == "note" %>
+          <div class="smaller-text activity-link" id="activity-note-id-<%=list.id%>"><%= truncate(list.note, :length => 250) %></div>
+        <% elsif activity.controller == "posts" %>
+          <div class="smaller-text activity-link" id="activity-post-id-<%=post.id%>"><%= truncate(post.body, :length => 250) %></div>
+        <% elsif activity.controller == "images" %>
+          <% if image.caption.length > 0 %>
+            <div class="smaller-text activity-link" id="activity-post-id-<%=post.id%>"><%= truncate(image.caption, :length => 250) %></div>
+          <% end %>
+        <% elsif activity.controller == "comments" %>
+          <div class="smaller-text activity-link" id="activity-comment-post-id-<%=post.id%>"><%= truncate(comment.content, :length => 250) %></div>
+        <% end %>
+        <div>
+          <% list.foods.where.not(image:nil).sample(3).each do |l| %>
+            <%= image_tag(l.image, style:"width:25%; max-width:150px;") %>
+          <% end %>
+
+        </div>
+
+        <% if !activity.created_at.blank? %> 
+          <div class="timestamp smaller-text gray"><%= time_ago_in_words(activity.created_at).capitalize %> ago.
+          </div>
+
+        <% end %>
+
+
+      </div>
+    </div>
+  <% end %>
+<% end %>

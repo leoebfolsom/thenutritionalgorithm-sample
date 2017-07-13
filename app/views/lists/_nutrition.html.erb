@@ -1,0 +1,453 @@
+<span class="hidden" id="max-price"><%='%.2f' % @list.max_price%></span>
+<span class="hidden" id="min-calories-day"><%=@min_cal_day%></span>
+<span class="hidden" id="max-calories-day"><%=@max_cal_day%></span>
+<span class="hidden" id="min-carbohydrates-day"><%=@min_carbohydrates_day%></span>
+<span class="hidden" id="max-carbohydrates-day"><%=@max_carbohydrates_day%></span>
+<span class="hidden" id="min-fat-day"><%=@min_fat_day%></span>
+<span class="hidden" id="max-fat-day"><%=@max_fat_day%></span>
+<span class="hidden" id="min-protein-day"><%=@min_protein_day%></span>
+<span class="hidden" id="max-protein-day"><%=@max_protein_day%></span>
+<span class="hidden" id="min-fiber-day"><%=@min_fiber_day%></span>
+<span class="hidden" id="max-sodium-day"><%=@max_sodium_day%></span>
+<span class="hidden" id="min-vitamin_a-day"><%=@min_vitamin_a_day%></span>
+
+<span class="hidden" id="min-calcium-day"><%=@min_calcium_day%></span>
+<span class="hidden" id="min-iron-day"><%=@min_iron_day%></span>
+<span class="hidden" id="max-vitamin_a-day"><%=@max_vitamin_a_day%></span>
+<span class="hidden" id="max-vitamin_c-day"><%=@max_vitamin_c_day%></span>
+<span class="hidden" id="max-calcium-day"><%=@max_calcium_day%></span>
+<span class="hidden" id="max-iron-day"><%=@max_iron_day%></span>
+<span class="hidden" id="max-sugar-day"><%=500%></span>
+<span class="hidden" id="number-of-days"><%=@list_days%></span>
+
+<span class="hidden" id="min-protein-list"><%=@min_protein%></span>
+<span class="hidden" id="max-protein-list"><%=@max_protein%></span>
+<span class="hidden" id="total-protein-list"><%=@list_total_protein%></span>
+<span class="hidden" id="min-fat-list"><%=@min_fat%></span>
+<span class="hidden" id="max-fat-list"><%=@max_fat%></span>
+<span class="hidden" id="total-fat-list"><%=@list_total_fat%></span>
+<span class="hidden" id="min-carbohydrates-list"><%=@min_carbohydrates%></span>
+<span class="hidden" id="max-carbohydrates-list"><%=@max_carbohydrates%></span>
+<span class="hidden" id="total-carbohydrates-list"><%=@list_total_carbohydrates%></span>
+
+
+
+
+
+
+
+
+
+
+<% 
+=begin %> 
+<% if @list_users != nil && @list_users.length > 0 %>
+  <div class="text-center onboarding-box">
+    This list is for <%= @list.user.name %> and:
+    <% @list_users.keys.each do |a| %>
+      <div><%=a%>
+        <% if current_user != nil %>
+          <% if @list.user == current_user %>
+            <span class="smaller-text">
+              <%= link_to 'edit', edit_person_path(:list_id => @list_id, :name => a ) %>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>  
+    <%= link_to "+ add a person", add_person_path(:list_id => @list_id), :class => 'smaller-text' %>
+  </div>
+
+
+<% end %>
+<div class="hidden">
+  <%= link_to add_list_buy_path(:list_id => @list_id, :user_id => current_user.id, :list_buy_code => current_user.list_buy_code) do %>
+    <button class="btn list-buttons wide-button green-button" id="mobile-checklist" data-toggle="tooltip" data-placement="bottom" title="" style="padding:3px;width:100px;"><i class="fa fa-shopping-cart" aria-hidden="true"></i>SHOP</button>
+  <% end %>
+</div>
+    <%= link_to send_checklist_mailer_path(:list_id => @list_id, :user_id => current_user.id), :remote => true, :class => "hidden" do %>
+      <button class="btn list-buttons wide-button send-checklist-mailer-button green-button img-responsive" id="email-me-the-list">EMAIL</button>
+    <% end %>
+
+    <% if current_user %>
+      <%= link_to add_list_buy_path(:list_id => @list_id, :user_id => current_user.id, :list_buy_code => current_user.list_buy_code) do %>
+        <button class="btn list-buttons wide-button green-button img-responsive" id="mobile-checklist" data-toggle="tooltip" data-placement="bottom" title=""><i class="fa fa-shopping-cart" aria-hidden="true"></i>SHOP</button>
+      <% end %>
+    <% else %>
+      <%= link_to new_user_registration_path do %>
+        <button class="btn list-buttons wide-button green-button img-responsive" id="mobile-checklist" data-toggle="tooltip" data-placement="bottom" title="Create a profile to access this feature."><i class="fa fa-shopping-cart" aria-hidden="true"></i>SHOP</button>
+      <% end %>
+
+    <% end %>
+
+<% 
+=end %> 
+
+
+<% if @list.user == current_user %>
+  <% list_user_name = "your" %>
+<% else %>
+  <% list_user_name = @list.user.name+"'s" %>
+<% end %>
+
+
+
+
+
+
+
+
+  <div id="pie-wrapper" class="col-md-2 col-sm-2 col-xs-2" style="padding-left:5px;padding-right:-5px; padding-bottom:0px;">
+
+
+    <div id="header" class="hidden">
+      <p id="txt_title">Macronutrients</p>
+      <p id="txt_subtitle">Percentage of Calories</p>
+    </div>
+
+    <div id="macronutrient-pie">
+      <div id="chart_holder">
+        <div id="pie_chart">
+          <ul>           
+            <li id="carbohydrates_r">
+              <p>
+                <span class="pie_left"></span>
+              </p>
+            </li>   
+            <li id="carbohydrates_l">
+              <p><span class="pie_right"></span></p>
+            </li>
+            <li id="fat_r">
+              <p><span class="pie_left"></span></p>
+            </li>   
+            <li id="fat_l">
+              <p><span class="pie_right"></span></p>
+            </li>
+            <li id="protein_r">
+              <p><span class="pie_left"></span></p>
+            </li>   
+            <li id="protein_l">
+              <p><span class="pie_right"></span></p>
+            </li>
+          </ul>
+        </div>
+        <div id="labels">
+          <ul class="label-ul">
+            <li class="label-li"><span class="lbox"></span><span class="boxlab">Protein</span></li>
+            <li class="label-li"><span class="lbox"></span><span class="boxlab">Fat</span></li>
+            <li class="label-li"><span class="lbox"></span><span class="boxlab">Carbs</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="nutrition-panel col-md-10 col-sm-10 col-xs-10" id="nutrition-panel" style="padding:0px;">
+
+
+
+
+    <div class="nutrition-panel col-md-12 col-sm-12 col-xs-12" style="padding: 5px; padding-bottom:0px;">
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">
+          CALORIES
+        </div>
+        <span id="calories-success" class="detailed-nutrition">
+          <%= (@list.total_calories.to_f/@list_days).round %>
+        </span>
+        <span class="detailed-nutrition">
+          <%=" per day." %>
+        </span>
+        <div class="little detailed-nutrition">
+          <%= list_user_name.capitalize+" target is between #{@min_cal_day} and #{@max_cal_day} calories per day." %>
+        </div>
+        <span id="calories-progress" class="hidden">
+          <%=@progress_calories%>
+        </span>
+        <div id="progressbar-calories" class="bar-max-or-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+      </div>
+    </div>
+    <div class="nutrition-panel col-md-4 col-xs-4 col-sm-4" style="padding: 5px;">
+
+
+
+
+
+
+
+
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">CARBS<span id="total-sugar-day" class="hidden simple-nutrition">
+            <%= (@list.total_sugar.to_f/@list_days).round %>
+          </span>
+          <span class="hidden simple-nutrition">
+            <%=" g sugar per day.)" %>
+          </span></div>
+        <span id="carbohydrates-success" class="detailed-nutrition">
+          <%= @carbohydrates_success %>
+        </span>
+        <span class="detailed-nutrition">
+          <%=" g per day." %>
+        </span>
+        <div class="detailed-nutrition little">
+          <%= list_user_name.capitalize+" target is between #{@min_carbohydrates_day} and #{@max_carbohydrates_day} g per day." %>
+        </div>
+        <span id="carbohydrates-progress" class="hidden">
+          <%=@progress_carbohydrates%>
+        </span>
+        <div id="progressbar-carbohydrates" class="bar-max-or-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in carbohydrates?", rich_in_nutrient_path(:nutrient => "carbohydrates", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+      </div>
+
+
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">FAT</div>
+        <span id="fat-success" class="detailed-nutrition">
+          <%= @fat_success %>
+        </span>
+        <span class="detailed-nutrition">
+          <%=" g per day." %>
+        </span>
+        <div class="detailed-nutrition little">
+          <%= list_user_name.capitalize+" target is between #{@min_fat_day} and #{@max_fat_day} g per day." %>
+        </div>
+        <span id="fat-progress" class="hidden">
+          <%=@progress_fat%>
+        </span>
+        <div id="progressbar-fat" class="bar-max-or-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in fat?", rich_in_nutrient_path(:nutrient => "fat", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+
+      </div>
+
+
+      <div class="nutrient-container">
+
+        <div class="simple-nutrition nutrient-header">PROTEIN</div>
+        <span id="protein-success" class="detailed-nutrition">
+          <%= @protein_success %>
+        </span>
+        <span class="detailed-nutrition">
+          <%=" g per day." %>
+        </span>
+        <div class="detailed-nutrition little">
+          <%= list_user_name.capitalize+" target is between #{@min_protein_day} and #{@max_protein_day} g per day." %>
+        </div>
+        <span id="protein-progress" class="hidden">
+          <%=@progress_protein%>
+        </span>
+        <div id="progressbar-protein" class="bar-max-or-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in protein?", rich_in_nutrient_path(:nutrient => "protein", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+
+    <div class="nutrition-panel col-md-4 col-xs-4 col-sm-4" style="padding: 5px;">
+
+
+
+
+      <div class="nutrient-container hidden">
+        <div class="simple-nutrition nutrient-header">SUGAR</div>
+        <div class="simple-nutrition nutrient-header">
+          
+          <div class="simple-nutrition hidden" style="width:25%">
+            <%= "This includes sugars that occur naturally in fruits, vegetables, and dairy products." %>
+          </div>
+        </div>
+
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What are some low-sugar options?", rich_in_nutrient_path(:nutrient => "sugar", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+      </div>
+
+
+
+
+      <div class="nutrient-container">
+
+        <div class="simple-nutrition nutrient-header">FIBER</div>
+        <span id="total-fiber-day" class="detailed-nutrition">
+          <%= (@list.total_fiber.to_f/@list_days).round %>
+        </span>
+        <span class="detailed-nutrition">
+          <%= " g per day." %>
+        </span>
+        <div class="detailed-nutrition little">
+          <%= "#{@min_fiber_day} g is "+list_user_name+" minimum." %>
+        </div>
+        <span id="fiber-progress" class="hidden">
+          <%=@progress_fiber%>
+        </span>
+        <div id="progressbar-fiber" class="bar-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in fiber?", rich_in_nutrient_path(:nutrient => "fiber", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+      </div>
+
+
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">VIT A</div>
+        <span id="total-vitamin_a-day" class="detailed-nutrition"><%= (@list.total_vitamin_a.to_f/@list_days).round %></span>
+        <span class="detailed-nutrition"><%= "% DV per day." %></span>
+        <div class="detailed-nutrition little"><%= list_user_name.capitalize+" target is #{@min_vitamin_a_day}% DV per day. (The tolerable upper limit is #{@max_vitamin_a_day}% DV per day.)" %></div>
+
+        <span id="vitamin_a-progress" class="hidden"><%=@progress_vitamin_a%></span>
+
+        <div id="progressbar-vitamin_a" class="bar-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in vitamin A?", rich_in_nutrient_path(:nutrient => "vitamin_a", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+
+      </div>
+
+
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">VIT C</div>
+        <span id="total-vitamin_c-day" class="detailed-nutrition"><%= (@list.total_vitamin_c.to_f/@list_days).round %></span>
+        <span  class="detailed-nutrition"><%= "% DV per day." %></span>
+        <div class="detailed-nutrition little"><%=list_user_name.capitalize%> target is <span id="min-vitamin_c-day"><%=@min_vitamin_c_day%></span><%="% DV per day. (The tolerable upper limit is #{@max_vitamin_c_day}% DV per day.)" %></div>
+
+        <span id="vitamin_c-progress" class="hidden"><%=@progress_vitamin_c%></span>
+
+        <div id="progressbar-vitamin_c" class="bar-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in vitamin C?", rich_in_nutrient_path(:nutrient => "vitamin_c", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+
+
+      </div>
+    </div>
+
+
+    <div class="nutrition-panel col-md-4 col-xs-4 col-sm-4" style="padding: 5px;">
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">CALCIUM</div>
+        <span id="total-calcium-day" class="detailed-nutrition"><%= (@list.total_calcium.to_f/@list_days).round %></span>
+        <span class="detailed-nutrition"><%= "% DV per day." %></span>
+
+        <div class="detailed-nutrition little"><%= list_user_name.capitalize+" target is #{@min_calcium_day}% DV per day. (The tolerable upper limit is #{@max_calcium_day}% DV per day.)" %></div>
+
+        <span id="calcium-progress" class="hidden"><%=@progress_calcium%></span>
+        <div id="progressbar-calcium" class="bar-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in calcium?", rich_in_nutrient_path(:nutrient => "calcium", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+
+
+      </div>
+
+
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">IRON</div>
+        <span id="total-iron-day" class="detailed-nutrition"><%= (@list.total_iron.to_f/@list_days).round %></span>
+        <span class="detailed-nutrition"><%= "% DV per day." %></span>
+        <div class="detailed-nutrition little"><%= list_user_name.capitalize+" target is #{@min_iron_day}% DV per day. (The tolerable upper limit is #{@max_iron_day}% DV per day.)" %></div>
+        <span id="iron-progress" class="hidden"><%=@progress_iron%></span>
+        <div id="progressbar-iron" class="bar-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What is rich in iron?", rich_in_nutrient_path(:nutrient => "iron", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+
+
+      </div>
+
+
+      <div class="nutrient-container">
+        <div class="simple-nutrition nutrient-header">SODIUM</div>
+        <span id="total-sodium-day" class="detailed-nutrition"><%= (@list.total_sodium.to_f/@list_days).round %></span>
+        <span class="detailed-nutrition" class="detailed-nutrition"><%= " mg per day." %></span>
+        <div class="detailed-nutrition little"><%= "#{@max_sodium_day} g is "+list_user_name+" maximum." %></div>
+        <span id="sodium-progress" class="hidden"><%=@progress_sodium%></span>
+        <div id="progressbar-sodium" class="bar-min center-block" data-toggle="tooltip" data-placement="top" title="">
+          <div></div>
+        </div>
+        <% if current_user == @list.user %>
+          <div class="detailed-nutrition little hidden">
+            <%= link_to "What are some low-sodium options?", rich_in_nutrient_path(:nutrient => "sodium", :list_id => @list.id), class: "specific-nutrient", :remote => true %>
+          </div>
+        <% end %>
+
+
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+<span id="show-detailed-nutrition-link" class="hidden">
+  <%= link_to "Show detailed nutrition.", "#", href: "javascript:void(0)" %>
+</span>
+<span id="hide-detailed-nutrition-link" class="hidden">
+  <%= link_to "Hide detailed nutrition.", "#", href: "javascript:void(0)" %>
+</span>
+<% if current_user != nil %>
+  <% if @list.user != current_user %>
+    <div style="display:none;">This grocery list is for <%=@list.percentage%>% of <%=@list.user.name%>'s nutrition over <%=@list.days%> days with a budget of $<%='%.2f' % @list.max_price%>.</div>
+  <% end %>
+<% else %>
+  <div style="display:none;" id="max-price-show-main">Budget: $<%='%.2f' % @list.max_price%></div>
+<% end %>

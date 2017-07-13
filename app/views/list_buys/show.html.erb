@@ -1,0 +1,66 @@
+<% provide(:title, @list_buy.list.name) %>
+<% if current_user != nil %>
+<%= link_to "View all the lists you've bought", user_path(current_user, :from_list_buys => "true") %>
+<% end %>
+<h4><%= @list_buy.list.name %></h4>
+<div class="row">
+  <div class="col-md-6">
+    <p>
+      Price: $<%=@list_buy.total_price%><br>
+      Calories: <%=@list_buy.total_calories%><br>
+      Carbohydrates: <%=@list_buy.total_carbohydrates%> g<br>
+      Fat: <%=@list_buy.total_fat%> g<br>
+      Protien: <%=@list_buy.total_protein%> g<br>
+      Vitamin A: <%=@list_buy.total_vitamin_a%> %DV<br>
+      Vitamin C: <%=@list_buy.total_fat%> %DV<br>
+      Iron: <%=@list_buy.total_protein%> %DV<br>
+      Calcium: <%=@list_buy.total_calcium%> %DV<br>
+      Sugar: <%=@list_buy.total_sugar%> g<br>
+      Sodium: <%=@list_buy.total_sodium%> mg<br>
+    </p>
+    <div>
+      <span class="timestamp">  
+        Bought <%= time_ago_in_words(@list_buy.created_at) %> ago.
+      </span>
+    </div>
+  </div>
+  <div class="col-md-6">
+
+    <div class="fifteen-px-top-bottom-margin">
+      <% if @list_buy.receipt_image != nil %>
+        <%= image_tag(@list_buy.receipt_image, style: "max-width: 100%;") %>
+      <% end %>
+
+        <div id="camera">
+          <% if @list_buy.receipt_image != nil %>
+            <% smaller_class = "smaller-text" %>
+          <% else %>
+            <% smaller_class = "" %>
+          <% end %>
+          <%= link_to "#", {:id => "camera-link", :class => smaller_class, href: "javascript:void(0)"} do %>
+            <i class="fa fa-camera" aria-hidden="true"></i>
+            <% if @list_buy.receipt_image == nil %>
+              Upload a photo of your receipt.
+            <% else %>
+              Upload a different photo of your receipt.
+            <% end %>
+          <% end %>
+        </div>
+        <%= form_for(@list_buy, html: { class: 'directUpload hidden', data: { 'form-data' => (@s3_direct_post.fields), 'url' => @s3_direct_post.url, 'host' => URI.parse(@s3_direct_post.url).host } }) do |f| %>
+          <%= link_to "#", :id => "camera-hide", :class => "smaller-text", href: "javascript:void(0)" do %>
+            Hide photo uploader.
+          <% end %>
+
+          <div class="field">
+            <%= f.file_field :receipt_image %>
+          </div>             
+          <div class="actions">
+            <%= f.submit "SAVE PHOTO", :class => "btn wide-button" %>
+          </div>
+        <% end %>
+    </div>
+
+
+  </div>
+
+</div>

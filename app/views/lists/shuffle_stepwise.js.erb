@@ -1,0 +1,260 @@
+$(".item-grand-div").css("background-color","white");
+$("#stepwise-response-box").css("opacity",1)
+<% if @existing_quantity_amount %>
+  var amount = '<%="%g" % ("%.2f" % (1+@existing_quantity_amount))%>';
+  $("#amount-from-suggestions").val(amount);
+<% else %>
+  var amount = 1;
+  $("#amount-from-suggestions").val(amount);
+<% end %>
+$("#percentage_from_suggestions").val(100);
+$("#quantity-percentage-show-from-suggestions").text("100");
+$("#user-actions-in-suggestions").removeClass("hidden");
+$(".suggestions-number-field-display").html('1');
+<% if @mode == "opt" %>
+
+  $("#add-and-like").removeClass("hidden"); 
+
+  $("#optimizer-name").addClass("hidden");
+  $("#skip-or-delete-and-dislike").removeClass("hidden");
+  $(".cancel-auto").addClass("hidden");
+<% else %>
+  $("#add-and-like").addClass("hidden"); 
+  $("#optimizer-name").html("AUTOCOMPLETE");
+  $("#skip-or-delete-and-dislike").addClass("hidden");
+  $(".cancel-auto").removeClass("hidden");
+  $("#add-or-delete-stepwise-button").addClass("hidden");
+  $("#add-or-delete-stepwise").addClass("hidden");
+  $("#shuffle-stepwise-skip").addClass("hidden");
+
+  $(".shuffle-stepwise-enough").addClass("hidden");
+<% end %>
+<% if @stepwise_action == "add" %>
+  <% if @array_of_quantities_to_destroy != [] %>
+
+    <% @array_of_quantities_to_destroy.each do |d| %>
+      var a = '#'+'<%=d%>'+'-items-core';
+      $(a).parentsUntil(".item-grand-div-container").parent().remove();
+      //var b  = '<%=d%>'+'-list-view-item';
+      //$('span').filter(function(){ return jQuery.trim($(this).text().toLowerCase()) === b;}).parent().remove();
+      //var c  = '<%=d%>'+'-list-view-item-eat';
+      //$('span').filter(function(){ return jQuery.trim($(this).text().toLowerCase()) === c;}).parent().remove();
+    <% end %>
+  <% end %>
+  if ("<%=@stepwise_quantity.food.root_cat_name%>" != "") {
+    var root_cat_id = '<%=@stepwise_quantity.food.root_cat_name%>'.replace(/[^A-Z0-9]/ig, "").replace('amp', '');
+    var id = "#"+root_cat_id+"-items";
+//    var id_list_view = id+"-list-view";
+//    var id_list_view_eat = id+"-list-view-eat";
+  } else {
+    var id = "#"+"nil-category-items";
+//    var id_list_view = id+"-list-view";
+//    var id_list_view_eat = id+"-list-view-eat";
+  }
+  $(id).prepend("<%= j render 'lists/items_core', :q => @stepwise_quantity %>");
+  //$(id_list_view).prepend("<%= j render 'lists/list_view_items_core', :q => @stepwise_quantity %>");
+  //$(id_list_view_eat).prepend("<%= j render 'lists/list_view_items_core_eat', :q => @stepwise_quantity %>");
+ // $(".strikethrough-checkbox").prev().css("max-width","90%");
+ // $(".ate-checkbox").prev().css("max-width","90%");
+ // $(".quantity-field-input").css("width","100px");
+<% elsif @stepwise_action == "delete" %>
+  <% if @destroy_entirely == "true" %>
+
+    var d = '#'+'<%=@stepwise_quantity_id%>'+'-items-core';
+    $(d).parentsUntil(".item-grand-div-container").parent().remove();
+    //var e  = '<%=@stepwise_quantity_id%>'+'-list-view-item';
+    //$("span:contains('"+e+"')").parent().remove();
+    //var i  = '<%=@stepwise_quantity_id%>'+'-list-view-item-eat';
+    //$("span:contains('"+i+"')").parent().remove();
+  <% else %>
+    var f = '#quantity-number-field-<%=@stepwise_quantity_id%>';
+    var old_amount = $(f).val();
+    var new_amount = old_amount - 1.0;
+    $(f).val(new_amount);
+    //var g  = '<%=@stepwise_quantity_id%>'+'-list-view-item';
+    //var h  = '<%=@stepwise_quantity_id%>'+'-list-view-item-eat';
+    //$("span:contains('"+g+"')").parent().replaceWith("<%= j render 'lists/list_view_items_core', :q => @stepwise_quantity %>");
+    //$("span:contains('"+h+"')").parent().replaceWith("<%= j render 'lists/list_view_items_core_eat', :q => @stepwise_quantity %>");
+  <% end %>
+
+<% end %>
+
+<% if @food_action == "ADD 1" %>
+
+  <% if @mode == "opt" %>
+    $("#amount-and-percentage").removeClass("hidden");
+    $("#amount-from-suggestions").removeClass('hidden');
+    $("#add-or-delete-stepwise-button").removeClass("hidden");
+    $("#add-or-delete-stepwise-button").css("margin","8px auto");
+    $("#add-or-delete-stepwise-button").html("ADD");
+    $("#add-or-delete-stepwise").removeClass("hidden");
+    $("#shuffle-stepwise-skip").removeClass("hidden");
+    $(".shuffle-stepwise-enough").removeClass("hidden");
+    $("#shuffle-stepwise-skip").html('<div class="center-block"><%=link_to "Skip this suggestion.", add_food_stepwise_skip_path(:food_id => @target_id, :list_id => @list_id), :remote => true %></div>');
+    <% if Food.find(@target_id).image == nil %>
+      $("#stepwise-response").html('<div style="min-height:75px;"></div><div class="center-block"><%=@js_message%></div>');
+    <% else %>
+      $("#stepwise-response").html('<div style="min-height:75px;"><%= image_tag(Food.find(@target_id).image, class: "img-responsive center-block", style: "margin: 0px auto; max-height:50px;") %></div><div class="center-block"><%=@js_message%></div>');
+    <% end %>
+      
+//    $("#hidden-preview-details-div-shuffle-stepwise").html("<%= j render 'shared/preview_details', :f => Food.find(@target_id) %>");
+  <% else %>
+    $("#amount-and-percentage").addClass("hidden");
+    $("#stepwise-response").html('<div class="center-block" style="margin-top:15px;">Adding <%=@js_message%></div><div style="min-height:75px;"><%= image_tag(Food.find(@target_id).image, class: "img-responsive center-block", style: "margin: 0px auto; max-height: 50px;") %></div>');
+  <% end %>
+  var food_id = '<%=@target_id%>';
+  var list_id = '<%=@list_id%>';
+
+  <% if @mode == "opt" %>
+    var new_href = "/add_food_stepwise?food_id="+food_id+"&list_id="+list_id+"&mode=opt&amount="+amount+"&percentage=100";
+    <% if !(@user.favorites.include? "#{@target_id},") %>
+      var fa_class = "fa "+"fa-thumbs-o-up "+"fa-2x";
+      var add_and_like_id = "id=add-and-like-id";
+      $("#add-and-like").html('<div class="center-block smaller-text"><%= link_to "<i '+add_and_like_id+'></i><br />ADD + LIKE".html_safe, "#", id: "add-and-like-link", :remote => true %></div>');
+      $("#add-and-like-id").addClass(fa_class);
+      var new_href_add_and_like = "/add_food_stepwise?food_id="+food_id+"&list_id="+list_id+"&add_and_like=1"+"&mode=opt&amount="+amount+"&percentage=100";
+      $("#add-and-like-link").attr("href",new_href_add_and_like);
+    <% else %>
+      var fa_class = "fa "+"fa-thumbs-o-up "+"fa-2x";
+      var add_and_like_id = "id=add-and-like-id";
+      $("#add-and-like").html('<div class="center-block"><%= "<i '+add_and_like_id+'></i><br />ALREADY LIKED".html_safe %></div>');
+      $("#add-and-like-id").addClass(fa_class);
+    <% end %>
+    <% if !(@user.hard_delete.include? "#{@target_id},") %>
+      var fa_class = "fa "+"fa-thumbs-o-down "+"fa-2x";
+      var skip_and_dislike_id = "id=skip-and-dislike-id";
+      $("#skip-or-delete-and-dislike").html('<div class="center-block smaller-text"><%= link_to "<i '+skip_and_dislike_id+'></i><br />SKIP + DISLIKE".html_safe, "#", id: "skip-and-dislike-link", :remote => true %></div>');
+      $("#skip-and-dislike-id").addClass(fa_class);
+      var new_href_skip_and_dislike = "/add_food_stepwise_skip?food_id="+food_id+"&list_id="+list_id+"&skip_and_dislike=1"+"&mode=opt";
+      $("#skip-and-dislike-link").attr("href",new_href_skip_and_dislike);
+    <% else %>
+      $("#add-and-like").html("");
+    <% end %>
+  <% elsif @mode == "auto" %>
+    var new_href = "/add_food_stepwise?food_id="+food_id+"&list_id="+list_id+"&mode=auto";
+  <% end %>
+  $("#add-or-delete-stepwise").attr("href",new_href);
+  <% if @mode == "auto" %>
+    if ($("#cancel-auto-indicator").html() != "CANCEL") {
+      $("#add-or-delete-stepwise").click();
+    }    
+  <% end %>
+<% elsif @food_action == "DELETE" %>
+
+
+
+<% 
+=begin %>
+  $("#amount-and-percentage").addClass("hidden");
+  <% if @mode == "opt" %>
+    $("#add-and-like").html("");
+    $("#add-or-delete-stepwise-button").removeClass("hidden");
+    $("#add-or-delete-stepwise-button").css("margin","8px auto")
+    $("#add-or-delete-stepwise-button").html("DELETE");
+    $("#add-or-delete-stepwise").removeClass("hidden");
+    <% if @max_ratio_string != nil %>
+      $("#stepwise-response").html('<div style="min-height:75px;"><%= image_tag(Quantity.find(@target_id).food.image, class: "img-responsive center-block", style: "margin: 0px auto; max-height: 50px;") %></div><div class="center-block"><span style="font-size:1.25em;"><%=@js_message%></span></div>'); 
+    <% else %>
+      $("#stepwise-response").html('<div style="min-height:75px;"><%= image_tag(Quantity.find(@target_id).food.image, class: "img-responsive center-block", style: "margin: 0px auto; max-height: 50px;") %></div><div class="center-block"><span style="font-size:1.25em;"><%=@js_message%></span>'); 
+    <% end %>
+    $(".shuffle-stepwise-enough").removeClass("hidden");
+    $("#shuffle-stepwise-skip").removeClass("hidden");
+    $("#shuffle-stepwise-skip").html('<div class="center-block"><%=link_to "Skip this suggestion.", delete_food_stepwise_skip_path(:quantity_id => @target_id, :list_id => @list_id), :remote => true %></div>');
+    //$("#hidden-preview-details-div-shuffle-stepwise").html("<%= j render 'shared/preview_details', :f => Quantity.find(@target_id).food %>");
+  <% else %>
+    $("#stepwise-response").html('<div class="center-block" style="margin-top:15px;">Deleting <%=@js_message%></div><div style="min-height:75px;"><%= image_tag(Quantity.find(@target_id).food.image, class: "img-responsive center-block", style: "margin: 20px auto; max-height: 50px;") %></div>'); 
+  <% end %>
+  var quantity_id = '<%=@target_id%>';
+  var list_id = '<%=@list_id%>';
+  <% if @mode == "opt" %>
+    var new_href = "/delete_food_stepwise?quantity_id="+quantity_id+"&list_id="+list_id+"&mode=opt";
+    <% if !(@user.hard_delete.include? "#{@target_id},") %>
+      var fa_class = "fa "+"fa-thumbs-o-down "+"fa-2x";
+      var delete_and_dislike_id = "id=delete-and-dislike-id";
+      $("#skip-or-delete-and-dislike").html('<div class="center-block smaller-text"><%= link_to "<i '+delete_and_dislike_id+'></i><br />DELETE + DISLIKE".html_safe, "#", id: "delete-and-dislike-link", :remote => true %></div>');
+      $("#delete-and-dislike-id").addClass(fa_class);
+      var new_href_delete_and_dislike = "/delete_food_stepwise?quantity_id="+quantity_id+"&list_id="+list_id+"&delete_and_dislike=1"+"&mode=opt";
+      $("#delete-and-dislike-link").attr("href",new_href_delete_and_dislike);
+    <% end %>
+  <% elsif @mode == "auto" %>
+    var new_href = "/delete_food_stepwise?quantity_id="+quantity_id+"&list_id="+list_id+"&mode=auto";
+  <% end %>
+  $("#add-or-delete-stepwise").attr("href",new_href);
+  <% if @mode == "auto" %>
+    if ($("#cancel-auto-indicator").html() != "CANCEL") {
+      $("#add-or-delete-stepwise").click();
+    }    
+  <% end %>
+<% 
+=end %>
+
+  //EXPERIMENTING WITH DELETE HIGHLIGHTING
+  <% if @max_ratio_string != nil %>
+    var max = "<%=@max_ratio_string%>";
+    alert("Please remove or reduce a highlighted item to reduce your list's "+max+".");
+  <% end %>
+  $("#search-box-container").removeClass("hidden");
+  $("#shuffle-click").removeClass("hidden");
+  $(".shuffle-click").removeClass("hidden");
+  $(".browse-categories-buttons").show();
+  $("#top-foods-box-list").addClass("hidden");
+  $("#frequent-foods-box-list-2").addClass("hidden");
+  $("#stepwise-response").addClass("hidden");
+  $("#optimizer-name").html("");
+  $("#add-or-delete-stepwise-button").addClass("hidden");
+  $("#add-or-delete-stepwise").addClass("hidden");
+  $("#shuffle-stepwise-skip").addClass("hidden");
+  $("#add-and-like").addClass("hidden");
+  $("#skip-or-delete-and-dislike").addClass("hidden");
+  $("#stepwise-response-box-container").addClass("hidden");
+  $("#stepwise-response-box").addClass("hidden");
+  var max = parseFloat("<%=@array_to_delete.first[1]%>");
+  console.log(max);
+  $('html, body').animate({scrollTop: $("#<%=@array_to_delete.first[0]%>-items-core").parent().offset().top});
+
+  <% @array_to_delete.each do |a| %>
+    var id = "#<%=a[0]%>-items-core"
+    var num = parseFloat("<%=a[1]%>");
+    console.log(num/max);
+    console.log(id);
+    $(id).parent().css("background-color","rgba(255,0,0,"+String((num/max)*0.5)+")");
+  //  $(id).parent().css("opacity",(num/max)*0.5+0.5);
+
+  <% end %>
+
+
+
+<% else %>
+  <% if @food_action == "neither added nor deleted" %>
+    alert("We're sorry; the nutrition algorithm is stuck. Please try adding or deleting some items.");
+  <% else %>
+    alert("Good job! This is a healthy and affordable list.");
+    $("#search-box-container").removeClass("hidden");
+    $("#shuffle-click").removeClass("hidden");
+    $(".shuffle-click").removeClass("hidden");
+    $(".browse-categories-buttons").show();
+    $("#top-foods-box-list").addClass("hidden");
+    $("#frequent-foods-box-list-2").addClass("hidden");
+  <% end %>
+  $("#stepwise-response").addClass("hidden");
+  $("#optimizer-name").html("");
+  $("#add-or-delete-stepwise-button").addClass("hidden");
+  $("#add-or-delete-stepwise").addClass("hidden");
+  $("#shuffle-stepwise-skip").addClass("hidden");
+  $("#add-and-like").addClass("hidden");
+  $("#skip-or-delete-and-dislike").addClass("hidden");
+
+  $("#stepwise-response-box-container").addClass("hidden");
+  $("#stepwise-response-box").addClass("hidden");
+
+  rootCat();
+<% end %>
+<% if Quantity.where(list_id:@list_id).length != 0 %>
+  <% @list = List.joins(:quantities).find(@list_id) %>
+<% else %>
+  <% @list = List.find(@list_id) %>
+<% end %>
+<%= render "update_nutrition", list: @list %>
+<% if @food_action != "DELETE" %>
+  $('html, body').animate({scrollTop: $('#stepwise-response-box-container').offset().top});
+<% end %>

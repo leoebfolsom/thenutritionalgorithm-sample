@@ -1,0 +1,21 @@
+<% if q.strikethrough == 1 %>
+  <% checked_strikethrough = true %>
+<% else %>
+  <% checked_strikethrough = false %>
+<% end %>
+
+<span class="hidden list-view-item-q">
+  <%="#{q.id}-list-view-item"%>
+</span>
+<div class="row">
+  <div class="col-md-12 list-view-item-div">
+    <%= form_for(q, :remote => true, :html => {:class => "form-inline", :style => "width: 100%;"}) do |f| %>
+      <label>
+        <%= f.check_box :strikethrough, class: 'input form-control strikethrough-checkbox', :checked => checked_strikethrough, onchange: '$(this.form).submit();', onkeyup: '$(this.form).submit();', type: "checkbox" %> 
+        <%= f.submit "Save changes", class: "hidden" %>
+        <%= f.label(:strikethrough, "%.3g" % q.amount + " #{q.food.name} (#{q.food.aisle})") %>
+      </label>
+    <% end %>
+  </div>
+</div>
+

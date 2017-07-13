@@ -1,0 +1,60 @@
+<% food = q.food %>
+<span id="item-preview-details-price-#{q.id}" class="hidden"><%=(food.price.to_f).round(2)%></span>
+<span id="item-preview-details-amount-#{q.id}" class="hidden"><%=q.amount%></span>
+
+<ul style="text-align:left;">
+  <li>
+    <b><%= food.name.split.map(&:capitalize).join(' ') %></b>
+  </li>
+  <% if q.food.aisle != "Produce" %>
+    <li><%= q.food.aisle%></li>
+  <% end %>
+  <li>Total price: $<span id="item-preview-details-price-#{q.id}"><%= '%.2f' % food.price %></span>
+  </li>
+
+  <li>Calories: <%= "#{food.calories}"%>
+  </li>
+
+  <li>Carbohydrates:
+    <%= "#{food.carbohydrates} g" %>
+  </li>
+  <li>Fat:
+    <%= "#{food.fat} g" %>
+  </li>
+  <li>Protein
+    <%= "#{food.protein} g" %>
+  </li>
+
+  <li>Sugar:
+    <%= "#{food.sugar} g" %>
+  </li>
+
+  <li>Fiber:
+    <%= "#{food.fiber} g" %>
+  </li>
+
+  <li>Vit. A:
+    <%= "#{food.vitamin_a} %DV" %>
+  </li>
+
+  <li>Vit. C:
+    <%= "#{food.vitamin_c} %DV"%>
+  </li>
+
+  <li>Calcium:
+    <%= "#{food.calcium} %DV"%>
+  </li>
+
+  <li>Iron:
+    <%= "#{food.iron} %DV"%>
+  </li>
+
+  <li>Sodium:
+    <%= "#{food.sodium} mg"%>
+  </li>
+<% if food.ingredients != nil %>
+  <li>Ingredients:
+    <%= "#{food.ingredients}"%>
+  </li>
+<% end %>
+</ul>

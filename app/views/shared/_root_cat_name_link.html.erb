@@ -1,0 +1,17 @@
+<div class="root-cat-container">
+  <% root_cat_id = r.gsub(/[\s,&]/ ,"") %>
+  <div id="<%=root_cat_id%>">
+    <%= link_to "#", href: "javascript:void(0)", :class => "root-cat", :style => "font-size:1.1em;" do %>
+      <%= r %>
+    <% end %>
+  </div>
+  
+  <% Food.where(id:foods).where(root_cat_name:r).where.not(sub_cat_name:nil).pluck(:sub_cat_name).uniq.sort.each do |s| %>
+    <% sub_cat = s.gsub(/[\s,&]/ ,"") %>
+    <div id="<%=sub_cat%>"> 
+      <%= link_to browse_path(:sub_cat => s, :root_cat => r, :list_id => @list.id), :class => "sub-cat hidden", :remote => true, :style => "font-size:0.75em" do %>
+        <div class="<%=sub_cat%>"><%= s %></div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

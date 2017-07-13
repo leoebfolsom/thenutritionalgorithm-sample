@@ -1,0 +1,43 @@
+<div class="col-md-4 list-grand-div-container text-center">
+  <div class="list-grand-div item">
+    <% list = list_buy.list %>
+    <div class="row">
+      <div class="col-md-12 smaller-text">
+        <%= link_to list.name, list %> by <%= link_to list.user.name, list.user %>
+      </div>
+      <span>
+        <%= link_to "Receipt and details", list_buy %>
+      </span>
+    </div>
+    <% list_note = list.note %>
+    <% if list_note != "" && list_note != nil %>
+      <% if list_note.length > 250 %>
+        <% list_note = truncate(list.note, :length => 250) %>
+      <% end %>
+      <div class="row">
+        <div class="col-md-12 smaller-text">
+          <%= list_note %>
+        </div>
+      </div>
+    <% end %>
+    <div class="row">
+      <div class="col-md-12">
+        <%= link_to list do %>
+          <% if list_buy.receipt_image != nil %>
+            <div class="col-md-12">
+              <%= image_tag list_buy.receipt_image, style: "max-width:100%; max-height: 200px;" %>
+            </div>
+          <% elsif list.image != nil %>
+            <div class="col-md-12">
+              <%= image_tag list.image, style: "max-width:100%; max-height: 200px;" %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <span class="timestamp">  
+      Bought <%= time_ago_in_words(list_buy.created_at) %> ago.
+    </span>
+
+  </div>
+</div>

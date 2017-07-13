@@ -1,0 +1,6 @@
+<% if @from == "home" %>
+	$(".follow_form-<%=@user.id%>").hide();
+<% else %>
+	$(".follow_form-<%=@user.id%>").html("<%= escape_javascript(render('users/unfollow')) %>");
+	$(".followers-<%=@user.id%>").html('<%= @user.followers.count %>');
+<% end %>

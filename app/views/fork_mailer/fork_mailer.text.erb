@@ -1,0 +1,7 @@
+Good news, <%=@user.name.split.map(&:capitalize).join(' ')%>!
+
+<%= @forking_user.name.split.map(&:capitalize).join(' ') %> has forked your list, <%= @list.name %>, to create a new list, <%= @new_list.name %>.
+
+You can check it out at https://www.thenutritionalgorithm.com/lists/<%= @new_list.id %>.
+
+This has earned you 7 beans, bringing your total to <%=@user.points%> beans.

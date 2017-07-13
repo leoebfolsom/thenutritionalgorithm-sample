@@ -1,0 +1,23 @@
+<div class="favorites-li item col-md-4 col-sm-4 col-xs-4 ">
+  <div class="item-grand-div">
+    <% if current_user == user %>  
+      <div class="col-md-12 col-xs-12 col-sm-12">
+        <div class="remove-link remove-right">
+          <%= link_to "\xe2\x9c\x95".html_safe, undo_favorite_path(:param => f), :class => 'remove-from-favorite remove-right', :remote => true %>
+        </div>
+      </div>
+    <% end %>
+    <div class="col-md-12 col-sm-12 col-xs-12 item-name">
+      <br>
+      <%= f.name.split.map(&:capitalize).join(' ') %>
+      <br>
+      <span>$<%= '%.2f' % f.price %></span>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+      <% if f.image != "" %>
+        <%= image_tag(f.image, width: "100%", style:"max-width:200px;") %>
+      <% end %>
+    </div>
+  </div>
+  
+</div>

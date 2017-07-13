@@ -1,0 +1,11 @@
+<%= link_to onboarding_favorite_path(:param => f.id), class: "onboarding-favorite", remote: true do %>
+  <div style="display:inline-block;" class="onboard-not-chosen">
+    <span style="display:none;" class="food_id"><%=f.id%></span>
+    <div style="display:inline-block;" class="hovereffect">
+      <img class="img-responsive" src=<%=f.image%>>
+      <div class="overlay">
+        <h2><%=f.name%></h2>
+      </div>
+    </div>
+  </div>
+<% end %>

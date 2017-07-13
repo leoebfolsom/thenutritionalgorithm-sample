@@ -1,0 +1,86 @@
+<% provide(:title, 'explore') %>
+
+<% 
+=begin %> 
+<% if params[:show] %>
+  <div class="hidden" id="show-dishes-in-browse"></div>
+<% end %>
+<div class="row">
+  <div id="browse-option-lists" class="col-md-4 home-how-it-works active-browse">
+    <center>
+      <i class="fa fa-shopping-cart fa-5x home-icons" aria-hidden="true"></i>
+      <h1>LISTS</h1>
+      <div class="home-how-it-works-text">
+        Explore grocery lists that users have created.
+      </div>
+      <%= link_to "#", :id => "browse-lists-click" do %>
+        <button class="btn wide-button">BROWSE LISTS</button>
+      <% end %>
+    </center>
+  </div>
+  <div id="browse-option-good-for-you" class="col-md-4 home-how-it-works">  
+    <center>  
+      <i class='fa fa-heart-o fa-5x home-icons'></i>
+
+      <h1>GOOD FOR YOU</h1>
+      <div class="home-how-it-works-text">
+        Find lists that already meet your nutrition needs and budget.
+      </div>
+      <% if current_user != nil %>
+        <%= link_to find_good_list_path, :id => "good-lists-click", remote: true do %>
+          <button class="btn wide-button">GOOD FOR YOU</button>
+        <% end %>
+      <% else %>
+        <%= link_to "#", :id => "good-lists-click-logged-out", href: "javascript:void(0)" do %>
+          <button class="btn wide-button" data-toggle="tooltip" data-placement="top" title="Create a profile to access this feature!">GOOD FOR YOU</button>
+          
+        <% end %>
+      <% end %>
+    </center>
+  </div>
+  <div id="browse-option-dishes" class="col-md-4 home-how-it-works">
+    <center>
+      <i class='fa fa-photo fa-5x home-icons'></i>
+
+      <h1>DISHES</h1>
+
+      <div class="home-how-it-works-text">
+        Read dishes that users have written and photos they have posted.
+      </div>
+      
+      <%= link_to "#", :id => "browse-dishes-click", href: "javascript:void(0)" do %>
+        <button class="btn wide-button">BROWSE DISHES</button>
+      <% end %>
+    </center>
+  </div>
+</div>
+<div id="browse-container-dishes" class="hidden">
+
+  <div class="col-md-8 col-md-offset-2">
+    <ul>
+      <%= render @posts %>
+    </ul>
+  </div>
+
+</div>
+<div class="row" id="browse-container-lists">
+  <div class="col-md-12">
+    <div class="col-md-2" style="margin-top: 60px;">
+
+    </div>
+    <div class="col-md-10">
+      <div id="tasks">
+      	<div id="browse-lists-display" class="lists" style="text-align: center; list-style-position:inside;">
+      		<% @lists.each do |l| %>
+            <%= render 'shared/list', list: l, display_name: true %>
+          <% end %>
+      	</div>
+        <div id="good-lists-display" class="lists" style="text-align: center; list-style-position:inside;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% 
+=end %> 

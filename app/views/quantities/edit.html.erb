@@ -1,0 +1,17 @@
+<% provide(:title, 'Edit list item') %>
+
+<section id="form">
+  <h2>edit the quantity of this item</h2>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <%= form_for(@quantity) do |f| %>
+        <%= render 'shared/error_messages', object: @quantity %>
+
+        <%= f.label :amount, "Enter a new amount for #{Food.find(@quantity.food_id).name}:" %>
+        <%= f.text_field :amount, class: 'form-control' %>
+
+        <%= f.submit "Save changes", class: "btn"  %>
+      <% end %>
+    </div>
+  </div>
+</section>

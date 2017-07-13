@@ -1,0 +1,102 @@
+<% provide(:title, 'add image') %>
+
+<script>
+/*
+$(function() {
+  $('.directUpload').find("input:file").each(function(i, elem) {
+    var fileInput    = $(elem);
+    var form         = $(fileInput.parents('form:first'));
+    var submitButton = form.find('input[type="submit"]');
+    var progressBar  = $("<div class='bar'></div>");
+    var barContainer = $("<div class='progress'></div>").append(progressBar);
+    fileInput.after(barContainer);
+    fileInput.fileupload({
+    //  add: function (e, data) {
+    //    form.data('form-data')["Content-Type"] = "image/jpg";//data.files[0].type;
+    //    data.submit();
+    //  },
+      fileInput:       fileInput,
+      url:             form.data('url'),
+      type:            'POST',
+      autoUpload:       true,
+      formData:         form.data('form-data'),
+      paramName:        'file', // S3 does not like nested name fields i.e. name="user[avatar_url]"
+      dataType:         'XML',  // S3 returns XML if success_action_status is set to 201
+      replaceFileInput: false,
+      progressall: function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        progressBar.css('width', progress + '%')
+      },
+      start: function (e) {
+        submitButton.prop('disabled', true);
+
+        progressBar.
+          css('background', 'green').
+          css('display', 'block').
+          css('width', '0%').
+          text("Loading...");
+      },
+      done: function(e, data) {
+        submitButton.removeClass("hidden");
+        submitButton.prop('disabled', false);
+        progressBar.text("Uploading done");
+
+        // extract key and generate URL from response
+        var key   = $(data.jqXHR.responseXML).find("Key").text();
+        var url   = '//' + form.data('host') + '/' + key;
+
+        // create hidden field
+        var input = $("<input />", { type:'hidden', name: fileInput.attr('name'), value: url })
+        form.append(input);
+        var extension = $("#image_image_url").val().substr($("#image_image_url").val().lastIndexOf('.')+1);
+        if (extension == "jpg") {
+          extension = "image/jpeg";
+        } else if (extension == "png") {
+          extension = "image/png";
+        } else if (extension == "gif") {
+          extension = "image/gif";
+        } else if (extension == "svg") {
+          extension = "image/svg-xml";
+        } else {
+          extension = false;
+        }
+        if (extension != false) {
+          var data_form_data = $(".directUpload")[0].getAttribute('data-form-data').replace('"Content-Type":""','"Content-Type":"'+extension+'"');
+          $(".directUpload")[0].setAttribute('data-form-data',data_form_data);
+        }
+      },
+      fail: function(e, data) {
+        submitButton.prop('disabled', true);
+        submitButton.addClass("hidden");
+
+        progressBar.
+          css("background", "red").
+          text("Failed");
+      }
+    });
+  });
+});
+*/
+</script>
+
+
+<% if user_signed_in? || Post.find(@post_id).user.id == 75 %>
+  <h2>
+    image uploader
+  </h2>
+  <div class="row">
+    <div class="col-md-12">
+      <%= form_for(@image, html: { class: 'directUpload', data: { 'form-data' => (@s3_direct_post.fields), 'url' => @s3_direct_post.url, 'host' => URI.parse(@s3_direct_post.url).host } }) do |f| %>
+        <%= render 'shared/error_messages', object: @image %>
+        <center>
+          <%= f.hidden_field :post_id, class: 'form-control', value: @post_id %>
+          <%= f.label :image_url, "Select an image from your files" %>
+          <%= f.file_field :image_url, class: 'form-control' %>
+          <%= f.label :caption, "Add a caption for your image!" %>
+          <%= f.text_field :caption, class: 'form-control', placeholder: "What's this an image of?" %>
+          <%= f.submit "SAVE IMAGE", class: "btn wide-button" %>
+        </center>
+      <% end %>
+    </div>
+  </div>
+<% end %>

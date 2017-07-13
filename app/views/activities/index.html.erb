@@ -1,0 +1,12 @@
+<% provide(:title, 'All activities') %>
+<%= will_paginate %>
+
+<ul>
+  <li><%= link_to "look up an ip", "http://whatismyipaddress.com/ip/", :target => '_blank' %> |
+  <%= link_to "users & guests only", "#", :remote => true, :id => "hide-logged-out-users" %>
+  </li>
+
+    <%= render @activities %>
+</ul>
+
+<%= will_paginate %>

@@ -1,0 +1,19 @@
+<div class="post-image">
+
+  <% if image.image_url != nil %>
+    <div>
+      <center>
+        <%= image_tag image.image_url, style: "width: 100%; max-width:500px;" %> 
+      </center>
+    </div>
+    <div class="smaller-text text-center">
+      <%= image.caption %>
+    </div>
+    <% if current_user == image.post.user %>
+      <div class="smaller-text text-center">
+        <%= link_to "edit image", edit_image_path(image, :post_id => image.post_id) %> | 
+        <%= link_to "delete image", image, method: :delete, data: { confirm: "You sure?" }, :remote => true, :class => "delete-post-image-link" %> 
+      </div>
+    <% end %>
+  <% end %>
+</div>

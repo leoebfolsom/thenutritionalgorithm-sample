@@ -1,0 +1,9 @@
+$("#likes-response").html('<%= image_tag(Food.find(@next_like_id).image, width: "100px", class: "img-responsive center-block", style: "margin: 20px auto", id: "liker-image") %><%= link_to "View details", "#", href: "javascript:void(0)", class: "preview-details-link smaller-text" %><div id="liker-name-div" class="center-block"><%=@next_like_name%></div>');
+$("#skipliker").removeClass("hidden");
+var new_like_href = "/user_favorite?liker=true&param="+"<%=@next_like_id%>";
+$("#liker").attr("href",new_like_href);
+var new_dislike_href = "/hard_delete_user_from_profile?liker=true&param="+"<%=@next_like_id%>";
+$("#disliker").attr("href",new_dislike_href);
+var new_skip_href = "/skip_liker?param="+"<%=@next_like_id%>";
+$("#skipliker").attr("href",new_skip_href);
+$("#hidden-preview-details-div-home-game").html("<%= j render 'shared/preview_details', :f => Food.find(@next_like_id) %>");

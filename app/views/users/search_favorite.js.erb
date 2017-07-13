@@ -1,0 +1,8 @@
+<% if @foodsearch.length != 0 %>
+  $("#search-favorite-results-container").html("");
+  <% @foodsearch.each do |f| %>
+    $("#search-favorite-results-container").append("<%= j render 'shared/search_favorite_result', :f => f %>");
+  <% end %>
+<% else %>
+  $("#search-favorite-results-container").html("<%=@no_results%>");
+<% end %>

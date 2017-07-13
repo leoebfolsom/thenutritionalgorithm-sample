@@ -1,0 +1,24 @@
+<% provide(:title, @food.name) %>
+<h2><%= @food.name %></h2>
+<div class="row">
+  <div class="col-md-3 col-md-offset-5">
+    <ul>
+      <li>Price: $<%= '%.2f' % @food.price %></li>
+      <li>Calories: <%= @food.calories %></li>
+      <li>Carbohydrates: <%= @food.carbohydrates %> g</li>
+      <li>Fat: <%= @food.fat %> g</li>
+      <li>Protein: <%= @food.fiber %> g</li>
+      <li>Sugar: <%= @food.sugar %> g</li>
+      <li>Fiber: <%= @food.fiber %> g</li>
+      <li>Vitamin A: <%= @food.vitamin_a %> % DV</li>
+      <li>Vitamin C: <%= @food.vitamin_c %> % DV</li>
+      <li>Calcium: <%= @food.calcium %> % DV</li>
+      <li>Iron: <%= @food.iron %> % DV</li>
+      <li>Sodium: <%= @food.sodium %> mg</li>
+    </ul>
+      <%= link_to edit_food_path do %>
+        <button class="btn wide-button">EDIT</button>
+      <% end %> 
+
+  </div>
+</div>

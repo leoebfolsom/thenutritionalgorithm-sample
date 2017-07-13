@@ -1,0 +1,12 @@
+$("#browse-categories-id").html("");
+$("#browse-results-container").html("");
+<% if @search_and_add_eligible_foods.length != 0 %>
+  var string = "";
+  <% @root_cat_names.each do |r| %>
+    string += "<%= j render 'shared/root_cat_name_link', :r => r, :foods => @search_and_add_eligible_foods %>";  
+  <% end %>
+  $("#browse-categories-id").append(string); 
+<% end %>
+$(".item-grand-div").css("background-color","white");
+//var position = $("#browse-results-container").position().top;
+//$("#browse-foods-box-list").animate({scrollTop: position});

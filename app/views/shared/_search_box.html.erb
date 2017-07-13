@@ -1,0 +1,17 @@
+<div id="search-field-list" class="col-md-12 col-sm-12 col-xs-12 search-to-add-container" style="padding:0px;">
+  <div class="text-center">
+    <%= form_tag({action: "search", controller: "lists"}, :method => "get", :remote => true) do %>
+      <%= hidden_field_tag :list_id, params[:list_id], :value => list_id %>
+      <div class="">
+        <%= text_field_tag :search, params[:search], placeholder: "Type a food to add to your grocery list.", class: "text-field-clearable search-to-add", style: "" %>
+        <span class="text-field-clear glyphicon glyphicon-remove-circle"></span>
+      </div>
+      <%= submit_tag "Search", :name => nil, :class => "hidden search-submit btn wide-button green-button img-responsive" %>
+      
+    <% end %>
+  </div>
+  <div class="col-md-12 col-sm-12 col-xs-12 text-center" style="padding:0px;"><%= link_to "Clear search results.", "#", id: "clear-search-results", class: "hidden", href: "javascript:void(0)" %></div>
+  <div class="search-results-container hidden col-md-12 col-xs-12 col-sm-12"></div>
+  <div class="hidden" id="no-results-flag"></div>
+</div>
+

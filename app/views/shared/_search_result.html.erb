@@ -1,0 +1,93 @@
+<% @list = List.find(l) %>
+<% if !@list.foods.pluck(:id).include?(f.id) %>
+<%= form_for(@quantity, :remote=>true) do |q| %>
+  <div class="col-md-12 col-sm-12 col-xs-12 search-result-grand-container" style='padding: 5px 0px;'>
+    <div class="item-grand-div item search-result" style='padding: 5px 0px;'>
+      <div class="col-md-3 col-sm-3 col-xs-3 text-center center-block">
+        <% if f.image != "" && f.image != nil %>
+          <%= image_tag(f.image, width: "100%", style:"max-width:100px;") %>
+        <% end %>
+        <br>
+        <a href="javascript:void(0);" class="tiny-text view-product-details-modal-button" data-toggle="modal" data-target="#<%=from%>-previewDetailsModalSearchResult-<%=f.id%>">
+          Details
+        </a>
+      </div>
+      <div class="modal fade" id="<%=from%>-previewDetailsModalSearchResult-<%=f.id%>" tabindex="-1" role="dialog" aria-labelledby="#<%=from%>-previewDetailsModalSearchResultLabel-<%=f.id%>" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="<%=from%>-previewDetailsModalSearchResultLabel-<%=f.id%>">Nutrition details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="" style="display:inline; text-align:left; font-size:0.8em;">
+                <ul>
+                  <li><%= f.name.split.map(&:capitalize).join(' ') %></li>
+                  <% if f.aisle != "Produce" %> <li><%= f.aisle %></li><% end %>
+                  <li>Price: $<%= '%.2f' % f.price %></li>
+                  <li>Calories: <%= "#{f.calories}" %></li>
+                  <li>Carbohydrates: <%= "#{f.carbohydrates} g"%></li>
+                  <li>Fat: <%= "#{f.fat} g"%></li>
+                  <li>Protein: <%= "#{f.protein} g"%> </li>
+                  <li>Sugar: <%= "#{f.sugar} g"%> </li>
+                  <li>Fiber: <%= "#{f.fiber} g"%> </li>
+                  <li>Vit. A: <%= "#{f.vitamin_a} %DV"%> </li>
+                  <li>Vit. C: <%= "#{f.vitamin_c} %DV"%> </li>
+                  <li>Calcium: <%= "#{f.calcium} %DV"%> </li>
+                  <li>Iron: <%= "#{f.iron} %DV"%> </li>
+                  <li>Sodium: <%= "#{f.sodium} mg"%> </li>
+                  <% if f.ingredients != nil %>
+                    <li>Ingredients:
+                      <%= "#{f.ingredients}"%>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5 col-sm-5 col-xs-5 item-name" style="padding: 0px;text-align:left; font-size:0.75em;">
+        <div>
+          <%= f.name.split.map(&:capitalize).join(' ') %>
+        </div>
+        <div>
+          <span>
+            $<%= '%.2f' % f.price %>    
+          </span>
+          <% if f.aisle != "Produce" %>
+            <span style="color:gray">
+              <%= f.aisle %>
+            </span>
+          <% end %>
+        </div>
+        <div style="margin-top:15px;">How much will you eat in <%=@list.days%> days? 
+          <span class="quantity-percentage-search-show">100
+          </span>%
+        </div>
+        <%= q.range_field(:percentage, in: 1..100, :value=>100,:class=>"input form-control quantity-percentage-search bfh-number", :style=> "padding:0px; margin: 5px auto;") %>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-4" style="padding-top: 0px;">
+        <center>
+          <div class="quantity-plus-search" style='margin:-10px 0px;'>
+            <%= link_to "<i class='fa fa-angle-up fa-2x' aria-hidden='true'></i>".html_safe, "javascript:void(0)" %>
+          </div>
+          <%= q.number_field(:amount, in: 0.01..20.0, :step => 'any', :value=>1, style: "text-align:center; margin: 0px;padding:0px;margin-bottom:5px;max-width:50px;display:inline;",:class=>"input form-control text_field quantity-field-input-search hidden") %>
+          <div class="number-field-display" style="font-size:1.5em;">1</div>
+          <div class="quantity-minus-search" style='margin-top:-10px;'>
+            <%= link_to "<i class='fa fa-angle-down fa-2x' aria-hidden='true'></i>".html_safe, "javascript:void(0)" %>
+          </div>  
+          <%= render 'shared/error_messages', object: @quantity %>
+          <%= q.hidden_field :food_id, class: 'form-control', :value => f.id %>
+          <%= q.hidden_field :list_id, class: 'form-control', :value => @list.id %>
+
+          <%= q.submit "ADD", class: "add-from-search", :style => "padding:0px;margin: 5px auto;" %>        
+        
+        </center>
+      </div>
+    </div>
+  </div>
+<% end %>
+<% end %>

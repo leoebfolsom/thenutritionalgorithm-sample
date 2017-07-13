@@ -1,0 +1,23 @@
+
+<% if @new_favorite != "already added" && @next_like_id == nil && @from_list != nil%>
+  $("#user-favorites").append("<%= j render 'shared/like', :f => Food.find(@new_favorite), :user => @user %>");
+<% end %>
+<% if @next_like_id != nil %>
+  if ($("user-likes-box-container").hasClass("hidden") != true) {
+    $("#skipliker").removeClass("hidden");
+    $("#likes-response").html('<%= image_tag(Food.find(@next_like_id).image, width: "100px", class: "img-responsive center-block", id: "liker-image", style: "margin: 20px auto") %><%= link_to "View details", "#", href: "javascript:void(0)", class: "preview-details-link smaller-text" %><div id="liker-name-div" class="center-block"><%=@next_like_name%></div>');
+    var new_like_href = "/user_favorite?liker=true&param="+"<%=@next_like_id%>";
+    $("#liker").attr("href",new_like_href);
+    var new_dislike_href = "/hard_delete_user_from_profile?liker=true&param="+"<%=@next_like_id%>";
+    $("#disliker").attr("href",new_dislike_href);
+    var new_skip_href = "/skip_liker?param="+"<%=@next_like_id%>";
+    $("#skipliker").attr("href",new_skip_href);
+    $("#hidden-preview-details-div-home-game").html("<%= j render 'shared/preview_details', :f => Food.find(@next_like_id) %>");
+  }
+<% end %>
+<% if @from_list != nil %>
+  var already_liked = "#already-liked-"+"<%=@quantity_id%>";
+  $(already_liked).show();
+  var not_yet_liked = "#not-yet-liked-"+"<%=@quantity_id%>";
+  $(not_yet_liked).hide();
+<% end %>

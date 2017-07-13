@@ -1,0 +1,9 @@
+Hello, <%=@user.name%>!
+
+Here is a checklist vesrion of <%= @list.name %>.
+<% @list.quantities.each do |q| %>
+  *<%="%.3g" % q.amount+" #{q.food.name}"%>
+<% end %>
+
+Enjoy!
+

@@ -1,0 +1,2 @@
+$("<%= j render 'posts/post', :post => @post %>").appendTo("#list-posts").hide().slideDown();
+$('html, body').animate({scrollTop: $("#dish-<%=@post.id%>").offset().top - 15}, 'slow');

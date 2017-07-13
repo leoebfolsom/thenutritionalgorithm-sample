@@ -1,0 +1,5 @@
+if ($("#charts").html() == "") {
+  var chart = $("#charts-hidden").html();
+  $("#charts-hidden").remove();
+  $("#charts").html(chart);
+}

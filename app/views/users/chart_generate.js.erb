@@ -1,0 +1,8 @@
+var chart = $("#charts-hidden").html();
+$("#charts-hidden").remove();
+$("#charts").hide();
+$("#charts").html(chart);
+$("#charts").fadeIn("slow");
+
+
+//$("#chart-calories-container").html("<%= j line_chart chart_generate_path %> %>");
