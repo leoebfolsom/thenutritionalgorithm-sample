@@ -80,6 +80,7 @@ GEM
     coffee-script-source (1.12.2)
     commonjs (0.2.7)
     concurrent-ruby (1.0.5)
+    crass (1.0.4)
     daemons (1.2.4)
     derailed (0.1.0)
       derailed_benchmarks
@@ -176,7 +177,8 @@ GEM
       actionpack (>= 4, < 5.2)
       activesupport (>= 4, < 5.2)
       railties (>= 4, < 5.2)
-    loofah (2.0.3)
+    loofah (2.2.3)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.12)
     mail (2.6.5)
@@ -190,7 +192,7 @@ GEM
       minitest (> 1.2.0)
       rails (>= 2.3.3)
     mini_magick (4.9.4)
-    mini_portile2 (2.1.0)
+    mini_portile2 (2.4.0)
     minitest (5.10.2)
     minitest-reporters (1.1.14)
       ansi
@@ -203,8 +205,8 @@ GEM
     nenv (0.3.0)
     netrc (0.11.0)
     nio4r (2.1.0)
-    nokogiri (1.7.2)
-      mini_portile2 (~> 2.1.0)
+    nokogiri (1.10.4)
+      mini_portile2 (~> 2.4.0)
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -251,8 +253,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.0.3)
-      loofah (~> 2.0)
+    rails-html-sanitizer (1.2.0)
+      loofah (~> 2.2, >= 2.2.2)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
