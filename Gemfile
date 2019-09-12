@@ -34,7 +34,7 @@ gem 'typhoeus'
 
 #IMAGES
 gem 'carrierwave', '~> 0.10.0'
-gem 'mini_magick', '~> 4.3'
+gem 'mini_magick', '~> 4.9'
 
 gem 'json'
 
